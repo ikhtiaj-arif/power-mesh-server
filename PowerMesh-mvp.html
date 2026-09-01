@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PowerMesh — MVP Business Model & Specification</title>
+<style>
+  :root {
+    --bg: #f7f6f2;
+    --surface: #ffffff;
+    --border: #e2e0d8;
+    --text-primary: #1a1917;
+    --text-secondary: #5c5a54;
+    --text-muted: #9b9890;
+    --accent: #1a5fb4;
+    --accent-bg: #e8f0fb;
+    --accent-border: #a8c4f0;
+    --success: #2d7a3a;
+    --success-bg: #e8f5eb;
+    --warning: #8a5c00;
+    --warning-bg: #fef3d0;
+    --danger: #a32d2d;
+    --danger-bg: #fcebeb;
+    --amber: #7a4f00;
+    --amber-bg: #faeeda;
+    --teal: #0f6e56;
+    --teal-bg: #e1f5ee;
+    --purple: #3c3489;
+    --purple-bg: #eeedfe;
+    --font: 'Georgia', serif;
+    --font-ui: system-ui, -apple-system, sans-serif;
+    --radius: 6px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 4rem 2rem 6rem;
+  }
+
+  .doc-header {
+    border-bottom: 1.5px solid var(--text-primary);
+    padding-bottom: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .doc-eyebrow {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .doc-title {
+    font-size: 2.6rem;
+    font-weight: normal;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .doc-title span { color: var(--accent); }
+
+  .doc-subtitle {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    max-width: 620px;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+  }
+
+  .doc-meta {
+    font-family: var(--font-ui);
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .doc-meta span { display: flex; align-items: center; gap: 6px; }
+
+  .callout {
+    border-left: 3px solid;
+    padding: 1rem 1.25rem;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin: 1.5rem 0;
+    font-family: var(--font-ui);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .callout.warning { border-color: #c97b00; background: var(--warning-bg); color: var(--warning); }
+  .callout.info { border-color: var(--accent); background: var(--accent-bg); color: #1a3d7a; }
+  .callout.danger { border-color: #c94040; background: var(--danger-bg); color: var(--danger); }
+  .callout.success { border-color: #2d7a3a; background: var(--success-bg); color: var(--success); }
+  .callout.amber { border-color: #c97b00; background: var(--amber-bg); color: var(--amber); }
+  .callout strong { font-weight: 600; display: block; margin-bottom: 4px; }
+
+  .section { margin-bottom: 3.5rem; }
+
+  .section-number {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: normal;
+    letter-spacing: -0.01em;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  h3 {
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin: 1.5rem 0 0.6rem;
+  }
+
+  p { margin-bottom: 1rem; }
+
+  .role-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .role-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+  }
+
+  .role-card .role-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-ui);
+  }
+
+  .role-card .role-name { font-family: var(--font-ui); font-weight: 600; font-size: 15px; margin-bottom: 0.4rem; }
+  .role-card .role-desc { font-family: var(--font-ui); font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0.75rem; }
+  .role-card .role-examples { font-family: var(--font-ui); font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+
+  .role-provider .role-icon { background: var(--teal-bg); color: var(--teal); }
+  .role-consumer .role-icon { background: var(--accent-bg); color: var(--accent); }
+  .role-operator .role-icon { background: var(--purple-bg); color: var(--purple); }
+
+  .workflow {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem;
+    margin: 1.5rem 0;
+  }
+
+  .workflow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .workflow-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 17px;
+    top: 38px;
+    width: 1px;
+    height: calc(100% - 8px);
+    border-left: 1.5px dashed var(--border);
+  }
+
+  .step-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--text-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .step-body { flex: 1; padding-top: 4px; }
+  .step-title { font-family: var(--font-ui); font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+  .step-desc { font-family: var(--font-ui); font-size: 13px; color: var(--text-secondary); line-height: 1.55; }
+
+  .step-tag {
+    display: inline-block;
+    font-family: var(--font-ui);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 6px;
+  }
+  .step-tag.provider { background: var(--teal-bg); color: var(--teal); }
+  .step-tag.consumer { background: var(--accent-bg); color: var(--accent); }
+  .step-tag.operator { background: var(--purple-bg); color: var(--purple); }
+  .step-tag.system { background: #f1efe8; color: #5f5e5a; }
+
+  .lifecycle { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 1rem 0; }
+
+  .lc-state {
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 4px;
+    border: 0.5px solid;
+  }
+  .lc-arrow { font-family: var(--font-ui); font-size: 14px; color: var(--text-muted); }
+  .lc-state.neutral { background: #f1efe8; color: #5f5e5a; border-color: #d3d1c7; }
+  .lc-state.active { background: var(--accent-bg); color: #1a3d7a; border-color: var(--accent-border); }
+  .lc-state.success { background: var(--success-bg); color: var(--success); border-color: #9fd4a8; }
+  .lc-state.danger { background: var(--danger-bg); color: var(--danger); border-color: #f7c1c1; }
+  .lc-state.warning { background: var(--warning-bg); color: var(--warning); border-color: #f5d580; }
+
+  .constraint-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-ui);
+    font-size: 13px;
+    margin: 1rem 0;
+  }
+  .constraint-table th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .constraint-table td {
+    padding: 0.65rem 0.75rem;
+    border-bottom: 0.5px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .constraint-table tr:last-child td { border-bottom: none; }
+
+  .tag-in { display: inline-block; background: var(--success-bg); color: var(--success); border-radius: 4px; padding: 1px 8px; font-size: 11px; font-weight: 600; }
+  .tag-out { display: inline-block; background: var(--danger-bg); color: var(--danger); border-radius: 4px; padding: 1px 8px; font-size: 11px; font-weight: 600; }
+
+  .priority-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.6rem 0;
+    border-bottom: 0.5px solid var(--border);
+    font-family: var(--font-ui);
+    font-size: 13px;
+  }
+  .priority-row:last-child { border-bottom: none; }
+  .priority-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--text-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .priority-label { font-weight: 600; min-width: 160px; }
+  .priority-examples { color: var(--text-secondary); }
+
+  .phase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .phase-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+  }
+
+  .phase-label {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+
+  .phase-card h4 { font-family: var(--font-ui); font-size: 15px; font-weight: 600; margin-bottom: 0.5rem; }
+
+  .phase-card ul {
+    list-style: none;
+    padding: 0;
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .phase-card ul li { padding: 3px 0; padding-left: 14px; position: relative; }
+  .phase-card ul li::before { content: '—'; position: absolute; left: 0; color: var(--text-muted); font-size: 11px; top: 5px; }
+
+  .phase-p0 .phase-label { color: var(--teal); }
+  .phase-p1 .phase-label { color: var(--accent); }
+  .phase-p2 .phase-label { color: var(--purple); }
+
+  .stack-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 0.7rem 0;
+    border-bottom: 0.5px solid var(--border);
+    font-family: var(--font-ui);
+    font-size: 13px;
+  }
+  .stack-row:last-child { border-bottom: none; }
+  .stack-layer { font-weight: 600; min-width: 140px; color: var(--text-secondary); }
+  .stack-choice { color: var(--text-primary); }
+  .stack-why { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
+
+  .risk-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 3fr;
+    gap: 0.75rem;
+    padding: 0.7rem 0;
+    border-bottom: 0.5px solid var(--border);
+    font-family: var(--font-ui);
+    font-size: 13px;
+    align-items: start;
+  }
+  .risk-row.header { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .risk-row:last-child { border-bottom: none; }
+  .risk-high { color: var(--danger); background: var(--danger-bg); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; }
+  .risk-med { color: var(--warning); background: var(--warning-bg); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; }
+  .risk-low { color: var(--success); background: var(--success-bg); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; }
+
+  /* API section */
+  .api-group { margin: 1.25rem 0; }
+  .api-group-label {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+  .api-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.45rem 0;
+    border-bottom: 0.5px solid var(--border);
+    font-family: var(--font-ui);
+    font-size: 13px;
+  }
+  .api-row:last-child { border-bottom: none; }
+  .method {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    min-width: 44px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    text-align: center;
+  }
+  .method.get { background: var(--success-bg); color: var(--success); }
+  .method.post { background: var(--accent-bg); color: var(--accent); }
+  .method.patch { background: var(--warning-bg); color: var(--warning); }
+  .method.delete { background: var(--danger-bg); color: var(--danger); }
+  .api-path { font-family: 'Courier New', monospace; font-size: 12px; color: var(--text-primary); flex: 1; }
+  .api-note { font-size: 12px; color: var(--text-muted); }
+
+  blockquote {
+    border-left: 3px solid var(--border);
+    margin: 1.25rem 0;
+    padding: 0.75rem 1.25rem;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  code {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    background: #f1efe8;
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--text-primary);
+  }
+
+  .doc-footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1.5px solid var(--text-primary);
+    font-family: var(--font-ui);
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  @media (max-width: 600px) {
+    .page { padding: 2rem 1rem 4rem; }
+    .doc-title { font-size: 1.8rem; }
+    .risk-row { grid-template-columns: 1fr; }
+    .priority-label { min-width: auto; }
+    .api-row { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="doc-header">
+    <div class="doc-eyebrow">Internal specification · MVP v1.1 — Final</div>
+    <h1 class="doc-title">PowerMesh — <span>Business Model</span><br>& MVP Specification</h1>
+    <p class="doc-subtitle">A coordination marketplace for temporary energy capacity during planned and unplanned load shedding. This document defines the business model, MVP scope, API surface, and tech stack for an enterprise-grade, scalable backend assignment.</p>
+    <div class="doc-meta">
+      <span>📍 Target market: Bangladesh (industrial zones)</span>
+      <span>🏗 Scope: MVP v1.1 — assignment-ready</span>
+      <span>📅 Deadline: September 07, 2026</span>
+    </div>
+  </header>
+
+  <!-- SECTION 1 -->
+  <section class="section">
+    <div class="section-number">Section 01</div>
+    <h2>What PowerMesh is — and what it is not</h2>
+
+    <p>PowerMesh is a marketplace and orchestration platform for temporary energy capacity during planned or expected electricity shortages. It connects energy providers that have available backup or distributed energy capacity with consumers that need temporary electricity continuity.</p>
+
+    <p>PowerMesh manages the commercial and operational workflow end to end: supply discovery → outage event context → capacity offer matching → allocation → reservation → payment → delivery → settlement → failure handling.</p>
+
+    <div class="callout danger">
+      <strong>PowerMesh does not generate, own, transmit, or physically control electricity.</strong>
+      It is the coordination, reservation, payment, and tracking layer. Physical delivery is the provider's responsibility. PowerMesh records whether delivery occurred and handles the financial consequences accordingly.
+    </div>
+
+    <div class="callout warning">
+      <strong>Regulatory framing</strong>
+      Commercial transactions involving electricity supply in Bangladesh are regulated by BERC (Bangladesh Energy Regulatory Commission). PowerMesh must be positioned consistently as a coordination and payment layer — not an electricity reseller. Engage a local energy lawyer before launch.
+    </div>
+
+    <div class="callout info">
+      <strong>AI integration path</strong>
+      The MVP data model is designed to support future AI features: outage prediction (ML on BPDB/REB historical schedules), dynamic pricing, provider reliability scoring, and anomaly detection on delivery reports. The schema captures the signals now so the models can be trained later.
+    </div>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section class="section">
+    <div class="section-number">Section 02</div>
+    <h2>Primary roles</h2>
+
+    <p>PowerMesh has exactly three primary roles. Role permissions are enforced at the middleware layer — no role can access or mutate resources belonging to another role.</p>
+
+    <div class="role-grid">
+      <div class="role-card role-provider">
+        <div class="role-icon">⚡</div>
+        <div class="role-name">Provider</div>
+        <div class="role-desc">Owns or operates an energy resource with genuinely spare capacity during load shedding windows. Registers resources, submits capacity offers, accepts reservations, and confirms or reports delivery.</div>
+        <div class="role-examples">
+          <strong style="color: var(--teal); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;">Resource types supported</strong><br>
+          Generator, battery storage, solar + BESS, microgrid, or any other backup/distributed energy resource. The model is resource-type agnostic.
+        </div>
+      </div>
+
+      <div class="role-card role-consumer">
+        <div class="role-icon">🏢</div>
+        <div class="role-name">Consumer</div>
+        <div class="role-desc">An organization that needs temporary electricity continuity during a shedding window. Browses open events in their service area, submits capacity requests, makes payments, and confirms delivery.</div>
+        <div class="role-examples">
+          <strong style="color: var(--accent); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;">Consumer categories</strong><br>
+          Hospitals, diagnostic centers, telecom facilities, factories, data centers, commercial buildings, apartment complexes, cold chain operators. Criticality determines allocation priority, not consumer type.
+        </div>
+      </div>
+
+      <div class="role-card role-operator">
+        <div class="role-icon">🛠</div>
+        <div class="role-name">Operator</div>
+        <div class="role-desc">PowerMesh staff managing the marketplace. Verifies providers and resources, creates and manages outage events, reviews and approves allocations, handles failures, manages disputes, and monitors the platform.</div>
+        <div class="role-examples">
+          <strong style="color: var(--purple); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;">MVP scope</strong><br>
+          Operator actions are predominantly manual in MVP. The platform surfaces calculated results; the operator reviews and approves before anything becomes binding.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section class="section">
+    <div class="section-number">Section 03</div>
+    <h2>Physical compatibility — a hard requirement</h2>
+
+    <p>A provider cannot serve an arbitrary consumer simply because they exist on the same platform. Electricity requires a physical connection. Provider resources and consumer facilities must belong to a <strong>physically serviceable relationship</strong> before any matching, offer surfacing, or allocation can occur.</p>
+
+    <h3>What defines physical compatibility</h3>
+    <p>Physical compatibility means the provider's resource and the consumer's facility share one of the following:</p>
+
+    <div style="background: var(--surface); border: 0.5px solid var(--border); border-radius: 10px; padding: 1.25rem; margin: 1rem 0;">
+      <div style="font-family: var(--font-ui); font-size: 13px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; gap: 12px; align-items: flex-start; padding-bottom: 10px; border-bottom: 0.5px solid var(--border);">
+          <div style="min-width: 8px; height: 8px; border-radius: 50%; background: var(--teal); margin-top: 5px; flex-shrink: 0;"></div>
+          <div><strong>Same service area</strong> — operator-defined geographic zone (e.g., Gazipur Industrial Zone, Savar EPZ, DEPZ)</div>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: flex-start; padding-bottom: 10px; border-bottom: 0.5px solid var(--border);">
+          <div style="min-width: 8px; height: 8px; border-radius: 50%; background: var(--teal); margin-top: 5px; flex-shrink: 0;"></div>
+          <div><strong>Same industrial estate or campus</strong> — both facilities on the same bounded site with shared internal distribution</div>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: flex-start; padding-bottom: 10px; border-bottom: 0.5px solid var(--border);">
+          <div style="min-width: 8px; height: 8px; border-radius: 50%; background: var(--teal); margin-top: 5px; flex-shrink: 0;"></div>
+          <div><strong>Same microgrid</strong> — both connected to the same islanded or community microgrid segment</div>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: flex-start; padding-bottom: 10px; border-bottom: 0.5px solid var(--border);">
+          <div style="min-width: 8px; height: 8px; border-radius: 50%; background: var(--teal); margin-top: 5px; flex-shrink: 0;"></div>
+          <div><strong>Same contiguous distribution segment</strong> — on the same feeder or substation zone as confirmed during provider verification</div>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="min-width: 8px; height: 8px; border-radius: 50%; background: var(--teal); margin-top: 5px; flex-shrink: 0;"></div>
+          <div><strong>Explicit direct connection</strong> — provider and consumer have a documented, verified direct physical interconnect</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>How compatibility is enforced in the system</h3>
+    <p>At registration, the Operator assigns each provider resource and each consumer facility to a <code>serviceZoneId</code>. This zone tag is the compatibility key. The matching engine will not surface a provider's offer to a consumer unless both share the same <code>serviceZoneId</code>. This is a hard filter, not a soft preference — it cannot be overridden by the allocation algorithm or by either party.</p>
+
+    <div class="callout amber">
+      <strong>Zone definition is operator responsibility</strong>
+      The accuracy of the service zone assignment determines whether the platform's reservations are physically deliverable. Operators must verify zone assignments during resource onboarding — not after the first delivery failure.
+    </div>
+  </section>
+
+  <!-- SECTION 4 -->
+  <section class="section">
+    <div class="section-number">Section 04</div>
+    <h2>Capacity offers — the fundamental supply unit</h2>
+
+    <p>Providers do not create "load-shedding slots." They create <strong>time-bound capacity offers</strong>. An offer represents a provider's willingness to supply a defined amount of capacity, from a specific resource, at a specific price, within a defined time window.</p>
+
+    <p>The outage event creates the marketplace context — a named shortage in a service area and time window. The outage event does not create supply. Supply comes entirely from provider capacity offers that are matched against the event.</p>
+
+    <h3>Offer types</h3>
+    <table class="constraint-table">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Definition</th>
+          <th>Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Standing / recurring offer</strong></td>
+          <td>A recurring availability schedule that activates automatically when a matching outage event is created. Remains active until the provider withdraws or modifies it.</td>
+          <td>"200 kW, every weekday 18:00–22:00, ৳X per kW/hour" — active for any qualifying event in this window.</td>
+        </tr>
+        <tr>
+          <td><strong>Event-specific offer</strong></td>
+          <td>Capacity offered in response to a specific outage event. Created after an event is published. Does not recur.</td>
+          <td>"150 kW for Outage Event #47, September 10, 19:00–21:00, ৳Y per kW/hour."</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Offer fields</h3>
+    <p>Every capacity offer — regardless of type — carries: the provider resource ID, the service zone ID, available capacity in kW, price per kW/hour, and the valid time window. The system checks for time conflicts against the same resource's existing offers before accepting a new one.</p>
+
+    <div class="callout info">
+      <strong>Outage event vs. supply — why they are separate</strong>
+      Keeping them separate means the marketplace does not start from zero each time an event is created. Standing offers from verified providers are already in the system. When an operator creates or confirms an event, relevant offers surface immediately without requiring manual provider action every time.
+    </div>
+  </section>
+
+  <!-- SECTION 5 -->
+  <section class="section">
+    <div class="section-number">Section 05</div>
+    <h2>Outage events</h2>
+
+    <p>An outage event represents a planned or expected electricity shortage in a specific service area and time window. It is the marketplace context — not the supply. The operator creates or confirms events. Providers do not create events.</p>
+
+    <h3>Event creation sources</h3>
+    <table class="constraint-table">
+      <thead>
+        <tr>
+          <th>Source</th>
+          <th>MVP</th>
+          <th>Future</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Operator manually creates event</td>
+          <td><span class="tag-in">Yes</span></td>
+          <td><span class="tag-in">Yes</span></td>
+        </tr>
+        <tr>
+          <td>Operator imports from BPDB/REB schedule</td>
+          <td><span class="tag-in">Yes — manual CSV</span></td>
+          <td>Automated API polling</td>
+        </tr>
+        <tr>
+          <td>Provider self-reports outage start</td>
+          <td><span class="tag-in">Yes — flags for operator review</span></td>
+          <td><span class="tag-in">Yes</span></td>
+        </tr>
+        <tr>
+          <td>Smart meter / grid telemetry</td>
+          <td><span class="tag-out">No</span></td>
+          <td>Phase 2+</td>
+        </tr>
+        <tr>
+          <td>ML/AI outage prediction</td>
+          <td><span class="tag-out">No</span></td>
+          <td>Phase 3+ (data exists, model is future)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>When no outage occurs</h3>
+    <p>If the main grid stays on during a confirmed shedding window, and the provider confirms no delivery was needed, the consumer is refunded in full. Platform fee is not charged. This must be stated explicitly in the consumer terms of service before launch.</p>
+  </section>
+
+  <!-- SECTION 6 -->
+  <section class="section">
+    <div class="section-number">Section 06</div>
+    <h2>MVP workflow</h2>
+
+    <p>Eight steps, two parties, one operator. Every step is logged. Every state transition is auditable.</p>
+
+    <div class="workflow">
+      <div class="workflow-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Provider onboarding and resource verification</div>
+          <div class="step-desc">Provider registers and submits their energy resource: type (generator, battery, solar+BESS, microgrid, etc.), physical location, rated capacity in kW, and supporting documentation. Operator verifies the resource, assigns it to a service zone (<code>serviceZoneId</code>), and marks it as verified. An unverified resource cannot create capacity offers.</div>
+          <span class="step-tag provider">Provider</span>
+          <span class="step-tag operator">Operator verification</span>
+        </div>
+      </div>
+
+      <div class="workflow-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Provider creates capacity offer</div>
+          <div class="step-desc">Verified provider creates a standing offer (recurring schedule) or an event-specific offer: available kW, price per kW/hour, and time window. The system checks for time conflicts on the same resource. The offer is active until withdrawn, expired, or fully allocated. Offers are tagged with the resource's <code>serviceZoneId</code>.</div>
+          <span class="step-tag provider">Provider</span>
+        </div>
+      </div>
+
+      <div class="workflow-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Operator creates or confirms outage event</div>
+          <div class="step-desc">Operator creates an event for a specific service zone and time window. On event creation, standing offers from verified providers in the same zone whose time windows overlap are automatically surfaced and linked to the event. The marketplace is now open — consumers in the same zone can submit requests.</div>
+          <span class="step-tag operator">Operator</span>
+        </div>
+      </div>
+
+      <div class="workflow-step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Consumer submits capacity request</div>
+          <div class="step-desc">Consumer selects an open outage event in their service zone, specifies required capacity in kW and required time window. The system validates that the consumer's registered facility belongs to the event's service zone — if not, the request is rejected. Requests are held as pending until allocation runs.</div>
+          <span class="step-tag consumer">Consumer</span>
+        </div>
+      </div>
+
+      <div class="workflow-step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <div class="step-title">Allocation runs — system calculates, operator approves</div>
+          <div class="step-desc">When the allocation window closes (configurable, e.g. 2 hours before the outage), the system runs the allocation algorithm: filter by physical compatibility (same service zone), match time windows, rank consumers by criticality tier, apply first-come-first-served within tiers. The algorithm outputs an allocation plan. The Operator reviews and approves it before it becomes binding — no allocation is confirmed without operator sign-off in MVP.</div>
+          <span class="step-tag system">System calculates</span>
+          <span class="step-tag operator">Operator approves</span>
+        </div>
+      </div>
+
+      <div class="workflow-step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <div class="step-title">Reservation confirmed — consumer pays via payment gateway</div>
+          <div class="step-desc">Allocated consumers receive a confirmed reservation and a payment window (e.g. 60 minutes). Consumer initiates payment via the standard gateway flow (bKash / SSLCommerz / Stripe). The system uses idempotency keys to prevent double-charges on retries. On payment success callback, the reservation moves to <strong>Confirmed</strong>. On failure or timeout, the reservation is cancelled and the capacity is released to the next eligible consumer.</div>
+          <span class="step-tag system">System</span>
+          <span class="step-tag consumer">Consumer pays</span>
+          <span class="step-tag provider">Provider notified</span>
+        </div>
+      </div>
+
+      <div class="workflow-step">
+        <div class="step-num">7</div>
+        <div class="step-body">
+          <div class="step-title">Delivery window — manual check-in by both parties</div>
+          <div class="step-desc">The outage window begins. The provider activates their resource and checks in via the app to confirm delivery has started. Consumer receives a notification. At the end of the window, the provider submits a delivery report: actual kW delivered, start time, end time. No IoT, no smart metering, no automated grid monitoring in MVP.</div>
+          <span class="step-tag provider">Provider</span>
+          <span class="step-tag consumer">Consumer notified</span>
+        </div>
+      </div>
+
+      <div class="workflow-step">
+        <div class="step-num">8</div>
+        <div class="step-body">
+          <div class="step-title">Consumer confirms or disputes — settlement runs</div>
+          <div class="step-desc">Consumer reviews the provider's delivery report and confirms or disputes within a defined window (e.g. 24 hours). On confirmation: payment is released to the provider minus the platform fee. On dispute: operator reviews and decides. Partial delivery triggers proportional settlement — consumer refunded the difference, provider paid for actual delivery only. All outcomes are recorded to the provider's reliability history.</div>
+          <span class="step-tag provider">Provider</span>
+          <span class="step-tag consumer">Consumer</span>
+          <span class="step-tag operator">Operator (if disputed)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 7 -->
+  <section class="section">
+    <div class="section-number">Section 07</div>
+    <h2>Allocation rules</h2>
+
+    <p>Allocation is deterministic and documented. When supply is insufficient to satisfy all demand, the algorithm applies these criteria in order: (1) physical compatibility, (2) time window compatibility, (3) consumer criticality tier, (4) first-come-first-served within the same tier. The result is a calculated plan that the operator reviews before it becomes binding.</p>
+
+    <p>Allocation does not use a highest-bidder mechanism. Price is set by the provider at offer creation — allocation is not a price auction.</p>
+
+    <div style="background: var(--surface); border: 0.5px solid var(--border); border-radius: 10px; padding: 1.25rem; margin: 1rem 0;">
+      <div class="priority-row" style="font-family: var(--font-ui); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); padding-top: 0;">
+        <div style="width: 24px;"></div>
+        <div class="priority-label">Consumer criticality tier</div>
+        <div class="priority-examples">Examples</div>
+      </div>
+      <div class="priority-row">
+        <div class="priority-num">1</div>
+        <div class="priority-label">Life-critical</div>
+        <div class="priority-examples">Hospitals, ICUs, dialysis centers, emergency services</div>
+      </div>
+      <div class="priority-row">
+        <div class="priority-num">2</div>
+        <div class="priority-label">Critical infrastructure</div>
+        <div class="priority-examples">Telecom base stations, water treatment, cold chain facilities</div>
+      </div>
+      <div class="priority-row">
+        <div class="priority-num">3</div>
+        <div class="priority-label">Industrial — essential</div>
+        <div class="priority-examples">Pharmaceutical manufacturing, food processing</div>
+      </div>
+      <div class="priority-row">
+        <div class="priority-num">4</div>
+        <div class="priority-label">Industrial — general</div>
+        <div class="priority-examples">Garments factories, general manufacturing, data centers</div>
+      </div>
+      <div class="priority-row">
+        <div class="priority-num">5</div>
+        <div class="priority-label">Commercial</div>
+        <div class="priority-examples">Office buildings, shopping centers, apartment complexes</div>
+      </div>
+    </div>
+
+    <p>Consumer criticality tier is assigned by the operator during consumer onboarding. A consumer cannot self-assign their own tier.</p>
+
+    <div class="callout warning">
+      <strong>Partial allocation</strong>
+      If a consumer requests 200 kW but only 150 kW is available at their priority level, the system can offer a partial allocation. The consumer must explicitly accept or reject the partial offer — silence is rejection and the capacity is released. Partial acceptance is recorded and used in settlement.
+    </div>
+  </section>
+
+  <!-- SECTION 8 -->
+  <section class="section">
+    <div class="section-number">Section 08</div>
+    <h2>Reservation and payment lifecycle</h2>
+
+    <p>Every state transition is logged with a timestamp, actor, and reason. This log is the audit trail for disputes, refunds, and provider reliability tracking.</p>
+
+    <h3>Normal flow</h3>
+    <div class="lifecycle">
+      <span class="lc-state neutral">Pending allocation</span>
+      <span class="lc-arrow">→</span>
+      <span class="lc-state active">Allocated</span>
+      <span class="lc-arrow">→</span>
+      <span class="lc-state active">Payment pending</span>
+      <span class="lc-arrow">→</span>
+      <span class="lc-state active">Confirmed</span>
+      <span class="lc-arrow">→</span>
+      <span class="lc-state warning">Active</span>
+      <span class="lc-arrow">→</span>
+      <span class="lc-state success">Completed</span>
+    </div>
+
+    <h3>Payment failure or timeout</h3>
+    <div class="lifecycle">
+      <span class="lc-state active">Payment pending</span>
+      <span class="lc-arrow">→</span>
+      <span class="lc-state danger">Cancelled — capacity released</span>
+    </div>
+    <p style="font-family: var(--font-ui); font-size: 13px; color: var(--text-secondary);">Released capacity is offered to the next eligible consumer in the priority queue. Idempotency keys prevent double-charge on retry.</p>
+
+    <h3>Provider failure (first-class workflow)</h3>
+    <div class="lifecycle">
+      <span class="lc-state warning">Active</span>
+      <span class="lc-arrow">→</span>
+      <span class="lc-state danger">Provider failed</span>
+      <span class="lc-arrow">→</span>
+      <span class="lc-state success">Consumer refunded in full</span>
+    </div>
+    <p style="font-family: var(--font-ui); font-size: 13px; color: var(--text-secondary);">Provider failure is recorded as an incident. The refund is processed automatically via the payment gateway. The incident is added to the provider's reliability history. Three confirmed failures in 90 days triggers operator review for suspension. The consumer does not bear the financial loss of a provider failure under any circumstances.</p>
+
+    <h3>Partial delivery</h3>
+    <div class="lifecycle">
+      <span class="lc-state warning">Active</span>
+      <span class="lc-arrow">→</span>
+      <span class="lc-state warning">Partially delivered</span>
+      <span class="lc-arrow">→</span>
+      <span class="lc-state success">Settled — proportional</span>
+    </div>
+    <p style="font-family: var(--font-ui); font-size: 13px; color: var(--text-secondary);">Consumer is refunded the proportion of payment corresponding to undelivered capacity. Provider receives payment for actual delivery only. The shortfall is recorded as a partial delivery incident.</p>
+
+    <h3>Consumer cancellation</h3>
+    <div class="lifecycle">
+      <span class="lc-state active">Confirmed</span>
+      <span class="lc-arrow">→</span>
+      <span class="lc-state danger">Cancelled by consumer</span>
+    </div>
+    <p style="font-family: var(--font-ui); font-size: 13px; color: var(--text-secondary);">More than 4 hours before window: full refund. Within 4 hours: 50% platform fee retained. Policy must be stated in consumer terms of service before launch.</p>
+
+    <h3>Outage did not occur</h3>
+    <div class="lifecycle">
+      <span class="lc-state active">Confirmed</span>
+      <span class="lc-arrow">→</span>
+      <span class="lc-state success">Voided — full refund</span>
+    </div>
+    <p style="font-family: var(--font-ui); font-size: 13px; color: var(--text-secondary);">If the main grid stayed on and the provider confirms no delivery was needed, the consumer is refunded in full. No platform fee is charged.</p>
+  </section>
+
+  <!-- SECTION 9 -->
+  <section class="section">
+    <div class="section-number">Section 09</div>
+    <h2>Provider reliability tracking</h2>
+
+    <p>PowerMesh records every provider's delivery outcomes from the first transaction. This data is the foundation for future reliability scoring, provider tiers, and AI-assisted provider selection.</p>
+
+    <div style="background: var(--surface); border: 0.5px solid var(--border); border-radius: 10px; padding: 1.25rem; margin: 1rem 0; font-family: var(--font-ui); font-size: 13px;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; text-align: center; margin-bottom: 1rem;">
+        <div style="background: var(--success-bg); border-radius: 8px; padding: 1rem;">
+          <div style="font-size: 22px; font-weight: 600; color: var(--success);">97</div>
+          <div style="color: var(--success); font-size: 12px; margin-top: 4px;">Successful deliveries</div>
+        </div>
+        <div style="background: var(--warning-bg); border-radius: 8px; padding: 1rem;">
+          <div style="font-size: 22px; font-weight: 600; color: var(--warning);">1</div>
+          <div style="color: var(--warning); font-size: 12px; margin-top: 4px;">Partial deliveries</div>
+        </div>
+        <div style="background: var(--danger-bg); border-radius: 8px; padding: 1rem;">
+          <div style="font-size: 22px; font-weight: 600; color: var(--danger);">2</div>
+          <div style="color: var(--danger); font-size: 12px; margin-top: 4px;">Failed deliveries</div>
+        </div>
+      </div>
+      <div style="color: var(--text-muted); font-size: 12px; text-align: center;">Example: Provider A delivery history — tracked from first transaction</div>
+    </div>
+
+    <p>At MVP, the raw counts are recorded and displayed. A weighted reliability score algorithm, provider tier system, and automated penalty triggers are Phase 1 features — but they require this data to exist first. The schema captures it from day one.</p>
+  </section>
+
+  <!-- SECTION 10 -->
+  <section class="section">
+    <div class="section-number">Section 10</div>
+    <h2>API surface — 24 endpoints</h2>
+
+    <p>All endpoints follow the format <code>/api/v1/...</code>. All responses use the standard structure: <code>{ success, message, data }</code> for success and <code>{ success, message, errors }</code> for errors. Protected routes require <code>Authorization: Bearer &lt;token&gt;</code>. Role-based middleware enforces access at the route level.</p>
+
+    <div class="api-group">
+      <div class="api-group-label">Authentication</div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/register</span><span class="api-note">Email + password. Role determined by registration type.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/login</span><span class="api-note">Returns access token + refresh token.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/refresh-token</span><span class="api-note">Rotates refresh token.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/logout</span><span class="api-note">Invalidates refresh token.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/google</span><span class="api-note">GCP OAuth2 social login.</span></div>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-label">User / profile</div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/users/me</span><span class="api-note">Returns authenticated user's profile.</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/users/me</span><span class="api-note">Update profile fields.</span></div>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-label">Provider resources — Provider role</div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/resources</span><span class="api-note">Register an energy resource. Pending verification.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/resources/mine</span><span class="api-note">List own resources. Supports pagination + status filter.</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/resources/:id</span><span class="api-note">Update resource details (if not active in an offer).</span></div>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-label">Capacity offers — Provider role</div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/offers</span><span class="api-note">Create standing or event-specific offer. Checks time conflicts.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/offers/mine</span><span class="api-note">List own offers. Filter by type, status, date range.</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/offers/:id</span><span class="api-note">Modify or withdraw an offer (if not yet allocated).</span></div>
+      <div class="api-row"><span class="method delete">DELETE</span><span class="api-path">/api/v1/offers/:id</span><span class="api-note">Soft delete — sets deletedAt. Cannot delete if allocated.</span></div>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-label">Outage events — Consumer + Operator</div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/events</span><span class="api-note">List open events in consumer's service zone. Pagination + filter by status/date.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/events/:id</span><span class="api-note">Event detail with matched offer summary.</span></div>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-label">Capacity requests — Consumer role</div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/requests</span><span class="api-note">Submit request for an event. Validates service zone match.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/requests/mine</span><span class="api-note">Consumer's request history. Filter by status.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/requests/:id/cancel</span><span class="api-note">Cancel request. Refund policy applied by status at cancellation time.</span></div>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-label">Payments</div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/payments/initiate</span><span class="api-note">Creates payment session for a confirmed reservation. Returns gateway URL.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/payments/webhook</span><span class="api-note">Gateway callback. Uses idempotency key. Updates reservation status.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/payments/:id</span><span class="api-note">Payment status and transaction detail.</span></div>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-label">Delivery — Provider + Consumer</div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/reservations/:id/delivery-report</span><span class="api-note">Provider submits actual kW delivered, start/end times.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/reservations/:id/confirm-delivery</span><span class="api-note">Consumer confirms or disputes delivery report.</span></div>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-label">Operator — Admin operations</div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/admin/events</span><span class="api-note">Create outage event for a service zone + time window.</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/admin/resources/:id/verify</span><span class="api-note">Verify provider resource + assign service zone.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/admin/events/:id/allocate</span><span class="api-note">Trigger allocation run. Returns plan for operator review.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/admin/events/:id/approve-allocation</span><span class="api-note">Operator approves plan — reservations become binding.</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/admin/reservations/:id/status</span><span class="api-note">Override reservation status (dispute resolution, failure handling).</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/admin/users</span><span class="api-note">List users. Filter by role, status. Pagination.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/admin/dashboard-stats</span><span class="api-note">Platform summary: active events, total capacity, revenue, incident counts.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/admin/audit-logs</span><span class="api-note">Full audit log. Filter by actor, action type, entity, date range.</span></div>
+    </div>
+
+    <div class="callout success">
+      <strong>Total: 28 meaningful endpoints</strong>
+      Covers authentication (5), profile (2), resources (3), offers (4), events (2), requests (3), payments (3), delivery (2), and operator admin (8). All backed by real database operations — no dummy endpoints.
+    </div>
+  </section>
+
+  <!-- SECTION 11 -->
+  <section class="section">
+    <div class="section-number">Section 11</div>
+    <h2>Tech stack — assignment-aligned</h2>
+
+    <div style="background: var(--surface); border: 0.5px solid var(--border); border-radius: 10px; padding: 1.25rem; margin: 1rem 0;">
+      <div class="stack-row">
+        <div class="stack-layer">Runtime</div>
+        <div>
+          <div class="stack-choice">Node.js + TypeScript</div>
+          <div class="stack-why">Type safety on the allocation logic, reservation lifecycle, and payment flows prevents entire classes of runtime bugs.</div>
+        </div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-layer">Framework</div>
+        <div>
+          <div class="stack-choice">Express.js</div>
+          <div class="stack-why">Modular architecture: routes → controllers → services → Prisma. No magic, easy to reason about, easy to test.</div>
+        </div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-layer">Database</div>
+        <div>
+          <div class="stack-choice">PostgreSQL + Prisma ORM</div>
+          <div class="stack-why">Relational model maps cleanly to the allocation logic. Prisma transactions prevent race conditions on concurrent reservation creation. Indexed on serviceZoneId, eventId, status.</div>
+        </div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-layer">Validation</div>
+        <div>
+          <div class="stack-choice">Zod</div>
+          <div class="stack-why">Schema-first validation with TypeScript inference. Consistent structured error messages on all endpoints.</div>
+        </div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-layer">Authentication</div>
+        <div>
+          <div class="stack-choice">JWT (access + refresh) + GCP OAuth2</div>
+          <div class="stack-why">Three-role system enforced via middleware. Refresh token rotation. GCP social login for consumer onboarding.</div>
+        </div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-layer">Payments</div>
+        <div>
+          <div class="stack-choice">SSLCommerz (primary) — bKash as secondary</div>
+          <div class="stack-why">SSLCommerz has the most complete sandbox environment for assignment testing. Idempotency keys on all payment webhook handlers prevent duplicate charge processing.</div>
+        </div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-layer">Caching</div>
+        <div>
+          <div class="stack-choice">Redis</div>
+          <div class="stack-why">Cache service zone + event listings (high read, low write). Rate limiting via express-rate-limit + Redis store. Session/token blacklist on logout.</div>
+        </div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-layer">Security</div>
+        <div>
+          <div class="stack-choice">Helmet + CORS + express-rate-limit</div>
+          <div class="stack-why">Security headers, origin whitelist, per-IP rate limiting on auth endpoints. Passwords hashed with bcrypt. Secrets in environment variables only.</div>
+        </div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-layer">File storage</div>
+        <div>
+          <div class="stack-choice">Multer + Cloudinary</div>
+          <div class="stack-why">Provider resource documentation uploads (ownership proof, site photos). Stored in Cloudinary, URL saved in DB.</div>
+        </div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-layer">Email</div>
+        <div>
+          <div class="stack-choice">Nodemailer / Resend</div>
+          <div class="stack-why">Transactional emails: registration confirmation, reservation confirmation, refund notification, delivery report.</div>
+        </div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-layer">Linting</div>
+        <div>
+          <div class="stack-choice">Biome</div>
+          <div class="stack-why">Fast, zero-config linting + formatting. One tool instead of ESLint + Prettier.</div>
+        </div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-layer">Documentation</div>
+        <div>
+          <div class="stack-choice">Postman collection</div>
+          <div class="stack-why">All 28 endpoints documented with example requests, responses, and environment variables for all three roles.</div>
+        </div>
+      </div>
+      <div class="stack-row" style="border-bottom: none;">
+        <div class="stack-layer">Deployment</div>
+        <div>
+          <div class="stack-choice">Render (backend) + Neon / Supabase (PostgreSQL)</div>
+          <div class="stack-why">Render supports persistent Node.js servers (not just serverless) — important for WebSocket or long-running processes in future. Neon provides serverless PostgreSQL with free tier.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 12 -->
+  <section class="section">
+    <div class="section-number">Section 12</div>
+    <h2>What MVP does not do</h2>
+
+    <table class="constraint-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>MVP</th>
+          <th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Pre-funded wallet / stored balance</td>
+          <td><span class="tag-out">Out</span></td>
+          <td>Standard gateway flow with idempotency is simpler, safer, and sufficient. Wallet can be added in Phase 1.</td>
+        </tr>
+        <tr>
+          <td>Real-time delivery monitoring / IoT</td>
+          <td><span class="tag-out">Out</span></td>
+          <td>Manual check-in is sufficient and avoids hardware dependency.</td>
+        </tr>
+        <tr>
+          <td>Automated allocation (no operator review)</td>
+          <td><span class="tag-out">Out</span></td>
+          <td>Operator-reviewed allocation builds trust before removing the human from the loop.</td>
+        </tr>
+        <tr>
+          <td>Provider reliability score algorithm</td>
+          <td><span class="tag-out">Out</span></td>
+          <td>Raw delivery counts are recorded. Scoring requires sufficient data to be meaningful.</td>
+        </tr>
+        <tr>
+          <td>AI / ML outage forecasting</td>
+          <td><span class="tag-out">Out</span></td>
+          <td>Data model captures the signals. Model comes in Phase 3 when training data exists.</td>
+        </tr>
+        <tr>
+          <td>Dynamic pricing</td>
+          <td><span class="tag-out">Out</span></td>
+          <td>Provider sets fixed price per offer. Dynamic pricing is a Phase 2 feature.</td>
+        </tr>
+        <tr>
+          <td>Multiple service zones</td>
+          <td><span class="tag-out">Soft limit</span></td>
+          <td>The schema supports multiple zones. Start with one to validate the loop.</td>
+        </tr>
+        <tr>
+          <td>Physical grid switching / control</td>
+          <td><span class="tag-out">Never</span></td>
+          <td>Outside PowerMesh's scope permanently. PowerMesh is the coordination and payment layer.</td>
+        </tr>
+        <tr>
+          <td>Manual delivery confirmation (provider + consumer)</td>
+          <td><span class="tag-in">In</span></td>
+          <td>Simple, auditable, requires no hardware.</td>
+        </tr>
+        <tr>
+          <td>Provider failure + proportional refund flow</td>
+          <td><span class="tag-in">In</span></td>
+          <td>First-class workflow. Consumer trust depends on this from day one.</td>
+        </tr>
+        <tr>
+          <td>Operator dispute resolution</td>
+          <td><span class="tag-in">In</span></td>
+          <td>Required from launch. Cannot operate without a dispute path.</td>
+        </tr>
+        <tr>
+          <td>Audit log on all critical state changes</td>
+          <td><span class="tag-in">In</span></td>
+          <td>Mandatory for enterprise-grade accountability and assignment requirements.</td>
+        </tr>
+        <tr>
+          <td>Soft deletes on all records</td>
+          <td><span class="tag-in">In</span></td>
+          <td>No hard deletes. deletedAt timestamp on all entities. Required by assignment.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- SECTION 13 -->
+  <section class="section">
+    <div class="section-number">Section 13</div>
+    <h2>Phased roadmap</h2>
+
+    <div class="phase-grid">
+      <div class="phase-card phase-p0">
+        <div class="phase-label">Phase 0 — MVP (assignment scope)</div>
+        <h4>Prove the core loop</h4>
+        <ul>
+          <li>Provider registration and resource verification</li>
+          <li>Standing and event-specific capacity offers</li>
+          <li>Service zone physical compatibility enforcement</li>
+          <li>Operator-created outage events</li>
+          <li>Consumer capacity requests (zone-validated)</li>
+          <li>Operator-reviewed allocation (5-tier priority)</li>
+          <li>Standard payment gateway (SSLCommerz)</li>
+          <li>Manual delivery confirmation by both parties</li>
+          <li>Provider failure + proportional refund flow</li>
+          <li>Provider reliability incident tracking</li>
+          <li>Audit logs on all critical actions</li>
+          <li>28-endpoint REST API with Postman docs</li>
+          <li>Redis caching + rate limiting</li>
+          <li>GCP OAuth2 + JWT auth</li>
+        </ul>
+      </div>
+
+      <div class="phase-card phase-p1">
+        <div class="phase-label">Phase 1 — Expand (90–180 days)</div>
+        <h4>Less manual, more zones</h4>
+        <ul>
+          <li>Automated allocation engine (no operator review)</li>
+          <li>Pre-funded consumer wallet (bKash)</li>
+          <li>Provider reliability score algorithm</li>
+          <li>Multiple service zone onboarding</li>
+          <li>BPDB/REB schedule import (CSV → polling API)</li>
+          <li>Consumer rating system for providers</li>
+          <li>Mobile-optimized API + PWA</li>
+          <li>SMS notifications (SSL Wireless)</li>
+          <li>Self-serve consumer onboarding</li>
+        </ul>
+      </div>
+
+      <div class="phase-card phase-p2">
+        <div class="phase-label">Phase 2 — Platform (180+ days)</div>
+        <h4>Intelligence and scale</h4>
+        <ul>
+          <li>ML outage prediction (trained on BPDB historical data)</li>
+          <li>AI-assisted provider reliability scoring</li>
+          <li>IoT / smart meter delivery monitoring</li>
+          <li>Dynamic pricing engine</li>
+          <li>Provider tier system (penalties, incentives)</li>
+          <li>B2B API for enterprise consumers</li>
+          <li>Multi-tenant zone operators (franchised)</li>
+          <li>BERC compliance reporting module</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 14 -->
+  <section class="section">
+    <div class="section-number">Section 14</div>
+    <h2>Key risks and mitigations</h2>
+
+    <div style="background: var(--surface); border: 0.5px solid var(--border); border-radius: 10px; padding: 1.25rem; margin: 1rem 0;">
+      <div class="risk-row header">
+        <div>Risk</div>
+        <div>Severity</div>
+        <div>Mitigation</div>
+      </div>
+      <div class="risk-row">
+        <div>No genuine spare capacity on the supply side</div>
+        <div><span class="risk-high">High</span></div>
+        <div>Validate with 5–10 provider conversations before building. If surplus doesn't exist at meaningful scale, the model needs rethinking first.</div>
+      </div>
+      <div class="risk-row">
+        <div>BERC regulatory challenge</div>
+        <div><span class="risk-high">High</span></div>
+        <div>Engage a local energy lawyer before launch. Frame platform consistently as coordination and payment layer, not electricity resale.</div>
+      </div>
+      <div class="risk-row">
+        <div>Provider no-show before delivery window</div>
+        <div><span class="risk-high">High</span></div>
+        <div>Mandatory pre-delivery check-in 30 minutes before window. Automatic consumer alert if check-in is missed. Operator can attempt emergency reallocation.</div>
+      </div>
+      <div class="risk-row">
+        <div>Race condition on concurrent reservation creation</div>
+        <div><span class="risk-high">High</span></div>
+        <div>All reservation creation runs inside a Prisma transaction with row-level locking on the capacity offer. No over-allocation possible.</div>
+      </div>
+      <div class="risk-row">
+        <div>Duplicate payment charge on gateway retry</div>
+        <div><span class="risk-med">Medium</span></div>
+        <div>All payment initiations use idempotency keys. Webhook handler checks payment status before processing — duplicate webhooks are no-ops.</div>
+      </div>
+      <div class="risk-row">
+        <div>Outage schedule inaccuracy</div>
+        <div><span class="risk-med">Medium</span></div>
+        <div>No-outage void policy: full refund if grid stayed on. Communicated clearly in consumer terms before first transaction.</div>
+      </div>
+      <div class="risk-row">
+        <div>Low consumer adoption (IPS/UPS is "good enough")</div>
+        <div><span class="risk-med">Medium</span></div>
+        <div>Target consumers whose IPS/UPS cannot cover full load: hospitals with high equipment draw, factories with precision processes.</div>
+      </div>
+      <div class="risk-row">
+        <div>Wrong service zone assignment leading to undeliverable reservation</div>
+        <div><span class="risk-med">Medium</span></div>
+        <div>Operator-verified zone assignment during resource onboarding. Zone cannot be self-assigned. Delivery disputes trigger zone review.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 15 -->
+  <section class="section">
+    <div class="section-number">Section 15</div>
+    <h2>PowerMesh in one paragraph</h2>
+
+    <blockquote style="font-size: 1.05rem; border-left: 3px solid var(--text-primary); color: var(--text-primary);">
+      PowerMesh is a marketplace where verified energy providers — operators of generators, batteries, solar+BESS systems, microgrids, or any backup energy resource — create time-bound capacity offers, and organizations that need temporary electricity continuity during load shedding request that capacity. Physical compatibility is a hard requirement: providers and consumers must share the same operator-verified service zone. Outage events create the marketplace context; they do not create supply — supply comes from standing and event-specific provider offers. Allocation is deterministic, criticality-based, and operator-reviewed. Consumers pay via a standard payment gateway with idempotency. Delivery is confirmed manually by both parties. Provider failure triggers a full consumer refund and a recorded incident. The MVP is a 28-endpoint REST API built on Node.js, TypeScript, Express, PostgreSQL, Prisma, and Redis — enterprise-grade from the first commit, and designed to support AI-powered features as the data accumulates.
+    </blockquote>
+  </section>
+
+  <footer class="doc-footer">
+    <span>PowerMesh — Business Model & MVP Specification v1.1 Final</span>
+    <span>Assignment: B7A6 · Load Shedding & Power Management ⚡</span>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -54,7 +54,7 @@ app.get("/test", async (req: Request, res: Response) => {
 app.get("/", async (req: Request, res: Response) => {
 	res.status(httpStatus.OK).json({
 		success: true,
-		message: "Welcome to PH Healthcare System Backend",
+		message: "Welcome to power-mesh Backend",
 	});
 });
 

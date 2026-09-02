@@ -28,6 +28,14 @@ export const UserStatus = {
 export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
 
 
+export const AuthProvider = {
+  GOOGLE: 'GOOGLE',
+  CREDENTIAL: 'CREDENTIAL'
+} as const
+
+export type AuthProvider = (typeof AuthProvider)[keyof typeof AuthProvider]
+
+
 export const ResourceType = {
   GENERATOR: 'GENERATOR',
   SOLAR_BESS: 'SOLAR_BESS',

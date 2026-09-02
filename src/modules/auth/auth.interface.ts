@@ -21,3 +21,6 @@ export interface IVerifyConsumerPayload {
   email: string;
   otp: string;
 }
+export interface IGoogleLoginPayload {
+	idToken: string;
+}

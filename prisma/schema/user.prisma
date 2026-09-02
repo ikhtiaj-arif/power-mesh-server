@@ -1,22 +1,23 @@
 model User {
-  id        String   @id @default(uuid())
-  email     String
-  firstName String
-  lastName  String
-  password  String?
-  googleId  String?  @unique
-  role      UserRole @default(CONSUMER)
+  id           String       @id @default(uuid())
+  email        String       @unique
+  firstName    String
+  lastName     String
+  password     String?
+  googleId     String?      @unique
+  authProvider AuthProvider @default(CREDENTIAL)
+  role         UserRole     @default(CONSUMER)
 
-  emailVerified      Boolean   @default(false)
-  isActive           Boolean   @default(true)
-  imageUrl           String?   @default("")
-  image_public_id    String?   @default("")
-  needPasswordChange Boolean   @default(false)
-  isDeleted          Boolean   @default(false)
+  emailVerified      Boolean    @default(false)
+  isActive           Boolean    @default(true)
+  imageUrl           String?    @default("")
+  image_public_id    String?    @default("")
+  needPasswordChange Boolean    @default(false)
+  isDeleted          Boolean    @default(false)
   deletedAt          DateTime?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-  status             UserStatus   @default(ACTIVE)
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  status             UserStatus @default(ACTIVE)
 
   // Relations
   provider  Provider?
@@ -24,8 +25,6 @@ model User {
   operator  Operator?
   auditLogs AuditLog[]
 
-  @@unique([email])
-  @@index([email])
   @@index([createdAt])
   @@index([deletedAt])
   @@map("users")

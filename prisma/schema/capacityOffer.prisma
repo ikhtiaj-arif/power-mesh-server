@@ -1,0 +1,27 @@
+model CapacityOffer {
+  id            String      @id @default(cuid())
+  providerId    String
+  zoneId        String
+  eventId       String? // NULL = standing offer
+  capacityKw    Int
+  pricePerKwh   Decimal     @db.Decimal(10, 4)
+  deliveryStart DateTime
+  deliveryEnd   DateTime
+  reservedKw    Int         @default(0)
+  status        OfferStatus @default(AVAILABLE)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  deletedAt     DateTime?
+
+  // Relations
+  provider     Provider      @relation(fields: [providerId], references: [id], onDelete: Restrict)
+  zone         ServiceZone   @relation(fields: [zoneId], references: [id], onDelete: Restrict)
+  event        OutageEvent?  @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  reservations Reservation[]
+
+  @@unique([providerId, eventId, deliveryStart, deliveryEnd])
+  @@index([zoneId, status])
+  @@index([eventId, status])
+  @@index([deliveryStart, deliveryEnd])
+  @@map("capacity_offers")
+}

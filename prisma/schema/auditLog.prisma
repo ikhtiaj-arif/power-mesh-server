@@ -1,0 +1,21 @@
+model AuditLog {
+  id         String      @id @default(cuid())
+  userId     String?
+  entityType String // "user" | "provider" | "consumer" | "reservation" | etc.
+  entityId   String
+  action     AuditAction
+  oldValues  Json?
+  newValues  Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime    @default(now())
+
+  // Relations
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}

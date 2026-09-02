@@ -1,0 +1,19 @@
+model Operator {
+  id        String    @id @default(cuid())
+  userId    String    @unique
+  zoneId    String
+  roleLevel String // "zone_manager" | "dispatcher" | "admin"
+  isAdmin   Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  // Relations
+  user         User          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  zone         ServiceZone   @relation(fields: [zoneId], references: [id], onDelete: Restrict)
+  outageEvents OutageEvent[]
+
+  @@unique([userId, zoneId])
+  @@index([zoneId])
+  @@map("operators")
+}

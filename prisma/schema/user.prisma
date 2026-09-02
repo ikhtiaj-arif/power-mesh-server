@@ -5,7 +5,7 @@ model User {
   lastName  String
   password  String?
   googleId  String?  @unique
-  role      UserRole
+  role      UserRole @default(CONSUMER)
 
   emailVerified      Boolean   @default(false)
   isActive           Boolean   @default(true)
@@ -16,6 +16,7 @@ model User {
   deletedAt          DateTime?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
+  status             UserStatus   @default(ACTIVE)
 
   // Relations
   provider  Provider?

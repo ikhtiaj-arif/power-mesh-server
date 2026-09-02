@@ -27,7 +27,6 @@ export type AggregateOperator = {
 export type OperatorMinAggregateOutputType = {
   id: string | null
   userId: string | null
-  zoneId: string | null
   roleLevel: string | null
   isAdmin: boolean | null
   createdAt: Date | null
@@ -38,7 +37,6 @@ export type OperatorMinAggregateOutputType = {
 export type OperatorMaxAggregateOutputType = {
   id: string | null
   userId: string | null
-  zoneId: string | null
   roleLevel: string | null
   isAdmin: boolean | null
   createdAt: Date | null
@@ -49,7 +47,6 @@ export type OperatorMaxAggregateOutputType = {
 export type OperatorCountAggregateOutputType = {
   id: number
   userId: number
-  zoneId: number
   roleLevel: number
   isAdmin: number
   createdAt: number
@@ -62,7 +59,6 @@ export type OperatorCountAggregateOutputType = {
 export type OperatorMinAggregateInputType = {
   id?: true
   userId?: true
-  zoneId?: true
   roleLevel?: true
   isAdmin?: true
   createdAt?: true
@@ -73,7 +69,6 @@ export type OperatorMinAggregateInputType = {
 export type OperatorMaxAggregateInputType = {
   id?: true
   userId?: true
-  zoneId?: true
   roleLevel?: true
   isAdmin?: true
   createdAt?: true
@@ -84,7 +79,6 @@ export type OperatorMaxAggregateInputType = {
 export type OperatorCountAggregateInputType = {
   id?: true
   userId?: true
-  zoneId?: true
   roleLevel?: true
   isAdmin?: true
   createdAt?: true
@@ -168,7 +162,6 @@ export type OperatorGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 export type OperatorGroupByOutputType = {
   id: string
   userId: string
-  zoneId: string
   roleLevel: string
   isAdmin: boolean
   createdAt: Date
@@ -200,53 +193,45 @@ export type OperatorWhereInput = {
   NOT?: Prisma.OperatorWhereInput | Prisma.OperatorWhereInput[]
   id?: Prisma.StringFilter<"Operator"> | string
   userId?: Prisma.StringFilter<"Operator"> | string
-  zoneId?: Prisma.StringFilter<"Operator"> | string
   roleLevel?: Prisma.StringFilter<"Operator"> | string
   isAdmin?: Prisma.BoolFilter<"Operator"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Operator"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Operator"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Operator"> | Date | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  zone?: Prisma.XOR<Prisma.ServiceZoneScalarRelationFilter, Prisma.ServiceZoneWhereInput>
   outageEvents?: Prisma.OutageEventListRelationFilter
 }
 
 export type OperatorOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   roleLevel?: Prisma.SortOrder
   isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
-  zone?: Prisma.ServiceZoneOrderByWithRelationInput
   outageEvents?: Prisma.OutageEventOrderByRelationAggregateInput
 }
 
 export type OperatorWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   userId?: string
-  userId_zoneId?: Prisma.OperatorUserIdZoneIdCompoundUniqueInput
   AND?: Prisma.OperatorWhereInput | Prisma.OperatorWhereInput[]
   OR?: Prisma.OperatorWhereInput[]
   NOT?: Prisma.OperatorWhereInput | Prisma.OperatorWhereInput[]
-  zoneId?: Prisma.StringFilter<"Operator"> | string
   roleLevel?: Prisma.StringFilter<"Operator"> | string
   isAdmin?: Prisma.BoolFilter<"Operator"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Operator"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Operator"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Operator"> | Date | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  zone?: Prisma.XOR<Prisma.ServiceZoneScalarRelationFilter, Prisma.ServiceZoneWhereInput>
   outageEvents?: Prisma.OutageEventListRelationFilter
-}, "id" | "userId" | "userId_zoneId">
+}, "id" | "userId">
 
 export type OperatorOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   roleLevel?: Prisma.SortOrder
   isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -263,7 +248,6 @@ export type OperatorScalarWhereWithAggregatesInput = {
   NOT?: Prisma.OperatorScalarWhereWithAggregatesInput | Prisma.OperatorScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Operator"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Operator"> | string
-  zoneId?: Prisma.StringWithAggregatesFilter<"Operator"> | string
   roleLevel?: Prisma.StringWithAggregatesFilter<"Operator"> | string
   isAdmin?: Prisma.BoolWithAggregatesFilter<"Operator"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Operator"> | Date | string
@@ -273,21 +257,19 @@ export type OperatorScalarWhereWithAggregatesInput = {
 
 export type OperatorCreateInput = {
   id?: string
-  roleLevel: string
+  roleLevel?: string
   isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   user: Prisma.UserCreateNestedOneWithoutOperatorInput
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutOperatorsInput
   outageEvents?: Prisma.OutageEventCreateNestedManyWithoutOperatorInput
 }
 
 export type OperatorUncheckedCreateInput = {
   id?: string
   userId: string
-  zoneId: string
-  roleLevel: string
+  roleLevel?: string
   isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -303,14 +285,12 @@ export type OperatorUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutOperatorNestedInput
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutOperatorsNestedInput
   outageEvents?: Prisma.OutageEventUpdateManyWithoutOperatorNestedInput
 }
 
 export type OperatorUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   roleLevel?: Prisma.StringFieldUpdateOperationsInput | string
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -322,8 +302,7 @@ export type OperatorUncheckedUpdateInput = {
 export type OperatorCreateManyInput = {
   id?: string
   userId: string
-  zoneId: string
-  roleLevel: string
+  roleLevel?: string
   isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -342,7 +321,6 @@ export type OperatorUpdateManyMutationInput = {
 export type OperatorUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   roleLevel?: Prisma.StringFieldUpdateOperationsInput | string
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -350,15 +328,9 @@ export type OperatorUncheckedUpdateManyInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
-export type OperatorUserIdZoneIdCompoundUniqueInput = {
-  userId: string
-  zoneId: string
-}
-
 export type OperatorCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   roleLevel?: Prisma.SortOrder
   isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -369,7 +341,6 @@ export type OperatorCountOrderByAggregateInput = {
 export type OperatorMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   roleLevel?: Prisma.SortOrder
   isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -380,7 +351,6 @@ export type OperatorMaxOrderByAggregateInput = {
 export type OperatorMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   roleLevel?: Prisma.SortOrder
   isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -391,16 +361,6 @@ export type OperatorMinOrderByAggregateInput = {
 export type OperatorScalarRelationFilter = {
   is?: Prisma.OperatorWhereInput
   isNot?: Prisma.OperatorWhereInput
-}
-
-export type OperatorListRelationFilter = {
-  every?: Prisma.OperatorWhereInput
-  some?: Prisma.OperatorWhereInput
-  none?: Prisma.OperatorWhereInput
-}
-
-export type OperatorOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
 }
 
 export type OperatorNullableScalarRelationFilter = {
@@ -424,48 +384,6 @@ export type OperatorUpdateOneRequiredWithoutOutageEventsNestedInput = {
   upsert?: Prisma.OperatorUpsertWithoutOutageEventsInput
   connect?: Prisma.OperatorWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.OperatorUpdateToOneWithWhereWithoutOutageEventsInput, Prisma.OperatorUpdateWithoutOutageEventsInput>, Prisma.OperatorUncheckedUpdateWithoutOutageEventsInput>
-}
-
-export type OperatorCreateNestedManyWithoutZoneInput = {
-  create?: Prisma.XOR<Prisma.OperatorCreateWithoutZoneInput, Prisma.OperatorUncheckedCreateWithoutZoneInput> | Prisma.OperatorCreateWithoutZoneInput[] | Prisma.OperatorUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.OperatorCreateOrConnectWithoutZoneInput | Prisma.OperatorCreateOrConnectWithoutZoneInput[]
-  createMany?: Prisma.OperatorCreateManyZoneInputEnvelope
-  connect?: Prisma.OperatorWhereUniqueInput | Prisma.OperatorWhereUniqueInput[]
-}
-
-export type OperatorUncheckedCreateNestedManyWithoutZoneInput = {
-  create?: Prisma.XOR<Prisma.OperatorCreateWithoutZoneInput, Prisma.OperatorUncheckedCreateWithoutZoneInput> | Prisma.OperatorCreateWithoutZoneInput[] | Prisma.OperatorUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.OperatorCreateOrConnectWithoutZoneInput | Prisma.OperatorCreateOrConnectWithoutZoneInput[]
-  createMany?: Prisma.OperatorCreateManyZoneInputEnvelope
-  connect?: Prisma.OperatorWhereUniqueInput | Prisma.OperatorWhereUniqueInput[]
-}
-
-export type OperatorUpdateManyWithoutZoneNestedInput = {
-  create?: Prisma.XOR<Prisma.OperatorCreateWithoutZoneInput, Prisma.OperatorUncheckedCreateWithoutZoneInput> | Prisma.OperatorCreateWithoutZoneInput[] | Prisma.OperatorUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.OperatorCreateOrConnectWithoutZoneInput | Prisma.OperatorCreateOrConnectWithoutZoneInput[]
-  upsert?: Prisma.OperatorUpsertWithWhereUniqueWithoutZoneInput | Prisma.OperatorUpsertWithWhereUniqueWithoutZoneInput[]
-  createMany?: Prisma.OperatorCreateManyZoneInputEnvelope
-  set?: Prisma.OperatorWhereUniqueInput | Prisma.OperatorWhereUniqueInput[]
-  disconnect?: Prisma.OperatorWhereUniqueInput | Prisma.OperatorWhereUniqueInput[]
-  delete?: Prisma.OperatorWhereUniqueInput | Prisma.OperatorWhereUniqueInput[]
-  connect?: Prisma.OperatorWhereUniqueInput | Prisma.OperatorWhereUniqueInput[]
-  update?: Prisma.OperatorUpdateWithWhereUniqueWithoutZoneInput | Prisma.OperatorUpdateWithWhereUniqueWithoutZoneInput[]
-  updateMany?: Prisma.OperatorUpdateManyWithWhereWithoutZoneInput | Prisma.OperatorUpdateManyWithWhereWithoutZoneInput[]
-  deleteMany?: Prisma.OperatorScalarWhereInput | Prisma.OperatorScalarWhereInput[]
-}
-
-export type OperatorUncheckedUpdateManyWithoutZoneNestedInput = {
-  create?: Prisma.XOR<Prisma.OperatorCreateWithoutZoneInput, Prisma.OperatorUncheckedCreateWithoutZoneInput> | Prisma.OperatorCreateWithoutZoneInput[] | Prisma.OperatorUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.OperatorCreateOrConnectWithoutZoneInput | Prisma.OperatorCreateOrConnectWithoutZoneInput[]
-  upsert?: Prisma.OperatorUpsertWithWhereUniqueWithoutZoneInput | Prisma.OperatorUpsertWithWhereUniqueWithoutZoneInput[]
-  createMany?: Prisma.OperatorCreateManyZoneInputEnvelope
-  set?: Prisma.OperatorWhereUniqueInput | Prisma.OperatorWhereUniqueInput[]
-  disconnect?: Prisma.OperatorWhereUniqueInput | Prisma.OperatorWhereUniqueInput[]
-  delete?: Prisma.OperatorWhereUniqueInput | Prisma.OperatorWhereUniqueInput[]
-  connect?: Prisma.OperatorWhereUniqueInput | Prisma.OperatorWhereUniqueInput[]
-  update?: Prisma.OperatorUpdateWithWhereUniqueWithoutZoneInput | Prisma.OperatorUpdateWithWhereUniqueWithoutZoneInput[]
-  updateMany?: Prisma.OperatorUpdateManyWithWhereWithoutZoneInput | Prisma.OperatorUpdateManyWithWhereWithoutZoneInput[]
-  deleteMany?: Prisma.OperatorScalarWhereInput | Prisma.OperatorScalarWhereInput[]
 }
 
 export type OperatorCreateNestedOneWithoutUserInput = {
@@ -502,20 +420,18 @@ export type OperatorUncheckedUpdateOneWithoutUserNestedInput = {
 
 export type OperatorCreateWithoutOutageEventsInput = {
   id?: string
-  roleLevel: string
+  roleLevel?: string
   isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   user: Prisma.UserCreateNestedOneWithoutOperatorInput
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutOperatorsInput
 }
 
 export type OperatorUncheckedCreateWithoutOutageEventsInput = {
   id?: string
   userId: string
-  zoneId: string
-  roleLevel: string
+  roleLevel?: string
   isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -546,13 +462,11 @@ export type OperatorUpdateWithoutOutageEventsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutOperatorNestedInput
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutOperatorsNestedInput
 }
 
 export type OperatorUncheckedUpdateWithoutOutageEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   roleLevel?: Prisma.StringFieldUpdateOperationsInput | string
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -560,83 +474,19 @@ export type OperatorUncheckedUpdateWithoutOutageEventsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
-export type OperatorCreateWithoutZoneInput = {
-  id?: string
-  roleLevel: string
-  isAdmin?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  user: Prisma.UserCreateNestedOneWithoutOperatorInput
-  outageEvents?: Prisma.OutageEventCreateNestedManyWithoutOperatorInput
-}
-
-export type OperatorUncheckedCreateWithoutZoneInput = {
-  id?: string
-  userId: string
-  roleLevel: string
-  isAdmin?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  outageEvents?: Prisma.OutageEventUncheckedCreateNestedManyWithoutOperatorInput
-}
-
-export type OperatorCreateOrConnectWithoutZoneInput = {
-  where: Prisma.OperatorWhereUniqueInput
-  create: Prisma.XOR<Prisma.OperatorCreateWithoutZoneInput, Prisma.OperatorUncheckedCreateWithoutZoneInput>
-}
-
-export type OperatorCreateManyZoneInputEnvelope = {
-  data: Prisma.OperatorCreateManyZoneInput | Prisma.OperatorCreateManyZoneInput[]
-  skipDuplicates?: boolean
-}
-
-export type OperatorUpsertWithWhereUniqueWithoutZoneInput = {
-  where: Prisma.OperatorWhereUniqueInput
-  update: Prisma.XOR<Prisma.OperatorUpdateWithoutZoneInput, Prisma.OperatorUncheckedUpdateWithoutZoneInput>
-  create: Prisma.XOR<Prisma.OperatorCreateWithoutZoneInput, Prisma.OperatorUncheckedCreateWithoutZoneInput>
-}
-
-export type OperatorUpdateWithWhereUniqueWithoutZoneInput = {
-  where: Prisma.OperatorWhereUniqueInput
-  data: Prisma.XOR<Prisma.OperatorUpdateWithoutZoneInput, Prisma.OperatorUncheckedUpdateWithoutZoneInput>
-}
-
-export type OperatorUpdateManyWithWhereWithoutZoneInput = {
-  where: Prisma.OperatorScalarWhereInput
-  data: Prisma.XOR<Prisma.OperatorUpdateManyMutationInput, Prisma.OperatorUncheckedUpdateManyWithoutZoneInput>
-}
-
-export type OperatorScalarWhereInput = {
-  AND?: Prisma.OperatorScalarWhereInput | Prisma.OperatorScalarWhereInput[]
-  OR?: Prisma.OperatorScalarWhereInput[]
-  NOT?: Prisma.OperatorScalarWhereInput | Prisma.OperatorScalarWhereInput[]
-  id?: Prisma.StringFilter<"Operator"> | string
-  userId?: Prisma.StringFilter<"Operator"> | string
-  zoneId?: Prisma.StringFilter<"Operator"> | string
-  roleLevel?: Prisma.StringFilter<"Operator"> | string
-  isAdmin?: Prisma.BoolFilter<"Operator"> | boolean
-  createdAt?: Prisma.DateTimeFilter<"Operator"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Operator"> | Date | string
-  deletedAt?: Prisma.DateTimeNullableFilter<"Operator"> | Date | string | null
-}
-
 export type OperatorCreateWithoutUserInput = {
   id?: string
-  roleLevel: string
+  roleLevel?: string
   isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutOperatorsInput
   outageEvents?: Prisma.OutageEventCreateNestedManyWithoutOperatorInput
 }
 
 export type OperatorUncheckedCreateWithoutUserInput = {
   id?: string
-  zoneId: string
-  roleLevel: string
+  roleLevel?: string
   isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -667,61 +517,17 @@ export type OperatorUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutOperatorsNestedInput
   outageEvents?: Prisma.OutageEventUpdateManyWithoutOperatorNestedInput
 }
 
 export type OperatorUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   roleLevel?: Prisma.StringFieldUpdateOperationsInput | string
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   outageEvents?: Prisma.OutageEventUncheckedUpdateManyWithoutOperatorNestedInput
-}
-
-export type OperatorCreateManyZoneInput = {
-  id?: string
-  userId: string
-  roleLevel: string
-  isAdmin?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-}
-
-export type OperatorUpdateWithoutZoneInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  roleLevel?: Prisma.StringFieldUpdateOperationsInput | string
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  user?: Prisma.UserUpdateOneRequiredWithoutOperatorNestedInput
-  outageEvents?: Prisma.OutageEventUpdateManyWithoutOperatorNestedInput
-}
-
-export type OperatorUncheckedUpdateWithoutZoneInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  roleLevel?: Prisma.StringFieldUpdateOperationsInput | string
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  outageEvents?: Prisma.OutageEventUncheckedUpdateManyWithoutOperatorNestedInput
-}
-
-export type OperatorUncheckedUpdateManyWithoutZoneInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  roleLevel?: Prisma.StringFieldUpdateOperationsInput | string
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -758,14 +564,12 @@ export type OperatorCountOutputTypeCountOutageEventsArgs<ExtArgs extends runtime
 export type OperatorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  zoneId?: boolean
   roleLevel?: boolean
   isAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
   outageEvents?: boolean | Prisma.Operator$outageEventsArgs<ExtArgs>
   _count?: boolean | Prisma.OperatorCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["operator"]>
@@ -773,33 +577,28 @@ export type OperatorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type OperatorSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  zoneId?: boolean
   roleLevel?: boolean
   isAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["operator"]>
 
 export type OperatorSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  zoneId?: boolean
   roleLevel?: boolean
   isAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["operator"]>
 
 export type OperatorSelectScalar = {
   id?: boolean
   userId?: boolean
-  zoneId?: boolean
   roleLevel?: boolean
   isAdmin?: boolean
   createdAt?: boolean
@@ -807,33 +606,28 @@ export type OperatorSelectScalar = {
   deletedAt?: boolean
 }
 
-export type OperatorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "zoneId" | "roleLevel" | "isAdmin" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["operator"]>
+export type OperatorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "roleLevel" | "isAdmin" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["operator"]>
 export type OperatorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
   outageEvents?: boolean | Prisma.Operator$outageEventsArgs<ExtArgs>
   _count?: boolean | Prisma.OperatorCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OperatorIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
 }
 export type OperatorIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
 }
 
 export type $OperatorPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Operator"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
-    zone: Prisma.$ServiceZonePayload<ExtArgs>
     outageEvents: Prisma.$OutageEventPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
-    zoneId: string
     roleLevel: string
     isAdmin: boolean
     createdAt: Date
@@ -1234,7 +1028,6 @@ readonly fields: OperatorFieldRefs;
 export interface Prisma__OperatorClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  zone<T extends Prisma.ServiceZoneDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ServiceZoneDefaultArgs<ExtArgs>>): Prisma.Prisma__ServiceZoneClient<runtime.Types.Result.GetResult<Prisma.$ServiceZonePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   outageEvents<T extends Prisma.Operator$outageEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Operator$outageEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OutageEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1267,7 +1060,6 @@ export interface Prisma__OperatorClient<T, Null = never, ExtArgs extends runtime
 export interface OperatorFieldRefs {
   readonly id: Prisma.FieldRef<"Operator", 'String'>
   readonly userId: Prisma.FieldRef<"Operator", 'String'>
-  readonly zoneId: Prisma.FieldRef<"Operator", 'String'>
   readonly roleLevel: Prisma.FieldRef<"Operator", 'String'>
   readonly isAdmin: Prisma.FieldRef<"Operator", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Operator", 'DateTime'>

@@ -31,7 +31,7 @@ export type IncidentMinAggregateOutputType = {
   incidentType: $Enums.IncidentType | null
   description: string | null
   occurredAt: Date | null
-  status: string | null
+  status: $Enums.IncidentStatus | null
   resolution: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -45,7 +45,7 @@ export type IncidentMaxAggregateOutputType = {
   incidentType: $Enums.IncidentType | null
   description: string | null
   occurredAt: Date | null
-  status: string | null
+  status: $Enums.IncidentStatus | null
   resolution: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -190,7 +190,7 @@ export type IncidentGroupByOutputType = {
   incidentType: $Enums.IncidentType
   description: string
   occurredAt: Date
-  status: string
+  status: $Enums.IncidentStatus
   resolution: string | null
   createdAt: Date
   updatedAt: Date
@@ -225,7 +225,7 @@ export type IncidentWhereInput = {
   incidentType?: Prisma.EnumIncidentTypeFilter<"Incident"> | $Enums.IncidentType
   description?: Prisma.StringFilter<"Incident"> | string
   occurredAt?: Prisma.DateTimeFilter<"Incident"> | Date | string
-  status?: Prisma.StringFilter<"Incident"> | string
+  status?: Prisma.EnumIncidentStatusFilter<"Incident"> | $Enums.IncidentStatus
   resolution?: Prisma.StringNullableFilter<"Incident"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Incident"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Incident"> | Date | string
@@ -260,7 +260,7 @@ export type IncidentWhereUniqueInput = Prisma.AtLeast<{
   incidentType?: Prisma.EnumIncidentTypeFilter<"Incident"> | $Enums.IncidentType
   description?: Prisma.StringFilter<"Incident"> | string
   occurredAt?: Prisma.DateTimeFilter<"Incident"> | Date | string
-  status?: Prisma.StringFilter<"Incident"> | string
+  status?: Prisma.EnumIncidentStatusFilter<"Incident"> | $Enums.IncidentStatus
   resolution?: Prisma.StringNullableFilter<"Incident"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Incident"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Incident"> | Date | string
@@ -296,7 +296,7 @@ export type IncidentScalarWhereWithAggregatesInput = {
   incidentType?: Prisma.EnumIncidentTypeWithAggregatesFilter<"Incident"> | $Enums.IncidentType
   description?: Prisma.StringWithAggregatesFilter<"Incident"> | string
   occurredAt?: Prisma.DateTimeWithAggregatesFilter<"Incident"> | Date | string
-  status?: Prisma.StringWithAggregatesFilter<"Incident"> | string
+  status?: Prisma.EnumIncidentStatusWithAggregatesFilter<"Incident"> | $Enums.IncidentStatus
   resolution?: Prisma.StringNullableWithAggregatesFilter<"Incident"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Incident"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Incident"> | Date | string
@@ -308,7 +308,7 @@ export type IncidentCreateInput = {
   incidentType: $Enums.IncidentType
   description: string
   occurredAt: Date | string
-  status?: string
+  status?: $Enums.IncidentStatus
   resolution?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -324,7 +324,7 @@ export type IncidentUncheckedCreateInput = {
   incidentType: $Enums.IncidentType
   description: string
   occurredAt: Date | string
-  status?: string
+  status?: $Enums.IncidentStatus
   resolution?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -336,7 +336,7 @@ export type IncidentUpdateInput = {
   incidentType?: Prisma.EnumIncidentTypeFieldUpdateOperationsInput | $Enums.IncidentType
   description?: Prisma.StringFieldUpdateOperationsInput | string
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -352,7 +352,7 @@ export type IncidentUncheckedUpdateInput = {
   incidentType?: Prisma.EnumIncidentTypeFieldUpdateOperationsInput | $Enums.IncidentType
   description?: Prisma.StringFieldUpdateOperationsInput | string
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -366,7 +366,7 @@ export type IncidentCreateManyInput = {
   incidentType: $Enums.IncidentType
   description: string
   occurredAt: Date | string
-  status?: string
+  status?: $Enums.IncidentStatus
   resolution?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -378,7 +378,7 @@ export type IncidentUpdateManyMutationInput = {
   incidentType?: Prisma.EnumIncidentTypeFieldUpdateOperationsInput | $Enums.IncidentType
   description?: Prisma.StringFieldUpdateOperationsInput | string
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -392,7 +392,7 @@ export type IncidentUncheckedUpdateManyInput = {
   incidentType?: Prisma.EnumIncidentTypeFieldUpdateOperationsInput | $Enums.IncidentType
   description?: Prisma.StringFieldUpdateOperationsInput | string
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -453,6 +453,10 @@ export type IncidentOrderByRelationAggregateInput = {
 
 export type EnumIncidentTypeFieldUpdateOperationsInput = {
   set?: $Enums.IncidentType
+}
+
+export type EnumIncidentStatusFieldUpdateOperationsInput = {
+  set?: $Enums.IncidentStatus
 }
 
 export type IncidentCreateNestedManyWithoutProviderInput = {
@@ -544,7 +548,7 @@ export type IncidentCreateWithoutProviderInput = {
   incidentType: $Enums.IncidentType
   description: string
   occurredAt: Date | string
-  status?: string
+  status?: $Enums.IncidentStatus
   resolution?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -558,7 +562,7 @@ export type IncidentUncheckedCreateWithoutProviderInput = {
   incidentType: $Enums.IncidentType
   description: string
   occurredAt: Date | string
-  status?: string
+  status?: $Enums.IncidentStatus
   resolution?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -601,7 +605,7 @@ export type IncidentScalarWhereInput = {
   incidentType?: Prisma.EnumIncidentTypeFilter<"Incident"> | $Enums.IncidentType
   description?: Prisma.StringFilter<"Incident"> | string
   occurredAt?: Prisma.DateTimeFilter<"Incident"> | Date | string
-  status?: Prisma.StringFilter<"Incident"> | string
+  status?: Prisma.EnumIncidentStatusFilter<"Incident"> | $Enums.IncidentStatus
   resolution?: Prisma.StringNullableFilter<"Incident"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Incident"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Incident"> | Date | string
@@ -613,7 +617,7 @@ export type IncidentCreateWithoutReservationInput = {
   incidentType: $Enums.IncidentType
   description: string
   occurredAt: Date | string
-  status?: string
+  status?: $Enums.IncidentStatus
   resolution?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -627,7 +631,7 @@ export type IncidentUncheckedCreateWithoutReservationInput = {
   incidentType: $Enums.IncidentType
   description: string
   occurredAt: Date | string
-  status?: string
+  status?: $Enums.IncidentStatus
   resolution?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -666,7 +670,7 @@ export type IncidentCreateManyProviderInput = {
   incidentType: $Enums.IncidentType
   description: string
   occurredAt: Date | string
-  status?: string
+  status?: $Enums.IncidentStatus
   resolution?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -678,7 +682,7 @@ export type IncidentUpdateWithoutProviderInput = {
   incidentType?: Prisma.EnumIncidentTypeFieldUpdateOperationsInput | $Enums.IncidentType
   description?: Prisma.StringFieldUpdateOperationsInput | string
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -692,7 +696,7 @@ export type IncidentUncheckedUpdateWithoutProviderInput = {
   incidentType?: Prisma.EnumIncidentTypeFieldUpdateOperationsInput | $Enums.IncidentType
   description?: Prisma.StringFieldUpdateOperationsInput | string
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -705,7 +709,7 @@ export type IncidentUncheckedUpdateManyWithoutProviderInput = {
   incidentType?: Prisma.EnumIncidentTypeFieldUpdateOperationsInput | $Enums.IncidentType
   description?: Prisma.StringFieldUpdateOperationsInput | string
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -718,7 +722,7 @@ export type IncidentCreateManyReservationInput = {
   incidentType: $Enums.IncidentType
   description: string
   occurredAt: Date | string
-  status?: string
+  status?: $Enums.IncidentStatus
   resolution?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -730,7 +734,7 @@ export type IncidentUpdateWithoutReservationInput = {
   incidentType?: Prisma.EnumIncidentTypeFieldUpdateOperationsInput | $Enums.IncidentType
   description?: Prisma.StringFieldUpdateOperationsInput | string
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -744,7 +748,7 @@ export type IncidentUncheckedUpdateWithoutReservationInput = {
   incidentType?: Prisma.EnumIncidentTypeFieldUpdateOperationsInput | $Enums.IncidentType
   description?: Prisma.StringFieldUpdateOperationsInput | string
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -757,7 +761,7 @@ export type IncidentUncheckedUpdateManyWithoutReservationInput = {
   incidentType?: Prisma.EnumIncidentTypeFieldUpdateOperationsInput | $Enums.IncidentType
   description?: Prisma.StringFieldUpdateOperationsInput | string
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumIncidentStatusFieldUpdateOperationsInput | $Enums.IncidentStatus
   resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -855,7 +859,7 @@ export type $IncidentPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     incidentType: $Enums.IncidentType
     description: string
     occurredAt: Date
-    status: string
+    status: $Enums.IncidentStatus
     resolution: string | null
     createdAt: Date
     updatedAt: Date
@@ -1291,7 +1295,7 @@ export interface IncidentFieldRefs {
   readonly incidentType: Prisma.FieldRef<"Incident", 'IncidentType'>
   readonly description: Prisma.FieldRef<"Incident", 'String'>
   readonly occurredAt: Prisma.FieldRef<"Incident", 'DateTime'>
-  readonly status: Prisma.FieldRef<"Incident", 'String'>
+  readonly status: Prisma.FieldRef<"Incident", 'IncidentStatus'>
   readonly resolution: Prisma.FieldRef<"Incident", 'String'>
   readonly createdAt: Prisma.FieldRef<"Incident", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Incident", 'DateTime'>

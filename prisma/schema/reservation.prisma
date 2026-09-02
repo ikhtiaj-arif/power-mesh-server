@@ -1,33 +1,33 @@
 model Reservation {
-  id                String            @id @default(cuid())
-  offerId           String
-  requestId         String
-  consumerId        String
-  providerId        String
-  allocatedKw       Int
-  unitPrice         Decimal           @db.Decimal(10, 4)
-  totalAmount       Decimal           @db.Decimal(14, 2)
-  status            ReservationStatus @default(ALLOCATED)
-  deliveryStart     DateTime
-  deliveryEnd       DateTime
-  paymentStatus     PaymentStatus     @default(INITIATED)
-  idempotencyKey    String            @unique
-  providerCheckinAt DateTime?
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-  deletedAt         DateTime?
+  id                    String            @id @default(uuid())
+  offerId               String
+  requestId             String
+  consumerId            String
+  providerId            String
+  allocatedKw           Int
+  unitPrice             Decimal           @db.Decimal(10, 4)
+  totalAmount           Decimal           @db.Decimal(14, 2)
+  deliveryStart         DateTime
+  deliveryEnd           DateTime
+  status                ReservationStatus @default(ALLOCATED)
+  paymentStatus         PaymentStatus     @default(INITIATED)
+  idempotencyKey        String            @unique
+  providerCheckinAt     DateTime?
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+  deletedAt             DateTime?
 
-  // Relations
-  offer     CapacityOffer   @relation(fields: [offerId], references: [id], onDelete: Restrict)
-  request   CapacityRequest @relation(fields: [requestId], references: [id], onDelete: Restrict)
-  consumer  Consumer        @relation(fields: [consumerId], references: [id], onDelete: Restrict)
-  provider  Provider        @relation(fields: [providerId], references: [id], onDelete: Restrict)
-  payment   Payment?
-  delivery  Delivery?
-  incidents Incident[]
-  refunds   Refund[]
-  ratings   Rating[]
+  offer                 CapacityOffer     @relation(fields: [offerId], references: [id], onDelete: Restrict)
+  request               CapacityRequest   @relation(fields: [requestId], references: [id], onDelete: Restrict)
+  consumer              Consumer          @relation(fields: [consumerId], references: [id], onDelete: Restrict)
+  provider              Provider          @relation(fields: [providerId], references: [id], onDelete: Restrict)
+  payment               Payment?
+  delivery              Delivery?
+  incidents             Incident[]
+  refunds               Refund[]
+  rating                Rating?
 
+  // Prevent the same request from being allocated to the same offer twice.
   @@unique([offerId, requestId])
   @@index([status])
   @@index([paymentStatus])

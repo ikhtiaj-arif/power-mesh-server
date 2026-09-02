@@ -41,11 +41,9 @@ export type PaymentMinAggregateOutputType = {
   gatewayStatus: $Enums.PaymentStatus | null
   amount: runtime.Decimal | null
   currency: string | null
-  paymentMethod: string | null
   initiatedAt: Date | null
   completedAt: Date | null
   idempotencyKey: string | null
-  webhookStatus: string | null
   webhookReceivedAt: Date | null
   webhookProcessedAt: Date | null
   createdAt: Date | null
@@ -60,11 +58,9 @@ export type PaymentMaxAggregateOutputType = {
   gatewayStatus: $Enums.PaymentStatus | null
   amount: runtime.Decimal | null
   currency: string | null
-  paymentMethod: string | null
   initiatedAt: Date | null
   completedAt: Date | null
   idempotencyKey: string | null
-  webhookStatus: string | null
   webhookReceivedAt: Date | null
   webhookProcessedAt: Date | null
   createdAt: Date | null
@@ -79,11 +75,9 @@ export type PaymentCountAggregateOutputType = {
   gatewayStatus: number
   amount: number
   currency: number
-  paymentMethod: number
   initiatedAt: number
   completedAt: number
   idempotencyKey: number
-  webhookStatus: number
   webhookReceivedAt: number
   webhookProcessedAt: number
   createdAt: number
@@ -108,11 +102,9 @@ export type PaymentMinAggregateInputType = {
   gatewayStatus?: true
   amount?: true
   currency?: true
-  paymentMethod?: true
   initiatedAt?: true
   completedAt?: true
   idempotencyKey?: true
-  webhookStatus?: true
   webhookReceivedAt?: true
   webhookProcessedAt?: true
   createdAt?: true
@@ -127,11 +119,9 @@ export type PaymentMaxAggregateInputType = {
   gatewayStatus?: true
   amount?: true
   currency?: true
-  paymentMethod?: true
   initiatedAt?: true
   completedAt?: true
   idempotencyKey?: true
-  webhookStatus?: true
   webhookReceivedAt?: true
   webhookProcessedAt?: true
   createdAt?: true
@@ -146,11 +136,9 @@ export type PaymentCountAggregateInputType = {
   gatewayStatus?: true
   amount?: true
   currency?: true
-  paymentMethod?: true
   initiatedAt?: true
   completedAt?: true
   idempotencyKey?: true
-  webhookStatus?: true
   webhookReceivedAt?: true
   webhookProcessedAt?: true
   createdAt?: true
@@ -248,15 +236,13 @@ export type PaymentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type PaymentGroupByOutputType = {
   id: string
   reservationId: string
-  gatewayId: string
+  gatewayId: string | null
   gatewayStatus: $Enums.PaymentStatus
   amount: runtime.Decimal
   currency: string
-  paymentMethod: string
   initiatedAt: Date
   completedAt: Date | null
   idempotencyKey: string
-  webhookStatus: string
   webhookReceivedAt: Date | null
   webhookProcessedAt: Date | null
   createdAt: Date
@@ -290,15 +276,13 @@ export type PaymentWhereInput = {
   NOT?: Prisma.PaymentWhereInput | Prisma.PaymentWhereInput[]
   id?: Prisma.StringFilter<"Payment"> | string
   reservationId?: Prisma.StringFilter<"Payment"> | string
-  gatewayId?: Prisma.StringFilter<"Payment"> | string
+  gatewayId?: Prisma.StringNullableFilter<"Payment"> | string | null
   gatewayStatus?: Prisma.EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
   amount?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFilter<"Payment"> | string
-  paymentMethod?: Prisma.StringFilter<"Payment"> | string
   initiatedAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"Payment"> | Date | string | null
   idempotencyKey?: Prisma.StringFilter<"Payment"> | string
-  webhookStatus?: Prisma.StringFilter<"Payment"> | string
   webhookReceivedAt?: Prisma.DateTimeNullableFilter<"Payment"> | Date | string | null
   webhookProcessedAt?: Prisma.DateTimeNullableFilter<"Payment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
@@ -311,15 +295,13 @@ export type PaymentWhereInput = {
 export type PaymentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   reservationId?: Prisma.SortOrder
-  gatewayId?: Prisma.SortOrder
+  gatewayId?: Prisma.SortOrderInput | Prisma.SortOrder
   gatewayStatus?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
-  paymentMethod?: Prisma.SortOrder
   initiatedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
-  webhookStatus?: Prisma.SortOrder
   webhookReceivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   webhookProcessedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -340,10 +322,8 @@ export type PaymentWhereUniqueInput = Prisma.AtLeast<{
   gatewayStatus?: Prisma.EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
   amount?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFilter<"Payment"> | string
-  paymentMethod?: Prisma.StringFilter<"Payment"> | string
   initiatedAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"Payment"> | Date | string | null
-  webhookStatus?: Prisma.StringFilter<"Payment"> | string
   webhookReceivedAt?: Prisma.DateTimeNullableFilter<"Payment"> | Date | string | null
   webhookProcessedAt?: Prisma.DateTimeNullableFilter<"Payment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
@@ -356,15 +336,13 @@ export type PaymentWhereUniqueInput = Prisma.AtLeast<{
 export type PaymentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   reservationId?: Prisma.SortOrder
-  gatewayId?: Prisma.SortOrder
+  gatewayId?: Prisma.SortOrderInput | Prisma.SortOrder
   gatewayStatus?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
-  paymentMethod?: Prisma.SortOrder
   initiatedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
-  webhookStatus?: Prisma.SortOrder
   webhookReceivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   webhookProcessedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -383,15 +361,13 @@ export type PaymentScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PaymentScalarWhereWithAggregatesInput | Prisma.PaymentScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Payment"> | string
   reservationId?: Prisma.StringWithAggregatesFilter<"Payment"> | string
-  gatewayId?: Prisma.StringWithAggregatesFilter<"Payment"> | string
+  gatewayId?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
   gatewayStatus?: Prisma.EnumPaymentStatusWithAggregatesFilter<"Payment"> | $Enums.PaymentStatus
   amount?: Prisma.DecimalWithAggregatesFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringWithAggregatesFilter<"Payment"> | string
-  paymentMethod?: Prisma.StringWithAggregatesFilter<"Payment"> | string
   initiatedAt?: Prisma.DateTimeWithAggregatesFilter<"Payment"> | Date | string
   completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Payment"> | Date | string | null
   idempotencyKey?: Prisma.StringWithAggregatesFilter<"Payment"> | string
-  webhookStatus?: Prisma.StringWithAggregatesFilter<"Payment"> | string
   webhookReceivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Payment"> | Date | string | null
   webhookProcessedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Payment"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Payment"> | Date | string
@@ -401,15 +377,13 @@ export type PaymentScalarWhereWithAggregatesInput = {
 
 export type PaymentCreateInput = {
   id?: string
-  gatewayId: string
+  gatewayId?: string | null
   gatewayStatus?: $Enums.PaymentStatus
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  paymentMethod: string
   initiatedAt?: Date | string
   completedAt?: Date | string | null
   idempotencyKey: string
-  webhookStatus?: string
   webhookReceivedAt?: Date | string | null
   webhookProcessedAt?: Date | string | null
   createdAt?: Date | string
@@ -422,15 +396,13 @@ export type PaymentCreateInput = {
 export type PaymentUncheckedCreateInput = {
   id?: string
   reservationId: string
-  gatewayId: string
+  gatewayId?: string | null
   gatewayStatus?: $Enums.PaymentStatus
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  paymentMethod: string
   initiatedAt?: Date | string
   completedAt?: Date | string | null
   idempotencyKey: string
-  webhookStatus?: string
   webhookReceivedAt?: Date | string | null
   webhookProcessedAt?: Date | string | null
   createdAt?: Date | string
@@ -441,15 +413,13 @@ export type PaymentUncheckedCreateInput = {
 
 export type PaymentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  gatewayId?: Prisma.StringFieldUpdateOperationsInput | string
+  gatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gatewayStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
-  webhookStatus?: Prisma.StringFieldUpdateOperationsInput | string
   webhookReceivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   webhookProcessedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -462,15 +432,13 @@ export type PaymentUpdateInput = {
 export type PaymentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reservationId?: Prisma.StringFieldUpdateOperationsInput | string
-  gatewayId?: Prisma.StringFieldUpdateOperationsInput | string
+  gatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gatewayStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
-  webhookStatus?: Prisma.StringFieldUpdateOperationsInput | string
   webhookReceivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   webhookProcessedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -482,15 +450,13 @@ export type PaymentUncheckedUpdateInput = {
 export type PaymentCreateManyInput = {
   id?: string
   reservationId: string
-  gatewayId: string
+  gatewayId?: string | null
   gatewayStatus?: $Enums.PaymentStatus
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  paymentMethod: string
   initiatedAt?: Date | string
   completedAt?: Date | string | null
   idempotencyKey: string
-  webhookStatus?: string
   webhookReceivedAt?: Date | string | null
   webhookProcessedAt?: Date | string | null
   createdAt?: Date | string
@@ -500,15 +466,13 @@ export type PaymentCreateManyInput = {
 
 export type PaymentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  gatewayId?: Prisma.StringFieldUpdateOperationsInput | string
+  gatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gatewayStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
-  webhookStatus?: Prisma.StringFieldUpdateOperationsInput | string
   webhookReceivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   webhookProcessedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -519,15 +483,13 @@ export type PaymentUpdateManyMutationInput = {
 export type PaymentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reservationId?: Prisma.StringFieldUpdateOperationsInput | string
-  gatewayId?: Prisma.StringFieldUpdateOperationsInput | string
+  gatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gatewayStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
-  webhookStatus?: Prisma.StringFieldUpdateOperationsInput | string
   webhookReceivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   webhookProcessedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -542,11 +504,9 @@ export type PaymentCountOrderByAggregateInput = {
   gatewayStatus?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
-  paymentMethod?: Prisma.SortOrder
   initiatedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
-  webhookStatus?: Prisma.SortOrder
   webhookReceivedAt?: Prisma.SortOrder
   webhookProcessedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -565,11 +525,9 @@ export type PaymentMaxOrderByAggregateInput = {
   gatewayStatus?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
-  paymentMethod?: Prisma.SortOrder
   initiatedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
-  webhookStatus?: Prisma.SortOrder
   webhookReceivedAt?: Prisma.SortOrder
   webhookProcessedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -584,11 +542,9 @@ export type PaymentMinOrderByAggregateInput = {
   gatewayStatus?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
-  paymentMethod?: Prisma.SortOrder
   initiatedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
-  webhookStatus?: Prisma.SortOrder
   webhookReceivedAt?: Prisma.SortOrder
   webhookProcessedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -662,15 +618,13 @@ export type PaymentUncheckedUpdateOneWithoutReservationNestedInput = {
 
 export type PaymentCreateWithoutRefundsInput = {
   id?: string
-  gatewayId: string
+  gatewayId?: string | null
   gatewayStatus?: $Enums.PaymentStatus
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  paymentMethod: string
   initiatedAt?: Date | string
   completedAt?: Date | string | null
   idempotencyKey: string
-  webhookStatus?: string
   webhookReceivedAt?: Date | string | null
   webhookProcessedAt?: Date | string | null
   createdAt?: Date | string
@@ -682,15 +636,13 @@ export type PaymentCreateWithoutRefundsInput = {
 export type PaymentUncheckedCreateWithoutRefundsInput = {
   id?: string
   reservationId: string
-  gatewayId: string
+  gatewayId?: string | null
   gatewayStatus?: $Enums.PaymentStatus
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  paymentMethod: string
   initiatedAt?: Date | string
   completedAt?: Date | string | null
   idempotencyKey: string
-  webhookStatus?: string
   webhookReceivedAt?: Date | string | null
   webhookProcessedAt?: Date | string | null
   createdAt?: Date | string
@@ -716,15 +668,13 @@ export type PaymentUpdateToOneWithWhereWithoutRefundsInput = {
 
 export type PaymentUpdateWithoutRefundsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  gatewayId?: Prisma.StringFieldUpdateOperationsInput | string
+  gatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gatewayStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
-  webhookStatus?: Prisma.StringFieldUpdateOperationsInput | string
   webhookReceivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   webhookProcessedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -736,15 +686,13 @@ export type PaymentUpdateWithoutRefundsInput = {
 export type PaymentUncheckedUpdateWithoutRefundsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reservationId?: Prisma.StringFieldUpdateOperationsInput | string
-  gatewayId?: Prisma.StringFieldUpdateOperationsInput | string
+  gatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gatewayStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
-  webhookStatus?: Prisma.StringFieldUpdateOperationsInput | string
   webhookReceivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   webhookProcessedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -754,15 +702,13 @@ export type PaymentUncheckedUpdateWithoutRefundsInput = {
 
 export type PaymentCreateWithoutReservationInput = {
   id?: string
-  gatewayId: string
+  gatewayId?: string | null
   gatewayStatus?: $Enums.PaymentStatus
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  paymentMethod: string
   initiatedAt?: Date | string
   completedAt?: Date | string | null
   idempotencyKey: string
-  webhookStatus?: string
   webhookReceivedAt?: Date | string | null
   webhookProcessedAt?: Date | string | null
   createdAt?: Date | string
@@ -773,15 +719,13 @@ export type PaymentCreateWithoutReservationInput = {
 
 export type PaymentUncheckedCreateWithoutReservationInput = {
   id?: string
-  gatewayId: string
+  gatewayId?: string | null
   gatewayStatus?: $Enums.PaymentStatus
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
-  paymentMethod: string
   initiatedAt?: Date | string
   completedAt?: Date | string | null
   idempotencyKey: string
-  webhookStatus?: string
   webhookReceivedAt?: Date | string | null
   webhookProcessedAt?: Date | string | null
   createdAt?: Date | string
@@ -808,15 +752,13 @@ export type PaymentUpdateToOneWithWhereWithoutReservationInput = {
 
 export type PaymentUpdateWithoutReservationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  gatewayId?: Prisma.StringFieldUpdateOperationsInput | string
+  gatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gatewayStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
-  webhookStatus?: Prisma.StringFieldUpdateOperationsInput | string
   webhookReceivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   webhookProcessedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -827,15 +769,13 @@ export type PaymentUpdateWithoutReservationInput = {
 
 export type PaymentUncheckedUpdateWithoutReservationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  gatewayId?: Prisma.StringFieldUpdateOperationsInput | string
+  gatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gatewayStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
-  paymentMethod?: Prisma.StringFieldUpdateOperationsInput | string
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
-  webhookStatus?: Prisma.StringFieldUpdateOperationsInput | string
   webhookReceivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   webhookProcessedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -882,11 +822,9 @@ export type PaymentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   gatewayStatus?: boolean
   amount?: boolean
   currency?: boolean
-  paymentMethod?: boolean
   initiatedAt?: boolean
   completedAt?: boolean
   idempotencyKey?: boolean
-  webhookStatus?: boolean
   webhookReceivedAt?: boolean
   webhookProcessedAt?: boolean
   createdAt?: boolean
@@ -904,11 +842,9 @@ export type PaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   gatewayStatus?: boolean
   amount?: boolean
   currency?: boolean
-  paymentMethod?: boolean
   initiatedAt?: boolean
   completedAt?: boolean
   idempotencyKey?: boolean
-  webhookStatus?: boolean
   webhookReceivedAt?: boolean
   webhookProcessedAt?: boolean
   createdAt?: boolean
@@ -924,11 +860,9 @@ export type PaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   gatewayStatus?: boolean
   amount?: boolean
   currency?: boolean
-  paymentMethod?: boolean
   initiatedAt?: boolean
   completedAt?: boolean
   idempotencyKey?: boolean
-  webhookStatus?: boolean
   webhookReceivedAt?: boolean
   webhookProcessedAt?: boolean
   createdAt?: boolean
@@ -944,11 +878,9 @@ export type PaymentSelectScalar = {
   gatewayStatus?: boolean
   amount?: boolean
   currency?: boolean
-  paymentMethod?: boolean
   initiatedAt?: boolean
   completedAt?: boolean
   idempotencyKey?: boolean
-  webhookStatus?: boolean
   webhookReceivedAt?: boolean
   webhookProcessedAt?: boolean
   createdAt?: boolean
@@ -956,7 +888,7 @@ export type PaymentSelectScalar = {
   deletedAt?: boolean
 }
 
-export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "reservationId" | "gatewayId" | "gatewayStatus" | "amount" | "currency" | "paymentMethod" | "initiatedAt" | "completedAt" | "idempotencyKey" | "webhookStatus" | "webhookReceivedAt" | "webhookProcessedAt" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["payment"]>
+export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "reservationId" | "gatewayId" | "gatewayStatus" | "amount" | "currency" | "initiatedAt" | "completedAt" | "idempotencyKey" | "webhookReceivedAt" | "webhookProcessedAt" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["payment"]>
 export type PaymentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   reservation?: boolean | Prisma.ReservationDefaultArgs<ExtArgs>
   refunds?: boolean | Prisma.Payment$refundsArgs<ExtArgs>
@@ -978,15 +910,13 @@ export type $PaymentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     reservationId: string
-    gatewayId: string
+    gatewayId: string | null
     gatewayStatus: $Enums.PaymentStatus
     amount: runtime.Decimal
     currency: string
-    paymentMethod: string
     initiatedAt: Date
     completedAt: Date | null
     idempotencyKey: string
-    webhookStatus: string
     webhookReceivedAt: Date | null
     webhookProcessedAt: Date | null
     createdAt: Date
@@ -1423,11 +1353,9 @@ export interface PaymentFieldRefs {
   readonly gatewayStatus: Prisma.FieldRef<"Payment", 'PaymentStatus'>
   readonly amount: Prisma.FieldRef<"Payment", 'Decimal'>
   readonly currency: Prisma.FieldRef<"Payment", 'String'>
-  readonly paymentMethod: Prisma.FieldRef<"Payment", 'String'>
   readonly initiatedAt: Prisma.FieldRef<"Payment", 'DateTime'>
   readonly completedAt: Prisma.FieldRef<"Payment", 'DateTime'>
   readonly idempotencyKey: Prisma.FieldRef<"Payment", 'String'>
-  readonly webhookStatus: Prisma.FieldRef<"Payment", 'String'>
   readonly webhookReceivedAt: Prisma.FieldRef<"Payment", 'DateTime'>
   readonly webhookProcessedAt: Prisma.FieldRef<"Payment", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Payment", 'DateTime'>

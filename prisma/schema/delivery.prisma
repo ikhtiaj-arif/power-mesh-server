@@ -1,20 +1,19 @@
 model Delivery {
-  id                  String         @id @default(cuid())
-  reservationId       String         @unique
-  confirmedByProvider String? // user_id
-  confirmedByConsumer String? // user_id
-  providerConfirmedAt DateTime?
-  consumerConfirmedAt DateTime?
-  actualDeliveredKw   Int?
-  partialRefundAmount Decimal?       @db.Decimal(14, 2)
-  status              DeliveryStatus @default(PENDING_CHECKIN)
-  disputeReason       String?
-  createdAt           DateTime       @default(now())
-  updatedAt           DateTime       @updatedAt
-  deletedAt           DateTime?
+  id                    String         @id @default(uuid())
+  reservationId         String         @unique
+  confirmedByProvider   String?
+  confirmedByConsumer   String?
+  providerConfirmedAt   DateTime?
+  consumerConfirmedAt   DateTime?
+  actualDeliveredKw     Int?
+  partialRefundAmount   Decimal?       @db.Decimal(14, 2)
+  status                DeliveryStatus @default(PENDING_CHECKIN)
+  disputeReason         String?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  deletedAt             DateTime?
 
-  // Relations
-  reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Restrict)
+  reservation           Reservation    @relation(fields: [reservationId], references: [id], onDelete: Restrict)
 
   @@index([status])
   @@index([createdAt])

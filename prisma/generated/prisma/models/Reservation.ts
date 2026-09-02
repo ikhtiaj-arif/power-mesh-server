@@ -47,9 +47,9 @@ export type ReservationMinAggregateOutputType = {
   allocatedKw: number | null
   unitPrice: runtime.Decimal | null
   totalAmount: runtime.Decimal | null
-  status: $Enums.ReservationStatus | null
   deliveryStart: Date | null
   deliveryEnd: Date | null
+  status: $Enums.ReservationStatus | null
   paymentStatus: $Enums.PaymentStatus | null
   idempotencyKey: string | null
   providerCheckinAt: Date | null
@@ -67,9 +67,9 @@ export type ReservationMaxAggregateOutputType = {
   allocatedKw: number | null
   unitPrice: runtime.Decimal | null
   totalAmount: runtime.Decimal | null
-  status: $Enums.ReservationStatus | null
   deliveryStart: Date | null
   deliveryEnd: Date | null
+  status: $Enums.ReservationStatus | null
   paymentStatus: $Enums.PaymentStatus | null
   idempotencyKey: string | null
   providerCheckinAt: Date | null
@@ -87,9 +87,9 @@ export type ReservationCountAggregateOutputType = {
   allocatedKw: number
   unitPrice: number
   totalAmount: number
-  status: number
   deliveryStart: number
   deliveryEnd: number
+  status: number
   paymentStatus: number
   idempotencyKey: number
   providerCheckinAt: number
@@ -121,9 +121,9 @@ export type ReservationMinAggregateInputType = {
   allocatedKw?: true
   unitPrice?: true
   totalAmount?: true
-  status?: true
   deliveryStart?: true
   deliveryEnd?: true
+  status?: true
   paymentStatus?: true
   idempotencyKey?: true
   providerCheckinAt?: true
@@ -141,9 +141,9 @@ export type ReservationMaxAggregateInputType = {
   allocatedKw?: true
   unitPrice?: true
   totalAmount?: true
-  status?: true
   deliveryStart?: true
   deliveryEnd?: true
+  status?: true
   paymentStatus?: true
   idempotencyKey?: true
   providerCheckinAt?: true
@@ -161,9 +161,9 @@ export type ReservationCountAggregateInputType = {
   allocatedKw?: true
   unitPrice?: true
   totalAmount?: true
-  status?: true
   deliveryStart?: true
   deliveryEnd?: true
+  status?: true
   paymentStatus?: true
   idempotencyKey?: true
   providerCheckinAt?: true
@@ -268,9 +268,9 @@ export type ReservationGroupByOutputType = {
   allocatedKw: number
   unitPrice: runtime.Decimal
   totalAmount: runtime.Decimal
-  status: $Enums.ReservationStatus
   deliveryStart: Date
   deliveryEnd: Date
+  status: $Enums.ReservationStatus
   paymentStatus: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt: Date | null
@@ -311,9 +311,9 @@ export type ReservationWhereInput = {
   allocatedKw?: Prisma.IntFilter<"Reservation"> | number
   unitPrice?: Prisma.DecimalFilter<"Reservation"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFilter<"Reservation"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFilter<"Reservation"> | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFilter<"Reservation"> | Date | string
   deliveryEnd?: Prisma.DateTimeFilter<"Reservation"> | Date | string
+  status?: Prisma.EnumReservationStatusFilter<"Reservation"> | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFilter<"Reservation"> | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFilter<"Reservation"> | string
   providerCheckinAt?: Prisma.DateTimeNullableFilter<"Reservation"> | Date | string | null
@@ -328,7 +328,7 @@ export type ReservationWhereInput = {
   delivery?: Prisma.XOR<Prisma.DeliveryNullableScalarRelationFilter, Prisma.DeliveryWhereInput> | null
   incidents?: Prisma.IncidentListRelationFilter
   refunds?: Prisma.RefundListRelationFilter
-  ratings?: Prisma.RatingListRelationFilter
+  rating?: Prisma.XOR<Prisma.RatingNullableScalarRelationFilter, Prisma.RatingWhereInput> | null
 }
 
 export type ReservationOrderByWithRelationInput = {
@@ -340,9 +340,9 @@ export type ReservationOrderByWithRelationInput = {
   allocatedKw?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   deliveryStart?: Prisma.SortOrder
   deliveryEnd?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   providerCheckinAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -357,7 +357,7 @@ export type ReservationOrderByWithRelationInput = {
   delivery?: Prisma.DeliveryOrderByWithRelationInput
   incidents?: Prisma.IncidentOrderByRelationAggregateInput
   refunds?: Prisma.RefundOrderByRelationAggregateInput
-  ratings?: Prisma.RatingOrderByRelationAggregateInput
+  rating?: Prisma.RatingOrderByWithRelationInput
 }
 
 export type ReservationWhereUniqueInput = Prisma.AtLeast<{
@@ -374,9 +374,9 @@ export type ReservationWhereUniqueInput = Prisma.AtLeast<{
   allocatedKw?: Prisma.IntFilter<"Reservation"> | number
   unitPrice?: Prisma.DecimalFilter<"Reservation"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFilter<"Reservation"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFilter<"Reservation"> | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFilter<"Reservation"> | Date | string
   deliveryEnd?: Prisma.DateTimeFilter<"Reservation"> | Date | string
+  status?: Prisma.EnumReservationStatusFilter<"Reservation"> | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFilter<"Reservation"> | $Enums.PaymentStatus
   providerCheckinAt?: Prisma.DateTimeNullableFilter<"Reservation"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Reservation"> | Date | string
@@ -390,7 +390,7 @@ export type ReservationWhereUniqueInput = Prisma.AtLeast<{
   delivery?: Prisma.XOR<Prisma.DeliveryNullableScalarRelationFilter, Prisma.DeliveryWhereInput> | null
   incidents?: Prisma.IncidentListRelationFilter
   refunds?: Prisma.RefundListRelationFilter
-  ratings?: Prisma.RatingListRelationFilter
+  rating?: Prisma.XOR<Prisma.RatingNullableScalarRelationFilter, Prisma.RatingWhereInput> | null
 }, "id" | "idempotencyKey" | "offerId_requestId">
 
 export type ReservationOrderByWithAggregationInput = {
@@ -402,9 +402,9 @@ export type ReservationOrderByWithAggregationInput = {
   allocatedKw?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   deliveryStart?: Prisma.SortOrder
   deliveryEnd?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   providerCheckinAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -430,9 +430,9 @@ export type ReservationScalarWhereWithAggregatesInput = {
   allocatedKw?: Prisma.IntWithAggregatesFilter<"Reservation"> | number
   unitPrice?: Prisma.DecimalWithAggregatesFilter<"Reservation"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalWithAggregatesFilter<"Reservation"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusWithAggregatesFilter<"Reservation"> | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeWithAggregatesFilter<"Reservation"> | Date | string
   deliveryEnd?: Prisma.DateTimeWithAggregatesFilter<"Reservation"> | Date | string
+  status?: Prisma.EnumReservationStatusWithAggregatesFilter<"Reservation"> | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusWithAggregatesFilter<"Reservation"> | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringWithAggregatesFilter<"Reservation"> | string
   providerCheckinAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Reservation"> | Date | string | null
@@ -446,9 +446,9 @@ export type ReservationCreateInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -463,7 +463,7 @@ export type ReservationCreateInput = {
   delivery?: Prisma.DeliveryCreateNestedOneWithoutReservationInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutReservationInput
   refunds?: Prisma.RefundCreateNestedManyWithoutReservationInput
-  ratings?: Prisma.RatingCreateNestedManyWithoutReservationInput
+  rating?: Prisma.RatingCreateNestedOneWithoutReservationInput
 }
 
 export type ReservationUncheckedCreateInput = {
@@ -475,9 +475,9 @@ export type ReservationUncheckedCreateInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -488,7 +488,7 @@ export type ReservationUncheckedCreateInput = {
   delivery?: Prisma.DeliveryUncheckedCreateNestedOneWithoutReservationInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutReservationInput
   refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutReservationInput
-  ratings?: Prisma.RatingUncheckedCreateNestedManyWithoutReservationInput
+  rating?: Prisma.RatingUncheckedCreateNestedOneWithoutReservationInput
 }
 
 export type ReservationUpdateInput = {
@@ -496,9 +496,9 @@ export type ReservationUpdateInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -513,7 +513,7 @@ export type ReservationUpdateInput = {
   delivery?: Prisma.DeliveryUpdateOneWithoutReservationNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutReservationNestedInput
   refunds?: Prisma.RefundUpdateManyWithoutReservationNestedInput
-  ratings?: Prisma.RatingUpdateManyWithoutReservationNestedInput
+  rating?: Prisma.RatingUpdateOneWithoutReservationNestedInput
 }
 
 export type ReservationUncheckedUpdateInput = {
@@ -525,9 +525,9 @@ export type ReservationUncheckedUpdateInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -538,7 +538,7 @@ export type ReservationUncheckedUpdateInput = {
   delivery?: Prisma.DeliveryUncheckedUpdateOneWithoutReservationNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutReservationNestedInput
   refunds?: Prisma.RefundUncheckedUpdateManyWithoutReservationNestedInput
-  ratings?: Prisma.RatingUncheckedUpdateManyWithoutReservationNestedInput
+  rating?: Prisma.RatingUncheckedUpdateOneWithoutReservationNestedInput
 }
 
 export type ReservationCreateManyInput = {
@@ -550,9 +550,9 @@ export type ReservationCreateManyInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -566,9 +566,9 @@ export type ReservationUpdateManyMutationInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -586,9 +586,9 @@ export type ReservationUncheckedUpdateManyInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -631,9 +631,9 @@ export type ReservationCountOrderByAggregateInput = {
   allocatedKw?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   deliveryStart?: Prisma.SortOrder
   deliveryEnd?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   providerCheckinAt?: Prisma.SortOrder
@@ -657,9 +657,9 @@ export type ReservationMaxOrderByAggregateInput = {
   allocatedKw?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   deliveryStart?: Prisma.SortOrder
   deliveryEnd?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   providerCheckinAt?: Prisma.SortOrder
@@ -677,9 +677,9 @@ export type ReservationMinOrderByAggregateInput = {
   allocatedKw?: Prisma.SortOrder
   unitPrice?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   deliveryStart?: Prisma.SortOrder
   deliveryEnd?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   providerCheckinAt?: Prisma.SortOrder
@@ -906,20 +906,18 @@ export type ReservationUncheckedUpdateManyWithoutProviderNestedInput = {
   deleteMany?: Prisma.ReservationScalarWhereInput | Prisma.ReservationScalarWhereInput[]
 }
 
-export type ReservationCreateNestedOneWithoutRatingsInput = {
-  create?: Prisma.XOR<Prisma.ReservationCreateWithoutRatingsInput, Prisma.ReservationUncheckedCreateWithoutRatingsInput>
-  connectOrCreate?: Prisma.ReservationCreateOrConnectWithoutRatingsInput
+export type ReservationCreateNestedOneWithoutRatingInput = {
+  create?: Prisma.XOR<Prisma.ReservationCreateWithoutRatingInput, Prisma.ReservationUncheckedCreateWithoutRatingInput>
+  connectOrCreate?: Prisma.ReservationCreateOrConnectWithoutRatingInput
   connect?: Prisma.ReservationWhereUniqueInput
 }
 
-export type ReservationUpdateOneWithoutRatingsNestedInput = {
-  create?: Prisma.XOR<Prisma.ReservationCreateWithoutRatingsInput, Prisma.ReservationUncheckedCreateWithoutRatingsInput>
-  connectOrCreate?: Prisma.ReservationCreateOrConnectWithoutRatingsInput
-  upsert?: Prisma.ReservationUpsertWithoutRatingsInput
-  disconnect?: Prisma.ReservationWhereInput | boolean
-  delete?: Prisma.ReservationWhereInput | boolean
+export type ReservationUpdateOneRequiredWithoutRatingNestedInput = {
+  create?: Prisma.XOR<Prisma.ReservationCreateWithoutRatingInput, Prisma.ReservationUncheckedCreateWithoutRatingInput>
+  connectOrCreate?: Prisma.ReservationCreateOrConnectWithoutRatingInput
+  upsert?: Prisma.ReservationUpsertWithoutRatingInput
   connect?: Prisma.ReservationWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ReservationUpdateToOneWithWhereWithoutRatingsInput, Prisma.ReservationUpdateWithoutRatingsInput>, Prisma.ReservationUncheckedUpdateWithoutRatingsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ReservationUpdateToOneWithWhereWithoutRatingInput, Prisma.ReservationUpdateWithoutRatingInput>, Prisma.ReservationUncheckedUpdateWithoutRatingInput>
 }
 
 export type ReservationCreateNestedOneWithoutRefundsInput = {
@@ -945,9 +943,9 @@ export type ReservationCreateWithoutOfferInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -961,7 +959,7 @@ export type ReservationCreateWithoutOfferInput = {
   delivery?: Prisma.DeliveryCreateNestedOneWithoutReservationInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutReservationInput
   refunds?: Prisma.RefundCreateNestedManyWithoutReservationInput
-  ratings?: Prisma.RatingCreateNestedManyWithoutReservationInput
+  rating?: Prisma.RatingCreateNestedOneWithoutReservationInput
 }
 
 export type ReservationUncheckedCreateWithoutOfferInput = {
@@ -972,9 +970,9 @@ export type ReservationUncheckedCreateWithoutOfferInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -985,7 +983,7 @@ export type ReservationUncheckedCreateWithoutOfferInput = {
   delivery?: Prisma.DeliveryUncheckedCreateNestedOneWithoutReservationInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutReservationInput
   refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutReservationInput
-  ratings?: Prisma.RatingUncheckedCreateNestedManyWithoutReservationInput
+  rating?: Prisma.RatingUncheckedCreateNestedOneWithoutReservationInput
 }
 
 export type ReservationCreateOrConnectWithoutOfferInput = {
@@ -1026,9 +1024,9 @@ export type ReservationScalarWhereInput = {
   allocatedKw?: Prisma.IntFilter<"Reservation"> | number
   unitPrice?: Prisma.DecimalFilter<"Reservation"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFilter<"Reservation"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFilter<"Reservation"> | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFilter<"Reservation"> | Date | string
   deliveryEnd?: Prisma.DateTimeFilter<"Reservation"> | Date | string
+  status?: Prisma.EnumReservationStatusFilter<"Reservation"> | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFilter<"Reservation"> | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFilter<"Reservation"> | string
   providerCheckinAt?: Prisma.DateTimeNullableFilter<"Reservation"> | Date | string | null
@@ -1042,9 +1040,9 @@ export type ReservationCreateWithoutRequestInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -1058,7 +1056,7 @@ export type ReservationCreateWithoutRequestInput = {
   delivery?: Prisma.DeliveryCreateNestedOneWithoutReservationInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutReservationInput
   refunds?: Prisma.RefundCreateNestedManyWithoutReservationInput
-  ratings?: Prisma.RatingCreateNestedManyWithoutReservationInput
+  rating?: Prisma.RatingCreateNestedOneWithoutReservationInput
 }
 
 export type ReservationUncheckedCreateWithoutRequestInput = {
@@ -1069,9 +1067,9 @@ export type ReservationUncheckedCreateWithoutRequestInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -1082,7 +1080,7 @@ export type ReservationUncheckedCreateWithoutRequestInput = {
   delivery?: Prisma.DeliveryUncheckedCreateNestedOneWithoutReservationInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutReservationInput
   refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutReservationInput
-  ratings?: Prisma.RatingUncheckedCreateNestedManyWithoutReservationInput
+  rating?: Prisma.RatingUncheckedCreateNestedOneWithoutReservationInput
 }
 
 export type ReservationCreateOrConnectWithoutRequestInput = {
@@ -1116,9 +1114,9 @@ export type ReservationCreateWithoutConsumerInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -1132,7 +1130,7 @@ export type ReservationCreateWithoutConsumerInput = {
   delivery?: Prisma.DeliveryCreateNestedOneWithoutReservationInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutReservationInput
   refunds?: Prisma.RefundCreateNestedManyWithoutReservationInput
-  ratings?: Prisma.RatingCreateNestedManyWithoutReservationInput
+  rating?: Prisma.RatingCreateNestedOneWithoutReservationInput
 }
 
 export type ReservationUncheckedCreateWithoutConsumerInput = {
@@ -1143,9 +1141,9 @@ export type ReservationUncheckedCreateWithoutConsumerInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -1156,7 +1154,7 @@ export type ReservationUncheckedCreateWithoutConsumerInput = {
   delivery?: Prisma.DeliveryUncheckedCreateNestedOneWithoutReservationInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutReservationInput
   refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutReservationInput
-  ratings?: Prisma.RatingUncheckedCreateNestedManyWithoutReservationInput
+  rating?: Prisma.RatingUncheckedCreateNestedOneWithoutReservationInput
 }
 
 export type ReservationCreateOrConnectWithoutConsumerInput = {
@@ -1190,9 +1188,9 @@ export type ReservationCreateWithoutDeliveryInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -1206,7 +1204,7 @@ export type ReservationCreateWithoutDeliveryInput = {
   payment?: Prisma.PaymentCreateNestedOneWithoutReservationInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutReservationInput
   refunds?: Prisma.RefundCreateNestedManyWithoutReservationInput
-  ratings?: Prisma.RatingCreateNestedManyWithoutReservationInput
+  rating?: Prisma.RatingCreateNestedOneWithoutReservationInput
 }
 
 export type ReservationUncheckedCreateWithoutDeliveryInput = {
@@ -1218,9 +1216,9 @@ export type ReservationUncheckedCreateWithoutDeliveryInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -1230,7 +1228,7 @@ export type ReservationUncheckedCreateWithoutDeliveryInput = {
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutReservationInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutReservationInput
   refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutReservationInput
-  ratings?: Prisma.RatingUncheckedCreateNestedManyWithoutReservationInput
+  rating?: Prisma.RatingUncheckedCreateNestedOneWithoutReservationInput
 }
 
 export type ReservationCreateOrConnectWithoutDeliveryInput = {
@@ -1254,9 +1252,9 @@ export type ReservationUpdateWithoutDeliveryInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1270,7 +1268,7 @@ export type ReservationUpdateWithoutDeliveryInput = {
   payment?: Prisma.PaymentUpdateOneWithoutReservationNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutReservationNestedInput
   refunds?: Prisma.RefundUpdateManyWithoutReservationNestedInput
-  ratings?: Prisma.RatingUpdateManyWithoutReservationNestedInput
+  rating?: Prisma.RatingUpdateOneWithoutReservationNestedInput
 }
 
 export type ReservationUncheckedUpdateWithoutDeliveryInput = {
@@ -1282,9 +1280,9 @@ export type ReservationUncheckedUpdateWithoutDeliveryInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1294,7 +1292,7 @@ export type ReservationUncheckedUpdateWithoutDeliveryInput = {
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutReservationNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutReservationNestedInput
   refunds?: Prisma.RefundUncheckedUpdateManyWithoutReservationNestedInput
-  ratings?: Prisma.RatingUncheckedUpdateManyWithoutReservationNestedInput
+  rating?: Prisma.RatingUncheckedUpdateOneWithoutReservationNestedInput
 }
 
 export type ReservationCreateWithoutIncidentsInput = {
@@ -1302,9 +1300,9 @@ export type ReservationCreateWithoutIncidentsInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -1318,7 +1316,7 @@ export type ReservationCreateWithoutIncidentsInput = {
   payment?: Prisma.PaymentCreateNestedOneWithoutReservationInput
   delivery?: Prisma.DeliveryCreateNestedOneWithoutReservationInput
   refunds?: Prisma.RefundCreateNestedManyWithoutReservationInput
-  ratings?: Prisma.RatingCreateNestedManyWithoutReservationInput
+  rating?: Prisma.RatingCreateNestedOneWithoutReservationInput
 }
 
 export type ReservationUncheckedCreateWithoutIncidentsInput = {
@@ -1330,9 +1328,9 @@ export type ReservationUncheckedCreateWithoutIncidentsInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -1342,7 +1340,7 @@ export type ReservationUncheckedCreateWithoutIncidentsInput = {
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutReservationInput
   delivery?: Prisma.DeliveryUncheckedCreateNestedOneWithoutReservationInput
   refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutReservationInput
-  ratings?: Prisma.RatingUncheckedCreateNestedManyWithoutReservationInput
+  rating?: Prisma.RatingUncheckedCreateNestedOneWithoutReservationInput
 }
 
 export type ReservationCreateOrConnectWithoutIncidentsInput = {
@@ -1366,9 +1364,9 @@ export type ReservationUpdateWithoutIncidentsInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1382,7 +1380,7 @@ export type ReservationUpdateWithoutIncidentsInput = {
   payment?: Prisma.PaymentUpdateOneWithoutReservationNestedInput
   delivery?: Prisma.DeliveryUpdateOneWithoutReservationNestedInput
   refunds?: Prisma.RefundUpdateManyWithoutReservationNestedInput
-  ratings?: Prisma.RatingUpdateManyWithoutReservationNestedInput
+  rating?: Prisma.RatingUpdateOneWithoutReservationNestedInput
 }
 
 export type ReservationUncheckedUpdateWithoutIncidentsInput = {
@@ -1394,9 +1392,9 @@ export type ReservationUncheckedUpdateWithoutIncidentsInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1406,7 +1404,7 @@ export type ReservationUncheckedUpdateWithoutIncidentsInput = {
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutReservationNestedInput
   delivery?: Prisma.DeliveryUncheckedUpdateOneWithoutReservationNestedInput
   refunds?: Prisma.RefundUncheckedUpdateManyWithoutReservationNestedInput
-  ratings?: Prisma.RatingUncheckedUpdateManyWithoutReservationNestedInput
+  rating?: Prisma.RatingUncheckedUpdateOneWithoutReservationNestedInput
 }
 
 export type ReservationCreateWithoutPaymentInput = {
@@ -1414,9 +1412,9 @@ export type ReservationCreateWithoutPaymentInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -1430,7 +1428,7 @@ export type ReservationCreateWithoutPaymentInput = {
   delivery?: Prisma.DeliveryCreateNestedOneWithoutReservationInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutReservationInput
   refunds?: Prisma.RefundCreateNestedManyWithoutReservationInput
-  ratings?: Prisma.RatingCreateNestedManyWithoutReservationInput
+  rating?: Prisma.RatingCreateNestedOneWithoutReservationInput
 }
 
 export type ReservationUncheckedCreateWithoutPaymentInput = {
@@ -1442,9 +1440,9 @@ export type ReservationUncheckedCreateWithoutPaymentInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -1454,7 +1452,7 @@ export type ReservationUncheckedCreateWithoutPaymentInput = {
   delivery?: Prisma.DeliveryUncheckedCreateNestedOneWithoutReservationInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutReservationInput
   refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutReservationInput
-  ratings?: Prisma.RatingUncheckedCreateNestedManyWithoutReservationInput
+  rating?: Prisma.RatingUncheckedCreateNestedOneWithoutReservationInput
 }
 
 export type ReservationCreateOrConnectWithoutPaymentInput = {
@@ -1478,9 +1476,9 @@ export type ReservationUpdateWithoutPaymentInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1494,7 +1492,7 @@ export type ReservationUpdateWithoutPaymentInput = {
   delivery?: Prisma.DeliveryUpdateOneWithoutReservationNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutReservationNestedInput
   refunds?: Prisma.RefundUpdateManyWithoutReservationNestedInput
-  ratings?: Prisma.RatingUpdateManyWithoutReservationNestedInput
+  rating?: Prisma.RatingUpdateOneWithoutReservationNestedInput
 }
 
 export type ReservationUncheckedUpdateWithoutPaymentInput = {
@@ -1506,9 +1504,9 @@ export type ReservationUncheckedUpdateWithoutPaymentInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1518,7 +1516,7 @@ export type ReservationUncheckedUpdateWithoutPaymentInput = {
   delivery?: Prisma.DeliveryUncheckedUpdateOneWithoutReservationNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutReservationNestedInput
   refunds?: Prisma.RefundUncheckedUpdateManyWithoutReservationNestedInput
-  ratings?: Prisma.RatingUncheckedUpdateManyWithoutReservationNestedInput
+  rating?: Prisma.RatingUncheckedUpdateOneWithoutReservationNestedInput
 }
 
 export type ReservationCreateWithoutProviderInput = {
@@ -1526,9 +1524,9 @@ export type ReservationCreateWithoutProviderInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -1542,7 +1540,7 @@ export type ReservationCreateWithoutProviderInput = {
   delivery?: Prisma.DeliveryCreateNestedOneWithoutReservationInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutReservationInput
   refunds?: Prisma.RefundCreateNestedManyWithoutReservationInput
-  ratings?: Prisma.RatingCreateNestedManyWithoutReservationInput
+  rating?: Prisma.RatingCreateNestedOneWithoutReservationInput
 }
 
 export type ReservationUncheckedCreateWithoutProviderInput = {
@@ -1553,9 +1551,9 @@ export type ReservationUncheckedCreateWithoutProviderInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -1566,7 +1564,7 @@ export type ReservationUncheckedCreateWithoutProviderInput = {
   delivery?: Prisma.DeliveryUncheckedCreateNestedOneWithoutReservationInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutReservationInput
   refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutReservationInput
-  ratings?: Prisma.RatingUncheckedCreateNestedManyWithoutReservationInput
+  rating?: Prisma.RatingUncheckedCreateNestedOneWithoutReservationInput
 }
 
 export type ReservationCreateOrConnectWithoutProviderInput = {
@@ -1595,14 +1593,14 @@ export type ReservationUpdateManyWithWhereWithoutProviderInput = {
   data: Prisma.XOR<Prisma.ReservationUpdateManyMutationInput, Prisma.ReservationUncheckedUpdateManyWithoutProviderInput>
 }
 
-export type ReservationCreateWithoutRatingsInput = {
+export type ReservationCreateWithoutRatingInput = {
   id?: string
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -1619,7 +1617,7 @@ export type ReservationCreateWithoutRatingsInput = {
   refunds?: Prisma.RefundCreateNestedManyWithoutReservationInput
 }
 
-export type ReservationUncheckedCreateWithoutRatingsInput = {
+export type ReservationUncheckedCreateWithoutRatingInput = {
   id?: string
   offerId: string
   requestId: string
@@ -1628,9 +1626,9 @@ export type ReservationUncheckedCreateWithoutRatingsInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -1643,30 +1641,30 @@ export type ReservationUncheckedCreateWithoutRatingsInput = {
   refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutReservationInput
 }
 
-export type ReservationCreateOrConnectWithoutRatingsInput = {
+export type ReservationCreateOrConnectWithoutRatingInput = {
   where: Prisma.ReservationWhereUniqueInput
-  create: Prisma.XOR<Prisma.ReservationCreateWithoutRatingsInput, Prisma.ReservationUncheckedCreateWithoutRatingsInput>
+  create: Prisma.XOR<Prisma.ReservationCreateWithoutRatingInput, Prisma.ReservationUncheckedCreateWithoutRatingInput>
 }
 
-export type ReservationUpsertWithoutRatingsInput = {
-  update: Prisma.XOR<Prisma.ReservationUpdateWithoutRatingsInput, Prisma.ReservationUncheckedUpdateWithoutRatingsInput>
-  create: Prisma.XOR<Prisma.ReservationCreateWithoutRatingsInput, Prisma.ReservationUncheckedCreateWithoutRatingsInput>
+export type ReservationUpsertWithoutRatingInput = {
+  update: Prisma.XOR<Prisma.ReservationUpdateWithoutRatingInput, Prisma.ReservationUncheckedUpdateWithoutRatingInput>
+  create: Prisma.XOR<Prisma.ReservationCreateWithoutRatingInput, Prisma.ReservationUncheckedCreateWithoutRatingInput>
   where?: Prisma.ReservationWhereInput
 }
 
-export type ReservationUpdateToOneWithWhereWithoutRatingsInput = {
+export type ReservationUpdateToOneWithWhereWithoutRatingInput = {
   where?: Prisma.ReservationWhereInput
-  data: Prisma.XOR<Prisma.ReservationUpdateWithoutRatingsInput, Prisma.ReservationUncheckedUpdateWithoutRatingsInput>
+  data: Prisma.XOR<Prisma.ReservationUpdateWithoutRatingInput, Prisma.ReservationUncheckedUpdateWithoutRatingInput>
 }
 
-export type ReservationUpdateWithoutRatingsInput = {
+export type ReservationUpdateWithoutRatingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1683,7 +1681,7 @@ export type ReservationUpdateWithoutRatingsInput = {
   refunds?: Prisma.RefundUpdateManyWithoutReservationNestedInput
 }
 
-export type ReservationUncheckedUpdateWithoutRatingsInput = {
+export type ReservationUncheckedUpdateWithoutRatingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   offerId?: Prisma.StringFieldUpdateOperationsInput | string
   requestId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1692,9 +1690,9 @@ export type ReservationUncheckedUpdateWithoutRatingsInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1712,9 +1710,9 @@ export type ReservationCreateWithoutRefundsInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -1728,7 +1726,7 @@ export type ReservationCreateWithoutRefundsInput = {
   payment?: Prisma.PaymentCreateNestedOneWithoutReservationInput
   delivery?: Prisma.DeliveryCreateNestedOneWithoutReservationInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutReservationInput
-  ratings?: Prisma.RatingCreateNestedManyWithoutReservationInput
+  rating?: Prisma.RatingCreateNestedOneWithoutReservationInput
 }
 
 export type ReservationUncheckedCreateWithoutRefundsInput = {
@@ -1740,9 +1738,9 @@ export type ReservationUncheckedCreateWithoutRefundsInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -1752,7 +1750,7 @@ export type ReservationUncheckedCreateWithoutRefundsInput = {
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutReservationInput
   delivery?: Prisma.DeliveryUncheckedCreateNestedOneWithoutReservationInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutReservationInput
-  ratings?: Prisma.RatingUncheckedCreateNestedManyWithoutReservationInput
+  rating?: Prisma.RatingUncheckedCreateNestedOneWithoutReservationInput
 }
 
 export type ReservationCreateOrConnectWithoutRefundsInput = {
@@ -1776,9 +1774,9 @@ export type ReservationUpdateWithoutRefundsInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1792,7 +1790,7 @@ export type ReservationUpdateWithoutRefundsInput = {
   payment?: Prisma.PaymentUpdateOneWithoutReservationNestedInput
   delivery?: Prisma.DeliveryUpdateOneWithoutReservationNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutReservationNestedInput
-  ratings?: Prisma.RatingUpdateManyWithoutReservationNestedInput
+  rating?: Prisma.RatingUpdateOneWithoutReservationNestedInput
 }
 
 export type ReservationUncheckedUpdateWithoutRefundsInput = {
@@ -1804,9 +1802,9 @@ export type ReservationUncheckedUpdateWithoutRefundsInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1816,7 +1814,7 @@ export type ReservationUncheckedUpdateWithoutRefundsInput = {
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutReservationNestedInput
   delivery?: Prisma.DeliveryUncheckedUpdateOneWithoutReservationNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutReservationNestedInput
-  ratings?: Prisma.RatingUncheckedUpdateManyWithoutReservationNestedInput
+  rating?: Prisma.RatingUncheckedUpdateOneWithoutReservationNestedInput
 }
 
 export type ReservationCreateManyOfferInput = {
@@ -1827,9 +1825,9 @@ export type ReservationCreateManyOfferInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -1843,9 +1841,9 @@ export type ReservationUpdateWithoutOfferInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1859,7 +1857,7 @@ export type ReservationUpdateWithoutOfferInput = {
   delivery?: Prisma.DeliveryUpdateOneWithoutReservationNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutReservationNestedInput
   refunds?: Prisma.RefundUpdateManyWithoutReservationNestedInput
-  ratings?: Prisma.RatingUpdateManyWithoutReservationNestedInput
+  rating?: Prisma.RatingUpdateOneWithoutReservationNestedInput
 }
 
 export type ReservationUncheckedUpdateWithoutOfferInput = {
@@ -1870,9 +1868,9 @@ export type ReservationUncheckedUpdateWithoutOfferInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1883,7 +1881,7 @@ export type ReservationUncheckedUpdateWithoutOfferInput = {
   delivery?: Prisma.DeliveryUncheckedUpdateOneWithoutReservationNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutReservationNestedInput
   refunds?: Prisma.RefundUncheckedUpdateManyWithoutReservationNestedInput
-  ratings?: Prisma.RatingUncheckedUpdateManyWithoutReservationNestedInput
+  rating?: Prisma.RatingUncheckedUpdateOneWithoutReservationNestedInput
 }
 
 export type ReservationUncheckedUpdateManyWithoutOfferInput = {
@@ -1894,9 +1892,9 @@ export type ReservationUncheckedUpdateManyWithoutOfferInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1913,9 +1911,9 @@ export type ReservationCreateManyRequestInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -1929,9 +1927,9 @@ export type ReservationUpdateWithoutRequestInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1945,7 +1943,7 @@ export type ReservationUpdateWithoutRequestInput = {
   delivery?: Prisma.DeliveryUpdateOneWithoutReservationNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutReservationNestedInput
   refunds?: Prisma.RefundUpdateManyWithoutReservationNestedInput
-  ratings?: Prisma.RatingUpdateManyWithoutReservationNestedInput
+  rating?: Prisma.RatingUpdateOneWithoutReservationNestedInput
 }
 
 export type ReservationUncheckedUpdateWithoutRequestInput = {
@@ -1956,9 +1954,9 @@ export type ReservationUncheckedUpdateWithoutRequestInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1969,7 +1967,7 @@ export type ReservationUncheckedUpdateWithoutRequestInput = {
   delivery?: Prisma.DeliveryUncheckedUpdateOneWithoutReservationNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutReservationNestedInput
   refunds?: Prisma.RefundUncheckedUpdateManyWithoutReservationNestedInput
-  ratings?: Prisma.RatingUncheckedUpdateManyWithoutReservationNestedInput
+  rating?: Prisma.RatingUncheckedUpdateOneWithoutReservationNestedInput
 }
 
 export type ReservationUncheckedUpdateManyWithoutRequestInput = {
@@ -1980,9 +1978,9 @@ export type ReservationUncheckedUpdateManyWithoutRequestInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1999,9 +1997,9 @@ export type ReservationCreateManyConsumerInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -2015,9 +2013,9 @@ export type ReservationUpdateWithoutConsumerInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2031,7 +2029,7 @@ export type ReservationUpdateWithoutConsumerInput = {
   delivery?: Prisma.DeliveryUpdateOneWithoutReservationNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutReservationNestedInput
   refunds?: Prisma.RefundUpdateManyWithoutReservationNestedInput
-  ratings?: Prisma.RatingUpdateManyWithoutReservationNestedInput
+  rating?: Prisma.RatingUpdateOneWithoutReservationNestedInput
 }
 
 export type ReservationUncheckedUpdateWithoutConsumerInput = {
@@ -2042,9 +2040,9 @@ export type ReservationUncheckedUpdateWithoutConsumerInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2055,7 +2053,7 @@ export type ReservationUncheckedUpdateWithoutConsumerInput = {
   delivery?: Prisma.DeliveryUncheckedUpdateOneWithoutReservationNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutReservationNestedInput
   refunds?: Prisma.RefundUncheckedUpdateManyWithoutReservationNestedInput
-  ratings?: Prisma.RatingUncheckedUpdateManyWithoutReservationNestedInput
+  rating?: Prisma.RatingUncheckedUpdateOneWithoutReservationNestedInput
 }
 
 export type ReservationUncheckedUpdateManyWithoutConsumerInput = {
@@ -2066,9 +2064,9 @@ export type ReservationUncheckedUpdateManyWithoutConsumerInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2085,9 +2083,9 @@ export type ReservationCreateManyProviderInput = {
   allocatedKw: number
   unitPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: $Enums.ReservationStatus
   deliveryStart: Date | string
   deliveryEnd: Date | string
+  status?: $Enums.ReservationStatus
   paymentStatus?: $Enums.PaymentStatus
   idempotencyKey: string
   providerCheckinAt?: Date | string | null
@@ -2101,9 +2099,9 @@ export type ReservationUpdateWithoutProviderInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2117,7 +2115,7 @@ export type ReservationUpdateWithoutProviderInput = {
   delivery?: Prisma.DeliveryUpdateOneWithoutReservationNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutReservationNestedInput
   refunds?: Prisma.RefundUpdateManyWithoutReservationNestedInput
-  ratings?: Prisma.RatingUpdateManyWithoutReservationNestedInput
+  rating?: Prisma.RatingUpdateOneWithoutReservationNestedInput
 }
 
 export type ReservationUncheckedUpdateWithoutProviderInput = {
@@ -2128,9 +2126,9 @@ export type ReservationUncheckedUpdateWithoutProviderInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2141,7 +2139,7 @@ export type ReservationUncheckedUpdateWithoutProviderInput = {
   delivery?: Prisma.DeliveryUncheckedUpdateOneWithoutReservationNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutReservationNestedInput
   refunds?: Prisma.RefundUncheckedUpdateManyWithoutReservationNestedInput
-  ratings?: Prisma.RatingUncheckedUpdateManyWithoutReservationNestedInput
+  rating?: Prisma.RatingUncheckedUpdateOneWithoutReservationNestedInput
 }
 
 export type ReservationUncheckedUpdateManyWithoutProviderInput = {
@@ -2152,9 +2150,9 @@ export type ReservationUncheckedUpdateManyWithoutProviderInput = {
   allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   unitPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   deliveryStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deliveryEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumReservationStatusFieldUpdateOperationsInput | $Enums.ReservationStatus
   paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
   providerCheckinAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2171,13 +2169,11 @@ export type ReservationUncheckedUpdateManyWithoutProviderInput = {
 export type ReservationCountOutputType = {
   incidents: number
   refunds: number
-  ratings: number
 }
 
 export type ReservationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   incidents?: boolean | ReservationCountOutputTypeCountIncidentsArgs
   refunds?: boolean | ReservationCountOutputTypeCountRefundsArgs
-  ratings?: boolean | ReservationCountOutputTypeCountRatingsArgs
 }
 
 /**
@@ -2204,13 +2200,6 @@ export type ReservationCountOutputTypeCountRefundsArgs<ExtArgs extends runtime.T
   where?: Prisma.RefundWhereInput
 }
 
-/**
- * ReservationCountOutputType without action
- */
-export type ReservationCountOutputTypeCountRatingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.RatingWhereInput
-}
-
 
 export type ReservationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2221,9 +2210,9 @@ export type ReservationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   allocatedKw?: boolean
   unitPrice?: boolean
   totalAmount?: boolean
-  status?: boolean
   deliveryStart?: boolean
   deliveryEnd?: boolean
+  status?: boolean
   paymentStatus?: boolean
   idempotencyKey?: boolean
   providerCheckinAt?: boolean
@@ -2238,7 +2227,7 @@ export type ReservationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   delivery?: boolean | Prisma.Reservation$deliveryArgs<ExtArgs>
   incidents?: boolean | Prisma.Reservation$incidentsArgs<ExtArgs>
   refunds?: boolean | Prisma.Reservation$refundsArgs<ExtArgs>
-  ratings?: boolean | Prisma.Reservation$ratingsArgs<ExtArgs>
+  rating?: boolean | Prisma.Reservation$ratingArgs<ExtArgs>
   _count?: boolean | Prisma.ReservationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["reservation"]>
 
@@ -2251,9 +2240,9 @@ export type ReservationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   allocatedKw?: boolean
   unitPrice?: boolean
   totalAmount?: boolean
-  status?: boolean
   deliveryStart?: boolean
   deliveryEnd?: boolean
+  status?: boolean
   paymentStatus?: boolean
   idempotencyKey?: boolean
   providerCheckinAt?: boolean
@@ -2275,9 +2264,9 @@ export type ReservationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   allocatedKw?: boolean
   unitPrice?: boolean
   totalAmount?: boolean
-  status?: boolean
   deliveryStart?: boolean
   deliveryEnd?: boolean
+  status?: boolean
   paymentStatus?: boolean
   idempotencyKey?: boolean
   providerCheckinAt?: boolean
@@ -2299,9 +2288,9 @@ export type ReservationSelectScalar = {
   allocatedKw?: boolean
   unitPrice?: boolean
   totalAmount?: boolean
-  status?: boolean
   deliveryStart?: boolean
   deliveryEnd?: boolean
+  status?: boolean
   paymentStatus?: boolean
   idempotencyKey?: boolean
   providerCheckinAt?: boolean
@@ -2310,7 +2299,7 @@ export type ReservationSelectScalar = {
   deletedAt?: boolean
 }
 
-export type ReservationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "offerId" | "requestId" | "consumerId" | "providerId" | "allocatedKw" | "unitPrice" | "totalAmount" | "status" | "deliveryStart" | "deliveryEnd" | "paymentStatus" | "idempotencyKey" | "providerCheckinAt" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["reservation"]>
+export type ReservationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "offerId" | "requestId" | "consumerId" | "providerId" | "allocatedKw" | "unitPrice" | "totalAmount" | "deliveryStart" | "deliveryEnd" | "status" | "paymentStatus" | "idempotencyKey" | "providerCheckinAt" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["reservation"]>
 export type ReservationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   offer?: boolean | Prisma.CapacityOfferDefaultArgs<ExtArgs>
   request?: boolean | Prisma.CapacityRequestDefaultArgs<ExtArgs>
@@ -2320,7 +2309,7 @@ export type ReservationInclude<ExtArgs extends runtime.Types.Extensions.Internal
   delivery?: boolean | Prisma.Reservation$deliveryArgs<ExtArgs>
   incidents?: boolean | Prisma.Reservation$incidentsArgs<ExtArgs>
   refunds?: boolean | Prisma.Reservation$refundsArgs<ExtArgs>
-  ratings?: boolean | Prisma.Reservation$ratingsArgs<ExtArgs>
+  rating?: boolean | Prisma.Reservation$ratingArgs<ExtArgs>
   _count?: boolean | Prisma.ReservationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ReservationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2347,7 +2336,7 @@ export type $ReservationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     delivery: Prisma.$DeliveryPayload<ExtArgs> | null
     incidents: Prisma.$IncidentPayload<ExtArgs>[]
     refunds: Prisma.$RefundPayload<ExtArgs>[]
-    ratings: Prisma.$RatingPayload<ExtArgs>[]
+    rating: Prisma.$RatingPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2358,9 +2347,9 @@ export type $ReservationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     allocatedKw: number
     unitPrice: runtime.Decimal
     totalAmount: runtime.Decimal
-    status: $Enums.ReservationStatus
     deliveryStart: Date
     deliveryEnd: Date
+    status: $Enums.ReservationStatus
     paymentStatus: $Enums.PaymentStatus
     idempotencyKey: string
     providerCheckinAt: Date | null
@@ -2769,7 +2758,7 @@ export interface Prisma__ReservationClient<T, Null = never, ExtArgs extends runt
   delivery<T extends Prisma.Reservation$deliveryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Reservation$deliveryArgs<ExtArgs>>): Prisma.Prisma__DeliveryClient<runtime.Types.Result.GetResult<Prisma.$DeliveryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   incidents<T extends Prisma.Reservation$incidentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Reservation$incidentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$IncidentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   refunds<T extends Prisma.Reservation$refundsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Reservation$refundsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  ratings<T extends Prisma.Reservation$ratingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Reservation$ratingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RatingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  rating<T extends Prisma.Reservation$ratingArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Reservation$ratingArgs<ExtArgs>>): Prisma.Prisma__RatingClient<runtime.Types.Result.GetResult<Prisma.$RatingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2807,9 +2796,9 @@ export interface ReservationFieldRefs {
   readonly allocatedKw: Prisma.FieldRef<"Reservation", 'Int'>
   readonly unitPrice: Prisma.FieldRef<"Reservation", 'Decimal'>
   readonly totalAmount: Prisma.FieldRef<"Reservation", 'Decimal'>
-  readonly status: Prisma.FieldRef<"Reservation", 'ReservationStatus'>
   readonly deliveryStart: Prisma.FieldRef<"Reservation", 'DateTime'>
   readonly deliveryEnd: Prisma.FieldRef<"Reservation", 'DateTime'>
+  readonly status: Prisma.FieldRef<"Reservation", 'ReservationStatus'>
   readonly paymentStatus: Prisma.FieldRef<"Reservation", 'PaymentStatus'>
   readonly idempotencyKey: Prisma.FieldRef<"Reservation", 'String'>
   readonly providerCheckinAt: Prisma.FieldRef<"Reservation", 'DateTime'>
@@ -3303,9 +3292,9 @@ export type Reservation$refundsArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * Reservation.ratings
+ * Reservation.rating
  */
-export type Reservation$ratingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Reservation$ratingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Rating
    */
@@ -3319,11 +3308,6 @@ export type Reservation$ratingsArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   include?: Prisma.RatingInclude<ExtArgs> | null
   where?: Prisma.RatingWhereInput
-  orderBy?: Prisma.RatingOrderByWithRelationInput | Prisma.RatingOrderByWithRelationInput[]
-  cursor?: Prisma.RatingWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.RatingScalarFieldEnum | Prisma.RatingScalarFieldEnum[]
 }
 
 /**

@@ -37,7 +37,6 @@ export type ConsumerSumAggregateOutputType = {
 export type ConsumerMinAggregateOutputType = {
   id: string | null
   userId: string | null
-  zoneId: string | null
   organizationName: string | null
   criticalLoadKw: number | null
   address: string | null
@@ -51,7 +50,6 @@ export type ConsumerMinAggregateOutputType = {
 export type ConsumerMaxAggregateOutputType = {
   id: string | null
   userId: string | null
-  zoneId: string | null
   organizationName: string | null
   criticalLoadKw: number | null
   address: string | null
@@ -65,7 +63,6 @@ export type ConsumerMaxAggregateOutputType = {
 export type ConsumerCountAggregateOutputType = {
   id: number
   userId: number
-  zoneId: number
   organizationName: number
   criticalLoadKw: number
   address: number
@@ -89,7 +86,6 @@ export type ConsumerSumAggregateInputType = {
 export type ConsumerMinAggregateInputType = {
   id?: true
   userId?: true
-  zoneId?: true
   organizationName?: true
   criticalLoadKw?: true
   address?: true
@@ -103,7 +99,6 @@ export type ConsumerMinAggregateInputType = {
 export type ConsumerMaxAggregateInputType = {
   id?: true
   userId?: true
-  zoneId?: true
   organizationName?: true
   criticalLoadKw?: true
   address?: true
@@ -117,7 +112,6 @@ export type ConsumerMaxAggregateInputType = {
 export type ConsumerCountAggregateInputType = {
   id?: true
   userId?: true
-  zoneId?: true
   organizationName?: true
   criticalLoadKw?: true
   address?: true
@@ -218,7 +212,6 @@ export type ConsumerGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 export type ConsumerGroupByOutputType = {
   id: string
   userId: string
-  zoneId: string
   organizationName: string
   criticalLoadKw: number
   address: string
@@ -255,7 +248,6 @@ export type ConsumerWhereInput = {
   NOT?: Prisma.ConsumerWhereInput | Prisma.ConsumerWhereInput[]
   id?: Prisma.StringFilter<"Consumer"> | string
   userId?: Prisma.StringFilter<"Consumer"> | string
-  zoneId?: Prisma.StringFilter<"Consumer"> | string
   organizationName?: Prisma.StringFilter<"Consumer"> | string
   criticalLoadKw?: Prisma.IntFilter<"Consumer"> | number
   address?: Prisma.StringFilter<"Consumer"> | string
@@ -265,7 +257,6 @@ export type ConsumerWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Consumer"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Consumer"> | Date | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  zone?: Prisma.XOR<Prisma.ServiceZoneScalarRelationFilter, Prisma.ServiceZoneWhereInput>
   capacityRequests?: Prisma.CapacityRequestListRelationFilter
   reservations?: Prisma.ReservationListRelationFilter
   ratings?: Prisma.RatingListRelationFilter
@@ -274,7 +265,6 @@ export type ConsumerWhereInput = {
 export type ConsumerOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   organizationName?: Prisma.SortOrder
   criticalLoadKw?: Prisma.SortOrder
   address?: Prisma.SortOrder
@@ -284,7 +274,6 @@ export type ConsumerOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
-  zone?: Prisma.ServiceZoneOrderByWithRelationInput
   capacityRequests?: Prisma.CapacityRequestOrderByRelationAggregateInput
   reservations?: Prisma.ReservationOrderByRelationAggregateInput
   ratings?: Prisma.RatingOrderByRelationAggregateInput
@@ -293,11 +282,9 @@ export type ConsumerOrderByWithRelationInput = {
 export type ConsumerWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   userId?: string
-  userId_zoneId?: Prisma.ConsumerUserIdZoneIdCompoundUniqueInput
   AND?: Prisma.ConsumerWhereInput | Prisma.ConsumerWhereInput[]
   OR?: Prisma.ConsumerWhereInput[]
   NOT?: Prisma.ConsumerWhereInput | Prisma.ConsumerWhereInput[]
-  zoneId?: Prisma.StringFilter<"Consumer"> | string
   organizationName?: Prisma.StringFilter<"Consumer"> | string
   criticalLoadKw?: Prisma.IntFilter<"Consumer"> | number
   address?: Prisma.StringFilter<"Consumer"> | string
@@ -307,16 +294,14 @@ export type ConsumerWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Consumer"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Consumer"> | Date | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  zone?: Prisma.XOR<Prisma.ServiceZoneScalarRelationFilter, Prisma.ServiceZoneWhereInput>
   capacityRequests?: Prisma.CapacityRequestListRelationFilter
   reservations?: Prisma.ReservationListRelationFilter
   ratings?: Prisma.RatingListRelationFilter
-}, "id" | "userId" | "userId_zoneId">
+}, "id" | "userId">
 
 export type ConsumerOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   organizationName?: Prisma.SortOrder
   criticalLoadKw?: Prisma.SortOrder
   address?: Prisma.SortOrder
@@ -338,7 +323,6 @@ export type ConsumerScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ConsumerScalarWhereWithAggregatesInput | Prisma.ConsumerScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Consumer"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Consumer"> | string
-  zoneId?: Prisma.StringWithAggregatesFilter<"Consumer"> | string
   organizationName?: Prisma.StringWithAggregatesFilter<"Consumer"> | string
   criticalLoadKw?: Prisma.IntWithAggregatesFilter<"Consumer"> | number
   address?: Prisma.StringWithAggregatesFilter<"Consumer"> | string
@@ -360,7 +344,6 @@ export type ConsumerCreateInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   user: Prisma.UserCreateNestedOneWithoutConsumerInput
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutConsumersInput
   capacityRequests?: Prisma.CapacityRequestCreateNestedManyWithoutConsumerInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutConsumerInput
   ratings?: Prisma.RatingCreateNestedManyWithoutConsumerInput
@@ -369,7 +352,6 @@ export type ConsumerCreateInput = {
 export type ConsumerUncheckedCreateInput = {
   id?: string
   userId: string
-  zoneId: string
   organizationName: string
   criticalLoadKw: number
   address: string
@@ -394,7 +376,6 @@ export type ConsumerUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutConsumerNestedInput
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutConsumersNestedInput
   capacityRequests?: Prisma.CapacityRequestUpdateManyWithoutConsumerNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutConsumerNestedInput
   ratings?: Prisma.RatingUpdateManyWithoutConsumerNestedInput
@@ -403,7 +384,6 @@ export type ConsumerUpdateInput = {
 export type ConsumerUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationName?: Prisma.StringFieldUpdateOperationsInput | string
   criticalLoadKw?: Prisma.IntFieldUpdateOperationsInput | number
   address?: Prisma.StringFieldUpdateOperationsInput | string
@@ -420,7 +400,6 @@ export type ConsumerUncheckedUpdateInput = {
 export type ConsumerCreateManyInput = {
   id?: string
   userId: string
-  zoneId: string
   organizationName: string
   criticalLoadKw: number
   address: string
@@ -446,7 +425,6 @@ export type ConsumerUpdateManyMutationInput = {
 export type ConsumerUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationName?: Prisma.StringFieldUpdateOperationsInput | string
   criticalLoadKw?: Prisma.IntFieldUpdateOperationsInput | number
   address?: Prisma.StringFieldUpdateOperationsInput | string
@@ -462,15 +440,9 @@ export type ConsumerScalarRelationFilter = {
   isNot?: Prisma.ConsumerWhereInput
 }
 
-export type ConsumerUserIdZoneIdCompoundUniqueInput = {
-  userId: string
-  zoneId: string
-}
-
 export type ConsumerCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   organizationName?: Prisma.SortOrder
   criticalLoadKw?: Prisma.SortOrder
   address?: Prisma.SortOrder
@@ -488,7 +460,6 @@ export type ConsumerAvgOrderByAggregateInput = {
 export type ConsumerMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   organizationName?: Prisma.SortOrder
   criticalLoadKw?: Prisma.SortOrder
   address?: Prisma.SortOrder
@@ -502,7 +473,6 @@ export type ConsumerMaxOrderByAggregateInput = {
 export type ConsumerMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   organizationName?: Prisma.SortOrder
   criticalLoadKw?: Prisma.SortOrder
   address?: Prisma.SortOrder
@@ -515,16 +485,6 @@ export type ConsumerMinOrderByAggregateInput = {
 
 export type ConsumerSumOrderByAggregateInput = {
   criticalLoadKw?: Prisma.SortOrder
-}
-
-export type ConsumerListRelationFilter = {
-  every?: Prisma.ConsumerWhereInput
-  some?: Prisma.ConsumerWhereInput
-  none?: Prisma.ConsumerWhereInput
-}
-
-export type ConsumerOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
 }
 
 export type ConsumerNullableScalarRelationFilter = {
@@ -574,48 +534,6 @@ export type ConsumerUpdateOneRequiredWithoutReservationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ConsumerUpdateToOneWithWhereWithoutReservationsInput, Prisma.ConsumerUpdateWithoutReservationsInput>, Prisma.ConsumerUncheckedUpdateWithoutReservationsInput>
 }
 
-export type ConsumerCreateNestedManyWithoutZoneInput = {
-  create?: Prisma.XOR<Prisma.ConsumerCreateWithoutZoneInput, Prisma.ConsumerUncheckedCreateWithoutZoneInput> | Prisma.ConsumerCreateWithoutZoneInput[] | Prisma.ConsumerUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.ConsumerCreateOrConnectWithoutZoneInput | Prisma.ConsumerCreateOrConnectWithoutZoneInput[]
-  createMany?: Prisma.ConsumerCreateManyZoneInputEnvelope
-  connect?: Prisma.ConsumerWhereUniqueInput | Prisma.ConsumerWhereUniqueInput[]
-}
-
-export type ConsumerUncheckedCreateNestedManyWithoutZoneInput = {
-  create?: Prisma.XOR<Prisma.ConsumerCreateWithoutZoneInput, Prisma.ConsumerUncheckedCreateWithoutZoneInput> | Prisma.ConsumerCreateWithoutZoneInput[] | Prisma.ConsumerUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.ConsumerCreateOrConnectWithoutZoneInput | Prisma.ConsumerCreateOrConnectWithoutZoneInput[]
-  createMany?: Prisma.ConsumerCreateManyZoneInputEnvelope
-  connect?: Prisma.ConsumerWhereUniqueInput | Prisma.ConsumerWhereUniqueInput[]
-}
-
-export type ConsumerUpdateManyWithoutZoneNestedInput = {
-  create?: Prisma.XOR<Prisma.ConsumerCreateWithoutZoneInput, Prisma.ConsumerUncheckedCreateWithoutZoneInput> | Prisma.ConsumerCreateWithoutZoneInput[] | Prisma.ConsumerUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.ConsumerCreateOrConnectWithoutZoneInput | Prisma.ConsumerCreateOrConnectWithoutZoneInput[]
-  upsert?: Prisma.ConsumerUpsertWithWhereUniqueWithoutZoneInput | Prisma.ConsumerUpsertWithWhereUniqueWithoutZoneInput[]
-  createMany?: Prisma.ConsumerCreateManyZoneInputEnvelope
-  set?: Prisma.ConsumerWhereUniqueInput | Prisma.ConsumerWhereUniqueInput[]
-  disconnect?: Prisma.ConsumerWhereUniqueInput | Prisma.ConsumerWhereUniqueInput[]
-  delete?: Prisma.ConsumerWhereUniqueInput | Prisma.ConsumerWhereUniqueInput[]
-  connect?: Prisma.ConsumerWhereUniqueInput | Prisma.ConsumerWhereUniqueInput[]
-  update?: Prisma.ConsumerUpdateWithWhereUniqueWithoutZoneInput | Prisma.ConsumerUpdateWithWhereUniqueWithoutZoneInput[]
-  updateMany?: Prisma.ConsumerUpdateManyWithWhereWithoutZoneInput | Prisma.ConsumerUpdateManyWithWhereWithoutZoneInput[]
-  deleteMany?: Prisma.ConsumerScalarWhereInput | Prisma.ConsumerScalarWhereInput[]
-}
-
-export type ConsumerUncheckedUpdateManyWithoutZoneNestedInput = {
-  create?: Prisma.XOR<Prisma.ConsumerCreateWithoutZoneInput, Prisma.ConsumerUncheckedCreateWithoutZoneInput> | Prisma.ConsumerCreateWithoutZoneInput[] | Prisma.ConsumerUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.ConsumerCreateOrConnectWithoutZoneInput | Prisma.ConsumerCreateOrConnectWithoutZoneInput[]
-  upsert?: Prisma.ConsumerUpsertWithWhereUniqueWithoutZoneInput | Prisma.ConsumerUpsertWithWhereUniqueWithoutZoneInput[]
-  createMany?: Prisma.ConsumerCreateManyZoneInputEnvelope
-  set?: Prisma.ConsumerWhereUniqueInput | Prisma.ConsumerWhereUniqueInput[]
-  disconnect?: Prisma.ConsumerWhereUniqueInput | Prisma.ConsumerWhereUniqueInput[]
-  delete?: Prisma.ConsumerWhereUniqueInput | Prisma.ConsumerWhereUniqueInput[]
-  connect?: Prisma.ConsumerWhereUniqueInput | Prisma.ConsumerWhereUniqueInput[]
-  update?: Prisma.ConsumerUpdateWithWhereUniqueWithoutZoneInput | Prisma.ConsumerUpdateWithWhereUniqueWithoutZoneInput[]
-  updateMany?: Prisma.ConsumerUpdateManyWithWhereWithoutZoneInput | Prisma.ConsumerUpdateManyWithWhereWithoutZoneInput[]
-  deleteMany?: Prisma.ConsumerScalarWhereInput | Prisma.ConsumerScalarWhereInput[]
-}
-
 export type ConsumerCreateNestedOneWithoutUserInput = {
   create?: Prisma.XOR<Prisma.ConsumerCreateWithoutUserInput, Prisma.ConsumerUncheckedCreateWithoutUserInput>
   connectOrCreate?: Prisma.ConsumerCreateOrConnectWithoutUserInput
@@ -659,7 +577,6 @@ export type ConsumerCreateWithoutCapacityRequestsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   user: Prisma.UserCreateNestedOneWithoutConsumerInput
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutConsumersInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutConsumerInput
   ratings?: Prisma.RatingCreateNestedManyWithoutConsumerInput
 }
@@ -667,7 +584,6 @@ export type ConsumerCreateWithoutCapacityRequestsInput = {
 export type ConsumerUncheckedCreateWithoutCapacityRequestsInput = {
   id?: string
   userId: string
-  zoneId: string
   organizationName: string
   criticalLoadKw: number
   address: string
@@ -707,7 +623,6 @@ export type ConsumerUpdateWithoutCapacityRequestsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutConsumerNestedInput
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutConsumersNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutConsumerNestedInput
   ratings?: Prisma.RatingUpdateManyWithoutConsumerNestedInput
 }
@@ -715,7 +630,6 @@ export type ConsumerUpdateWithoutCapacityRequestsInput = {
 export type ConsumerUncheckedUpdateWithoutCapacityRequestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationName?: Prisma.StringFieldUpdateOperationsInput | string
   criticalLoadKw?: Prisma.IntFieldUpdateOperationsInput | number
   address?: Prisma.StringFieldUpdateOperationsInput | string
@@ -739,7 +653,6 @@ export type ConsumerCreateWithoutRatingsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   user: Prisma.UserCreateNestedOneWithoutConsumerInput
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutConsumersInput
   capacityRequests?: Prisma.CapacityRequestCreateNestedManyWithoutConsumerInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutConsumerInput
 }
@@ -747,7 +660,6 @@ export type ConsumerCreateWithoutRatingsInput = {
 export type ConsumerUncheckedCreateWithoutRatingsInput = {
   id?: string
   userId: string
-  zoneId: string
   organizationName: string
   criticalLoadKw: number
   address: string
@@ -787,7 +699,6 @@ export type ConsumerUpdateWithoutRatingsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutConsumerNestedInput
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutConsumersNestedInput
   capacityRequests?: Prisma.CapacityRequestUpdateManyWithoutConsumerNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutConsumerNestedInput
 }
@@ -795,7 +706,6 @@ export type ConsumerUpdateWithoutRatingsInput = {
 export type ConsumerUncheckedUpdateWithoutRatingsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationName?: Prisma.StringFieldUpdateOperationsInput | string
   criticalLoadKw?: Prisma.IntFieldUpdateOperationsInput | number
   address?: Prisma.StringFieldUpdateOperationsInput | string
@@ -819,7 +729,6 @@ export type ConsumerCreateWithoutReservationsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   user: Prisma.UserCreateNestedOneWithoutConsumerInput
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutConsumersInput
   capacityRequests?: Prisma.CapacityRequestCreateNestedManyWithoutConsumerInput
   ratings?: Prisma.RatingCreateNestedManyWithoutConsumerInput
 }
@@ -827,7 +736,6 @@ export type ConsumerCreateWithoutReservationsInput = {
 export type ConsumerUncheckedCreateWithoutReservationsInput = {
   id?: string
   userId: string
-  zoneId: string
   organizationName: string
   criticalLoadKw: number
   address: string
@@ -867,7 +775,6 @@ export type ConsumerUpdateWithoutReservationsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutConsumerNestedInput
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutConsumersNestedInput
   capacityRequests?: Prisma.CapacityRequestUpdateManyWithoutConsumerNestedInput
   ratings?: Prisma.RatingUpdateManyWithoutConsumerNestedInput
 }
@@ -875,7 +782,6 @@ export type ConsumerUpdateWithoutReservationsInput = {
 export type ConsumerUncheckedUpdateWithoutReservationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationName?: Prisma.StringFieldUpdateOperationsInput | string
   criticalLoadKw?: Prisma.IntFieldUpdateOperationsInput | number
   address?: Prisma.StringFieldUpdateOperationsInput | string
@@ -888,81 +794,6 @@ export type ConsumerUncheckedUpdateWithoutReservationsInput = {
   ratings?: Prisma.RatingUncheckedUpdateManyWithoutConsumerNestedInput
 }
 
-export type ConsumerCreateWithoutZoneInput = {
-  id?: string
-  organizationName: string
-  criticalLoadKw: number
-  address: string
-  contactPerson: string
-  contactPhone: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  user: Prisma.UserCreateNestedOneWithoutConsumerInput
-  capacityRequests?: Prisma.CapacityRequestCreateNestedManyWithoutConsumerInput
-  reservations?: Prisma.ReservationCreateNestedManyWithoutConsumerInput
-  ratings?: Prisma.RatingCreateNestedManyWithoutConsumerInput
-}
-
-export type ConsumerUncheckedCreateWithoutZoneInput = {
-  id?: string
-  userId: string
-  organizationName: string
-  criticalLoadKw: number
-  address: string
-  contactPerson: string
-  contactPhone: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  capacityRequests?: Prisma.CapacityRequestUncheckedCreateNestedManyWithoutConsumerInput
-  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutConsumerInput
-  ratings?: Prisma.RatingUncheckedCreateNestedManyWithoutConsumerInput
-}
-
-export type ConsumerCreateOrConnectWithoutZoneInput = {
-  where: Prisma.ConsumerWhereUniqueInput
-  create: Prisma.XOR<Prisma.ConsumerCreateWithoutZoneInput, Prisma.ConsumerUncheckedCreateWithoutZoneInput>
-}
-
-export type ConsumerCreateManyZoneInputEnvelope = {
-  data: Prisma.ConsumerCreateManyZoneInput | Prisma.ConsumerCreateManyZoneInput[]
-  skipDuplicates?: boolean
-}
-
-export type ConsumerUpsertWithWhereUniqueWithoutZoneInput = {
-  where: Prisma.ConsumerWhereUniqueInput
-  update: Prisma.XOR<Prisma.ConsumerUpdateWithoutZoneInput, Prisma.ConsumerUncheckedUpdateWithoutZoneInput>
-  create: Prisma.XOR<Prisma.ConsumerCreateWithoutZoneInput, Prisma.ConsumerUncheckedCreateWithoutZoneInput>
-}
-
-export type ConsumerUpdateWithWhereUniqueWithoutZoneInput = {
-  where: Prisma.ConsumerWhereUniqueInput
-  data: Prisma.XOR<Prisma.ConsumerUpdateWithoutZoneInput, Prisma.ConsumerUncheckedUpdateWithoutZoneInput>
-}
-
-export type ConsumerUpdateManyWithWhereWithoutZoneInput = {
-  where: Prisma.ConsumerScalarWhereInput
-  data: Prisma.XOR<Prisma.ConsumerUpdateManyMutationInput, Prisma.ConsumerUncheckedUpdateManyWithoutZoneInput>
-}
-
-export type ConsumerScalarWhereInput = {
-  AND?: Prisma.ConsumerScalarWhereInput | Prisma.ConsumerScalarWhereInput[]
-  OR?: Prisma.ConsumerScalarWhereInput[]
-  NOT?: Prisma.ConsumerScalarWhereInput | Prisma.ConsumerScalarWhereInput[]
-  id?: Prisma.StringFilter<"Consumer"> | string
-  userId?: Prisma.StringFilter<"Consumer"> | string
-  zoneId?: Prisma.StringFilter<"Consumer"> | string
-  organizationName?: Prisma.StringFilter<"Consumer"> | string
-  criticalLoadKw?: Prisma.IntFilter<"Consumer"> | number
-  address?: Prisma.StringFilter<"Consumer"> | string
-  contactPerson?: Prisma.StringFilter<"Consumer"> | string
-  contactPhone?: Prisma.StringFilter<"Consumer"> | string
-  createdAt?: Prisma.DateTimeFilter<"Consumer"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Consumer"> | Date | string
-  deletedAt?: Prisma.DateTimeNullableFilter<"Consumer"> | Date | string | null
-}
-
 export type ConsumerCreateWithoutUserInput = {
   id?: string
   organizationName: string
@@ -973,7 +804,6 @@ export type ConsumerCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutConsumersInput
   capacityRequests?: Prisma.CapacityRequestCreateNestedManyWithoutConsumerInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutConsumerInput
   ratings?: Prisma.RatingCreateNestedManyWithoutConsumerInput
@@ -981,7 +811,6 @@ export type ConsumerCreateWithoutUserInput = {
 
 export type ConsumerUncheckedCreateWithoutUserInput = {
   id?: string
-  zoneId: string
   organizationName: string
   criticalLoadKw: number
   address: string
@@ -1021,7 +850,6 @@ export type ConsumerUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutConsumersNestedInput
   capacityRequests?: Prisma.CapacityRequestUpdateManyWithoutConsumerNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutConsumerNestedInput
   ratings?: Prisma.RatingUpdateManyWithoutConsumerNestedInput
@@ -1029,7 +857,6 @@ export type ConsumerUpdateWithoutUserInput = {
 
 export type ConsumerUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationName?: Prisma.StringFieldUpdateOperationsInput | string
   criticalLoadKw?: Prisma.IntFieldUpdateOperationsInput | number
   address?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1041,64 +868,6 @@ export type ConsumerUncheckedUpdateWithoutUserInput = {
   capacityRequests?: Prisma.CapacityRequestUncheckedUpdateManyWithoutConsumerNestedInput
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutConsumerNestedInput
   ratings?: Prisma.RatingUncheckedUpdateManyWithoutConsumerNestedInput
-}
-
-export type ConsumerCreateManyZoneInput = {
-  id?: string
-  userId: string
-  organizationName: string
-  criticalLoadKw: number
-  address: string
-  contactPerson: string
-  contactPhone: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-}
-
-export type ConsumerUpdateWithoutZoneInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationName?: Prisma.StringFieldUpdateOperationsInput | string
-  criticalLoadKw?: Prisma.IntFieldUpdateOperationsInput | number
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  user?: Prisma.UserUpdateOneRequiredWithoutConsumerNestedInput
-  capacityRequests?: Prisma.CapacityRequestUpdateManyWithoutConsumerNestedInput
-  reservations?: Prisma.ReservationUpdateManyWithoutConsumerNestedInput
-  ratings?: Prisma.RatingUpdateManyWithoutConsumerNestedInput
-}
-
-export type ConsumerUncheckedUpdateWithoutZoneInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationName?: Prisma.StringFieldUpdateOperationsInput | string
-  criticalLoadKw?: Prisma.IntFieldUpdateOperationsInput | number
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  capacityRequests?: Prisma.CapacityRequestUncheckedUpdateManyWithoutConsumerNestedInput
-  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutConsumerNestedInput
-  ratings?: Prisma.RatingUncheckedUpdateManyWithoutConsumerNestedInput
-}
-
-export type ConsumerUncheckedUpdateManyWithoutZoneInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationName?: Prisma.StringFieldUpdateOperationsInput | string
-  criticalLoadKw?: Prisma.IntFieldUpdateOperationsInput | number
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -1153,7 +922,6 @@ export type ConsumerCountOutputTypeCountRatingsArgs<ExtArgs extends runtime.Type
 export type ConsumerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  zoneId?: boolean
   organizationName?: boolean
   criticalLoadKw?: boolean
   address?: boolean
@@ -1163,7 +931,6 @@ export type ConsumerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   updatedAt?: boolean
   deletedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
   capacityRequests?: boolean | Prisma.Consumer$capacityRequestsArgs<ExtArgs>
   reservations?: boolean | Prisma.Consumer$reservationsArgs<ExtArgs>
   ratings?: boolean | Prisma.Consumer$ratingsArgs<ExtArgs>
@@ -1173,7 +940,6 @@ export type ConsumerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type ConsumerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  zoneId?: boolean
   organizationName?: boolean
   criticalLoadKw?: boolean
   address?: boolean
@@ -1183,13 +949,11 @@ export type ConsumerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   updatedAt?: boolean
   deletedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["consumer"]>
 
 export type ConsumerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  zoneId?: boolean
   organizationName?: boolean
   criticalLoadKw?: boolean
   address?: boolean
@@ -1199,13 +963,11 @@ export type ConsumerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   updatedAt?: boolean
   deletedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["consumer"]>
 
 export type ConsumerSelectScalar = {
   id?: boolean
   userId?: boolean
-  zoneId?: boolean
   organizationName?: boolean
   criticalLoadKw?: boolean
   address?: boolean
@@ -1216,10 +978,9 @@ export type ConsumerSelectScalar = {
   deletedAt?: boolean
 }
 
-export type ConsumerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "zoneId" | "organizationName" | "criticalLoadKw" | "address" | "contactPerson" | "contactPhone" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["consumer"]>
+export type ConsumerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "organizationName" | "criticalLoadKw" | "address" | "contactPerson" | "contactPhone" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["consumer"]>
 export type ConsumerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
   capacityRequests?: boolean | Prisma.Consumer$capacityRequestsArgs<ExtArgs>
   reservations?: boolean | Prisma.Consumer$reservationsArgs<ExtArgs>
   ratings?: boolean | Prisma.Consumer$ratingsArgs<ExtArgs>
@@ -1227,18 +988,15 @@ export type ConsumerInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
 }
 export type ConsumerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
 }
 export type ConsumerIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
 }
 
 export type $ConsumerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Consumer"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
-    zone: Prisma.$ServiceZonePayload<ExtArgs>
     capacityRequests: Prisma.$CapacityRequestPayload<ExtArgs>[]
     reservations: Prisma.$ReservationPayload<ExtArgs>[]
     ratings: Prisma.$RatingPayload<ExtArgs>[]
@@ -1246,7 +1004,6 @@ export type $ConsumerPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
-    zoneId: string
     organizationName: string
     criticalLoadKw: number
     address: string
@@ -1650,7 +1407,6 @@ readonly fields: ConsumerFieldRefs;
 export interface Prisma__ConsumerClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  zone<T extends Prisma.ServiceZoneDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ServiceZoneDefaultArgs<ExtArgs>>): Prisma.Prisma__ServiceZoneClient<runtime.Types.Result.GetResult<Prisma.$ServiceZonePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   capacityRequests<T extends Prisma.Consumer$capacityRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Consumer$capacityRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CapacityRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reservations<T extends Prisma.Consumer$reservationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Consumer$reservationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ratings<T extends Prisma.Consumer$ratingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Consumer$ratingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RatingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1685,7 +1441,6 @@ export interface Prisma__ConsumerClient<T, Null = never, ExtArgs extends runtime
 export interface ConsumerFieldRefs {
   readonly id: Prisma.FieldRef<"Consumer", 'String'>
   readonly userId: Prisma.FieldRef<"Consumer", 'String'>
-  readonly zoneId: Prisma.FieldRef<"Consumer", 'String'>
   readonly organizationName: Prisma.FieldRef<"Consumer", 'String'>
   readonly criticalLoadKw: Prisma.FieldRef<"Consumer", 'Int'>
   readonly address: Prisma.FieldRef<"Consumer", 'String'>

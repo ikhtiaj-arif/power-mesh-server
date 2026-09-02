@@ -107,11 +107,6 @@ export type Refund = Prisma.RefundModel
  */
 export type Reservation = Prisma.ReservationModel
 /**
- * Model ServiceZone
- * 
- */
-export type ServiceZone = Prisma.ServiceZoneModel
-/**
  * Model User
  * 
  */

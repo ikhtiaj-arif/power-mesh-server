@@ -410,7 +410,6 @@ export const ModelName = {
   Rating: 'Rating',
   Refund: 'Refund',
   Reservation: 'Reservation',
-  ServiceZone: 'ServiceZone',
   User: 'User'
 } as const
 
@@ -427,7 +426,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "auditLog" | "capacityOffer" | "capacityRequest" | "consumer" | "delivery" | "incident" | "operator" | "outageEvent" | "payment" | "provider" | "rating" | "refund" | "reservation" | "serviceZone" | "user"
+    modelProps: "auditLog" | "capacityOffer" | "capacityRequest" | "consumer" | "delivery" | "incident" | "operator" | "outageEvent" | "payment" | "provider" | "rating" | "refund" | "reservation" | "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1393,80 +1392,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    ServiceZone: {
-      payload: Prisma.$ServiceZonePayload<ExtArgs>
-      fields: Prisma.ServiceZoneFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.ServiceZoneFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceZonePayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.ServiceZoneFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceZonePayload>
-        }
-        findFirst: {
-          args: Prisma.ServiceZoneFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceZonePayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.ServiceZoneFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceZonePayload>
-        }
-        findMany: {
-          args: Prisma.ServiceZoneFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceZonePayload>[]
-        }
-        create: {
-          args: Prisma.ServiceZoneCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceZonePayload>
-        }
-        createMany: {
-          args: Prisma.ServiceZoneCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.ServiceZoneCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceZonePayload>[]
-        }
-        delete: {
-          args: Prisma.ServiceZoneDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceZonePayload>
-        }
-        update: {
-          args: Prisma.ServiceZoneUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceZonePayload>
-        }
-        deleteMany: {
-          args: Prisma.ServiceZoneDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.ServiceZoneUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.ServiceZoneUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceZonePayload>[]
-        }
-        upsert: {
-          args: Prisma.ServiceZoneUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceZonePayload>
-        }
-        aggregate: {
-          args: Prisma.ServiceZoneAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateServiceZone>
-        }
-        groupBy: {
-          args: Prisma.ServiceZoneGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ServiceZoneGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.ServiceZoneCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ServiceZoneCountAggregateOutputType> | number
-        }
-      }
-    }
     User: {
       payload: Prisma.$UserPayload<ExtArgs>
       fields: Prisma.UserFieldRefs
@@ -1599,7 +1524,6 @@ export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typ
 export const CapacityOfferScalarFieldEnum = {
   id: 'id',
   providerId: 'providerId',
-  zoneId: 'zoneId',
   eventId: 'eventId',
   capacityKw: 'capacityKw',
   pricePerKwh: 'pricePerKwh',
@@ -1618,7 +1542,6 @@ export type CapacityOfferScalarFieldEnum = (typeof CapacityOfferScalarFieldEnum)
 export const CapacityRequestScalarFieldEnum = {
   id: 'id',
   consumerId: 'consumerId',
-  zoneId: 'zoneId',
   eventId: 'eventId',
   requestedKw: 'requestedKw',
   maxPricePerKwh: 'maxPricePerKwh',
@@ -1636,7 +1559,6 @@ export type CapacityRequestScalarFieldEnum = (typeof CapacityRequestScalarFieldE
 export const ConsumerScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  zoneId: 'zoneId',
   organizationName: 'organizationName',
   criticalLoadKw: 'criticalLoadKw',
   address: 'address',
@@ -1689,7 +1611,6 @@ export type IncidentScalarFieldEnum = (typeof IncidentScalarFieldEnum)[keyof typ
 export const OperatorScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  zoneId: 'zoneId',
   roleLevel: 'roleLevel',
   isAdmin: 'isAdmin',
   createdAt: 'createdAt',
@@ -1702,12 +1623,13 @@ export type OperatorScalarFieldEnum = (typeof OperatorScalarFieldEnum)[keyof typ
 
 export const OutageEventScalarFieldEnum = {
   id: 'id',
-  zoneId: 'zoneId',
   operatorId: 'operatorId',
   scheduledStart: 'scheduledStart',
   scheduledEnd: 'scheduledEnd',
   status: 'status',
-  estimatedDurationMins: 'estimatedDurationMins',
+  totalCapacityKw: 'totalCapacityKw',
+  survivalQuotaKw: 'survivalQuotaKw',
+  allocatedKw: 'allocatedKw',
   notes: 'notes',
   actualStart: 'actualStart',
   actualEnd: 'actualEnd',
@@ -1726,11 +1648,9 @@ export const PaymentScalarFieldEnum = {
   gatewayStatus: 'gatewayStatus',
   amount: 'amount',
   currency: 'currency',
-  paymentMethod: 'paymentMethod',
   initiatedAt: 'initiatedAt',
   completedAt: 'completedAt',
   idempotencyKey: 'idempotencyKey',
-  webhookStatus: 'webhookStatus',
   webhookReceivedAt: 'webhookReceivedAt',
   webhookProcessedAt: 'webhookProcessedAt',
   createdAt: 'createdAt',
@@ -1744,7 +1664,6 @@ export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeo
 export const ProviderScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  zoneId: 'zoneId',
   companyName: 'companyName',
   licenseNumber: 'licenseNumber',
   resourceType: 'resourceType',
@@ -1786,7 +1705,6 @@ export const RefundScalarFieldEnum = {
   amount: 'amount',
   reason: 'reason',
   gatewayRefundId: 'gatewayRefundId',
-  status: 'status',
   initiatedAt: 'initiatedAt',
   completedAt: 'completedAt',
   createdAt: 'createdAt',
@@ -1806,9 +1724,9 @@ export const ReservationScalarFieldEnum = {
   allocatedKw: 'allocatedKw',
   unitPrice: 'unitPrice',
   totalAmount: 'totalAmount',
-  status: 'status',
   deliveryStart: 'deliveryStart',
   deliveryEnd: 'deliveryEnd',
+  status: 'status',
   paymentStatus: 'paymentStatus',
   idempotencyKey: 'idempotencyKey',
   providerCheckinAt: 'providerCheckinAt',
@@ -1818,22 +1736,6 @@ export const ReservationScalarFieldEnum = {
 } as const
 
 export type ReservationScalarFieldEnum = (typeof ReservationScalarFieldEnum)[keyof typeof ReservationScalarFieldEnum]
-
-
-export const ServiceZoneScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  region: 'region',
-  gridOperator: 'gridOperator',
-  latitude: 'latitude',
-  longitude: 'longitude',
-  coverageAreaSqKm: 'coverageAreaSqKm',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
-} as const
-
-export type ServiceZoneScalarFieldEnum = (typeof ServiceZoneScalarFieldEnum)[keyof typeof ServiceZoneScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -1852,7 +1754,8 @@ export const UserScalarFieldEnum = {
   isDeleted: 'isDeleted',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  status: 'status'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -2060,6 +1963,20 @@ export type ListEnumIncidentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<
 
 
 /**
+ * Reference to a field of type 'IncidentStatus'
+ */
+export type EnumIncidentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IncidentStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'IncidentStatus[]'
+ */
+export type ListEnumIncidentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IncidentStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
@@ -2123,20 +2040,6 @@ export type ListEnumReservationStatusFieldRefInput<$PrismaModel> = FieldRefInput
 
 
 /**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-/**
- * Reference to a field of type 'Float[]'
- */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-/**
  * Reference to a field of type 'UserRole'
  */
 export type EnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole'>
@@ -2147,6 +2050,34 @@ export type EnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'UserRole[]'
  */
 export type ListEnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole[]'>
+    
+
+
+/**
+ * Reference to a field of type 'UserStatus'
+ */
+export type EnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'UserStatus[]'
+ */
+export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -2313,7 +2244,6 @@ export type GlobalOmitConfig = {
   rating?: Prisma.RatingOmit
   refund?: Prisma.RefundOmit
   reservation?: Prisma.ReservationOmit
-  serviceZone?: Prisma.ServiceZoneOmit
   user?: Prisma.UserOmit
 }
 

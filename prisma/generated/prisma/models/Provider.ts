@@ -37,7 +37,6 @@ export type ProviderSumAggregateOutputType = {
 export type ProviderMinAggregateOutputType = {
   id: string | null
   userId: string | null
-  zoneId: string | null
   companyName: string | null
   licenseNumber: string | null
   resourceType: $Enums.ResourceType | null
@@ -57,7 +56,6 @@ export type ProviderMinAggregateOutputType = {
 export type ProviderMaxAggregateOutputType = {
   id: string | null
   userId: string | null
-  zoneId: string | null
   companyName: string | null
   licenseNumber: string | null
   resourceType: $Enums.ResourceType | null
@@ -77,7 +75,6 @@ export type ProviderMaxAggregateOutputType = {
 export type ProviderCountAggregateOutputType = {
   id: number
   userId: number
-  zoneId: number
   companyName: number
   licenseNumber: number
   resourceType: number
@@ -107,7 +104,6 @@ export type ProviderSumAggregateInputType = {
 export type ProviderMinAggregateInputType = {
   id?: true
   userId?: true
-  zoneId?: true
   companyName?: true
   licenseNumber?: true
   resourceType?: true
@@ -127,7 +123,6 @@ export type ProviderMinAggregateInputType = {
 export type ProviderMaxAggregateInputType = {
   id?: true
   userId?: true
-  zoneId?: true
   companyName?: true
   licenseNumber?: true
   resourceType?: true
@@ -147,7 +142,6 @@ export type ProviderMaxAggregateInputType = {
 export type ProviderCountAggregateInputType = {
   id?: true
   userId?: true
-  zoneId?: true
   companyName?: true
   licenseNumber?: true
   resourceType?: true
@@ -254,7 +248,6 @@ export type ProviderGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 export type ProviderGroupByOutputType = {
   id: string
   userId: string
-  zoneId: string
   companyName: string
   licenseNumber: string
   resourceType: $Enums.ResourceType
@@ -297,7 +290,6 @@ export type ProviderWhereInput = {
   NOT?: Prisma.ProviderWhereInput | Prisma.ProviderWhereInput[]
   id?: Prisma.StringFilter<"Provider"> | string
   userId?: Prisma.StringFilter<"Provider"> | string
-  zoneId?: Prisma.StringFilter<"Provider"> | string
   companyName?: Prisma.StringFilter<"Provider"> | string
   licenseNumber?: Prisma.StringFilter<"Provider"> | string
   resourceType?: Prisma.EnumResourceTypeFilter<"Provider"> | $Enums.ResourceType
@@ -313,7 +305,6 @@ export type ProviderWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Provider"> | Date | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  zone?: Prisma.XOR<Prisma.ServiceZoneScalarRelationFilter, Prisma.ServiceZoneWhereInput>
   capacityOffers?: Prisma.CapacityOfferListRelationFilter
   reservations?: Prisma.ReservationListRelationFilter
   incidents?: Prisma.IncidentListRelationFilter
@@ -323,7 +314,6 @@ export type ProviderWhereInput = {
 export type ProviderOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrder
   resourceType?: Prisma.SortOrder
@@ -339,7 +329,6 @@ export type ProviderOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
-  zone?: Prisma.ServiceZoneOrderByWithRelationInput
   capacityOffers?: Prisma.CapacityOfferOrderByRelationAggregateInput
   reservations?: Prisma.ReservationOrderByRelationAggregateInput
   incidents?: Prisma.IncidentOrderByRelationAggregateInput
@@ -350,11 +339,9 @@ export type ProviderWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   userId?: string
   licenseNumber?: string
-  userId_zoneId?: Prisma.ProviderUserIdZoneIdCompoundUniqueInput
   AND?: Prisma.ProviderWhereInput | Prisma.ProviderWhereInput[]
   OR?: Prisma.ProviderWhereInput[]
   NOT?: Prisma.ProviderWhereInput | Prisma.ProviderWhereInput[]
-  zoneId?: Prisma.StringFilter<"Provider"> | string
   companyName?: Prisma.StringFilter<"Provider"> | string
   resourceType?: Prisma.EnumResourceTypeFilter<"Provider"> | $Enums.ResourceType
   capacityKw?: Prisma.IntFilter<"Provider"> | number
@@ -369,17 +356,15 @@ export type ProviderWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Provider"> | Date | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  zone?: Prisma.XOR<Prisma.ServiceZoneScalarRelationFilter, Prisma.ServiceZoneWhereInput>
   capacityOffers?: Prisma.CapacityOfferListRelationFilter
   reservations?: Prisma.ReservationListRelationFilter
   incidents?: Prisma.IncidentListRelationFilter
   ratings?: Prisma.RatingListRelationFilter
-}, "id" | "userId" | "licenseNumber" | "userId_zoneId">
+}, "id" | "userId" | "licenseNumber">
 
 export type ProviderOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrder
   resourceType?: Prisma.SortOrder
@@ -407,7 +392,6 @@ export type ProviderScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ProviderScalarWhereWithAggregatesInput | Prisma.ProviderScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Provider"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Provider"> | string
-  zoneId?: Prisma.StringWithAggregatesFilter<"Provider"> | string
   companyName?: Prisma.StringWithAggregatesFilter<"Provider"> | string
   licenseNumber?: Prisma.StringWithAggregatesFilter<"Provider"> | string
   resourceType?: Prisma.EnumResourceTypeWithAggregatesFilter<"Provider"> | $Enums.ResourceType
@@ -441,7 +425,6 @@ export type ProviderCreateInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   user: Prisma.UserCreateNestedOneWithoutProviderInput
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutProvidersInput
   capacityOffers?: Prisma.CapacityOfferCreateNestedManyWithoutProviderInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutProviderInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutProviderInput
@@ -451,7 +434,6 @@ export type ProviderCreateInput = {
 export type ProviderUncheckedCreateInput = {
   id?: string
   userId: string
-  zoneId: string
   companyName: string
   licenseNumber: string
   resourceType: $Enums.ResourceType
@@ -489,7 +471,6 @@ export type ProviderUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutProviderNestedInput
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutProvidersNestedInput
   capacityOffers?: Prisma.CapacityOfferUpdateManyWithoutProviderNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutProviderNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutProviderNestedInput
@@ -499,7 +480,6 @@ export type ProviderUpdateInput = {
 export type ProviderUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
   resourceType?: Prisma.EnumResourceTypeFieldUpdateOperationsInput | $Enums.ResourceType
@@ -523,7 +503,6 @@ export type ProviderUncheckedUpdateInput = {
 export type ProviderCreateManyInput = {
   id?: string
   userId: string
-  zoneId: string
   companyName: string
   licenseNumber: string
   resourceType: $Enums.ResourceType
@@ -561,7 +540,6 @@ export type ProviderUpdateManyMutationInput = {
 export type ProviderUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
   resourceType?: Prisma.EnumResourceTypeFieldUpdateOperationsInput | $Enums.ResourceType
@@ -583,15 +561,9 @@ export type ProviderScalarRelationFilter = {
   isNot?: Prisma.ProviderWhereInput
 }
 
-export type ProviderUserIdZoneIdCompoundUniqueInput = {
-  userId: string
-  zoneId: string
-}
-
 export type ProviderCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrder
   resourceType?: Prisma.SortOrder
@@ -615,7 +587,6 @@ export type ProviderAvgOrderByAggregateInput = {
 export type ProviderMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrder
   resourceType?: Prisma.SortOrder
@@ -635,7 +606,6 @@ export type ProviderMaxOrderByAggregateInput = {
 export type ProviderMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrder
   resourceType?: Prisma.SortOrder
@@ -654,16 +624,6 @@ export type ProviderMinOrderByAggregateInput = {
 
 export type ProviderSumOrderByAggregateInput = {
   capacityKw?: Prisma.SortOrder
-}
-
-export type ProviderListRelationFilter = {
-  every?: Prisma.ProviderWhereInput
-  some?: Prisma.ProviderWhereInput
-  none?: Prisma.ProviderWhereInput
-}
-
-export type ProviderOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
 }
 
 export type ProviderNullableScalarRelationFilter = {
@@ -731,48 +691,6 @@ export type ProviderUpdateOneRequiredWithoutReservationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProviderUpdateToOneWithWhereWithoutReservationsInput, Prisma.ProviderUpdateWithoutReservationsInput>, Prisma.ProviderUncheckedUpdateWithoutReservationsInput>
 }
 
-export type ProviderCreateNestedManyWithoutZoneInput = {
-  create?: Prisma.XOR<Prisma.ProviderCreateWithoutZoneInput, Prisma.ProviderUncheckedCreateWithoutZoneInput> | Prisma.ProviderCreateWithoutZoneInput[] | Prisma.ProviderUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutZoneInput | Prisma.ProviderCreateOrConnectWithoutZoneInput[]
-  createMany?: Prisma.ProviderCreateManyZoneInputEnvelope
-  connect?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-}
-
-export type ProviderUncheckedCreateNestedManyWithoutZoneInput = {
-  create?: Prisma.XOR<Prisma.ProviderCreateWithoutZoneInput, Prisma.ProviderUncheckedCreateWithoutZoneInput> | Prisma.ProviderCreateWithoutZoneInput[] | Prisma.ProviderUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutZoneInput | Prisma.ProviderCreateOrConnectWithoutZoneInput[]
-  createMany?: Prisma.ProviderCreateManyZoneInputEnvelope
-  connect?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-}
-
-export type ProviderUpdateManyWithoutZoneNestedInput = {
-  create?: Prisma.XOR<Prisma.ProviderCreateWithoutZoneInput, Prisma.ProviderUncheckedCreateWithoutZoneInput> | Prisma.ProviderCreateWithoutZoneInput[] | Prisma.ProviderUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutZoneInput | Prisma.ProviderCreateOrConnectWithoutZoneInput[]
-  upsert?: Prisma.ProviderUpsertWithWhereUniqueWithoutZoneInput | Prisma.ProviderUpsertWithWhereUniqueWithoutZoneInput[]
-  createMany?: Prisma.ProviderCreateManyZoneInputEnvelope
-  set?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  disconnect?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  delete?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  connect?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  update?: Prisma.ProviderUpdateWithWhereUniqueWithoutZoneInput | Prisma.ProviderUpdateWithWhereUniqueWithoutZoneInput[]
-  updateMany?: Prisma.ProviderUpdateManyWithWhereWithoutZoneInput | Prisma.ProviderUpdateManyWithWhereWithoutZoneInput[]
-  deleteMany?: Prisma.ProviderScalarWhereInput | Prisma.ProviderScalarWhereInput[]
-}
-
-export type ProviderUncheckedUpdateManyWithoutZoneNestedInput = {
-  create?: Prisma.XOR<Prisma.ProviderCreateWithoutZoneInput, Prisma.ProviderUncheckedCreateWithoutZoneInput> | Prisma.ProviderCreateWithoutZoneInput[] | Prisma.ProviderUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutZoneInput | Prisma.ProviderCreateOrConnectWithoutZoneInput[]
-  upsert?: Prisma.ProviderUpsertWithWhereUniqueWithoutZoneInput | Prisma.ProviderUpsertWithWhereUniqueWithoutZoneInput[]
-  createMany?: Prisma.ProviderCreateManyZoneInputEnvelope
-  set?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  disconnect?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  delete?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  connect?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  update?: Prisma.ProviderUpdateWithWhereUniqueWithoutZoneInput | Prisma.ProviderUpdateWithWhereUniqueWithoutZoneInput[]
-  updateMany?: Prisma.ProviderUpdateManyWithWhereWithoutZoneInput | Prisma.ProviderUpdateManyWithWhereWithoutZoneInput[]
-  deleteMany?: Prisma.ProviderScalarWhereInput | Prisma.ProviderScalarWhereInput[]
-}
-
 export type ProviderCreateNestedOneWithoutUserInput = {
   create?: Prisma.XOR<Prisma.ProviderCreateWithoutUserInput, Prisma.ProviderUncheckedCreateWithoutUserInput>
   connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutUserInput
@@ -822,7 +740,6 @@ export type ProviderCreateWithoutCapacityOffersInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   user: Prisma.UserCreateNestedOneWithoutProviderInput
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutProvidersInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutProviderInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutProviderInput
   ratings?: Prisma.RatingCreateNestedManyWithoutProviderInput
@@ -831,7 +748,6 @@ export type ProviderCreateWithoutCapacityOffersInput = {
 export type ProviderUncheckedCreateWithoutCapacityOffersInput = {
   id?: string
   userId: string
-  zoneId: string
   companyName: string
   licenseNumber: string
   resourceType: $Enums.ResourceType
@@ -884,7 +800,6 @@ export type ProviderUpdateWithoutCapacityOffersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutProviderNestedInput
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutProvidersNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutProviderNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutProviderNestedInput
   ratings?: Prisma.RatingUpdateManyWithoutProviderNestedInput
@@ -893,7 +808,6 @@ export type ProviderUpdateWithoutCapacityOffersInput = {
 export type ProviderUncheckedUpdateWithoutCapacityOffersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
   resourceType?: Prisma.EnumResourceTypeFieldUpdateOperationsInput | $Enums.ResourceType
@@ -930,7 +844,6 @@ export type ProviderCreateWithoutIncidentsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   user: Prisma.UserCreateNestedOneWithoutProviderInput
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutProvidersInput
   capacityOffers?: Prisma.CapacityOfferCreateNestedManyWithoutProviderInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutProviderInput
   ratings?: Prisma.RatingCreateNestedManyWithoutProviderInput
@@ -939,7 +852,6 @@ export type ProviderCreateWithoutIncidentsInput = {
 export type ProviderUncheckedCreateWithoutIncidentsInput = {
   id?: string
   userId: string
-  zoneId: string
   companyName: string
   licenseNumber: string
   resourceType: $Enums.ResourceType
@@ -992,7 +904,6 @@ export type ProviderUpdateWithoutIncidentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutProviderNestedInput
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutProvidersNestedInput
   capacityOffers?: Prisma.CapacityOfferUpdateManyWithoutProviderNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutProviderNestedInput
   ratings?: Prisma.RatingUpdateManyWithoutProviderNestedInput
@@ -1001,7 +912,6 @@ export type ProviderUpdateWithoutIncidentsInput = {
 export type ProviderUncheckedUpdateWithoutIncidentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
   resourceType?: Prisma.EnumResourceTypeFieldUpdateOperationsInput | $Enums.ResourceType
@@ -1038,7 +948,6 @@ export type ProviderCreateWithoutRatingsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   user: Prisma.UserCreateNestedOneWithoutProviderInput
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutProvidersInput
   capacityOffers?: Prisma.CapacityOfferCreateNestedManyWithoutProviderInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutProviderInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutProviderInput
@@ -1047,7 +956,6 @@ export type ProviderCreateWithoutRatingsInput = {
 export type ProviderUncheckedCreateWithoutRatingsInput = {
   id?: string
   userId: string
-  zoneId: string
   companyName: string
   licenseNumber: string
   resourceType: $Enums.ResourceType
@@ -1100,7 +1008,6 @@ export type ProviderUpdateWithoutRatingsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutProviderNestedInput
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutProvidersNestedInput
   capacityOffers?: Prisma.CapacityOfferUpdateManyWithoutProviderNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutProviderNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutProviderNestedInput
@@ -1109,7 +1016,6 @@ export type ProviderUpdateWithoutRatingsInput = {
 export type ProviderUncheckedUpdateWithoutRatingsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
   resourceType?: Prisma.EnumResourceTypeFieldUpdateOperationsInput | $Enums.ResourceType
@@ -1146,7 +1052,6 @@ export type ProviderCreateWithoutReservationsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   user: Prisma.UserCreateNestedOneWithoutProviderInput
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutProvidersInput
   capacityOffers?: Prisma.CapacityOfferCreateNestedManyWithoutProviderInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutProviderInput
   ratings?: Prisma.RatingCreateNestedManyWithoutProviderInput
@@ -1155,7 +1060,6 @@ export type ProviderCreateWithoutReservationsInput = {
 export type ProviderUncheckedCreateWithoutReservationsInput = {
   id?: string
   userId: string
-  zoneId: string
   companyName: string
   licenseNumber: string
   resourceType: $Enums.ResourceType
@@ -1208,7 +1112,6 @@ export type ProviderUpdateWithoutReservationsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutProviderNestedInput
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutProvidersNestedInput
   capacityOffers?: Prisma.CapacityOfferUpdateManyWithoutProviderNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutProviderNestedInput
   ratings?: Prisma.RatingUpdateManyWithoutProviderNestedInput
@@ -1217,7 +1120,6 @@ export type ProviderUpdateWithoutReservationsInput = {
 export type ProviderUncheckedUpdateWithoutReservationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
   resourceType?: Prisma.EnumResourceTypeFieldUpdateOperationsInput | $Enums.ResourceType
@@ -1237,101 +1139,6 @@ export type ProviderUncheckedUpdateWithoutReservationsInput = {
   ratings?: Prisma.RatingUncheckedUpdateManyWithoutProviderNestedInput
 }
 
-export type ProviderCreateWithoutZoneInput = {
-  id?: string
-  companyName: string
-  licenseNumber: string
-  resourceType: $Enums.ResourceType
-  capacityKw: number
-  address: string
-  contactPerson: string
-  contactPhone: string
-  bankAccountNumber?: string | null
-  verified?: boolean
-  verifiedAt?: Date | string | null
-  verifiedBy?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  user: Prisma.UserCreateNestedOneWithoutProviderInput
-  capacityOffers?: Prisma.CapacityOfferCreateNestedManyWithoutProviderInput
-  reservations?: Prisma.ReservationCreateNestedManyWithoutProviderInput
-  incidents?: Prisma.IncidentCreateNestedManyWithoutProviderInput
-  ratings?: Prisma.RatingCreateNestedManyWithoutProviderInput
-}
-
-export type ProviderUncheckedCreateWithoutZoneInput = {
-  id?: string
-  userId: string
-  companyName: string
-  licenseNumber: string
-  resourceType: $Enums.ResourceType
-  capacityKw: number
-  address: string
-  contactPerson: string
-  contactPhone: string
-  bankAccountNumber?: string | null
-  verified?: boolean
-  verifiedAt?: Date | string | null
-  verifiedBy?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  capacityOffers?: Prisma.CapacityOfferUncheckedCreateNestedManyWithoutProviderInput
-  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutProviderInput
-  incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutProviderInput
-  ratings?: Prisma.RatingUncheckedCreateNestedManyWithoutProviderInput
-}
-
-export type ProviderCreateOrConnectWithoutZoneInput = {
-  where: Prisma.ProviderWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProviderCreateWithoutZoneInput, Prisma.ProviderUncheckedCreateWithoutZoneInput>
-}
-
-export type ProviderCreateManyZoneInputEnvelope = {
-  data: Prisma.ProviderCreateManyZoneInput | Prisma.ProviderCreateManyZoneInput[]
-  skipDuplicates?: boolean
-}
-
-export type ProviderUpsertWithWhereUniqueWithoutZoneInput = {
-  where: Prisma.ProviderWhereUniqueInput
-  update: Prisma.XOR<Prisma.ProviderUpdateWithoutZoneInput, Prisma.ProviderUncheckedUpdateWithoutZoneInput>
-  create: Prisma.XOR<Prisma.ProviderCreateWithoutZoneInput, Prisma.ProviderUncheckedCreateWithoutZoneInput>
-}
-
-export type ProviderUpdateWithWhereUniqueWithoutZoneInput = {
-  where: Prisma.ProviderWhereUniqueInput
-  data: Prisma.XOR<Prisma.ProviderUpdateWithoutZoneInput, Prisma.ProviderUncheckedUpdateWithoutZoneInput>
-}
-
-export type ProviderUpdateManyWithWhereWithoutZoneInput = {
-  where: Prisma.ProviderScalarWhereInput
-  data: Prisma.XOR<Prisma.ProviderUpdateManyMutationInput, Prisma.ProviderUncheckedUpdateManyWithoutZoneInput>
-}
-
-export type ProviderScalarWhereInput = {
-  AND?: Prisma.ProviderScalarWhereInput | Prisma.ProviderScalarWhereInput[]
-  OR?: Prisma.ProviderScalarWhereInput[]
-  NOT?: Prisma.ProviderScalarWhereInput | Prisma.ProviderScalarWhereInput[]
-  id?: Prisma.StringFilter<"Provider"> | string
-  userId?: Prisma.StringFilter<"Provider"> | string
-  zoneId?: Prisma.StringFilter<"Provider"> | string
-  companyName?: Prisma.StringFilter<"Provider"> | string
-  licenseNumber?: Prisma.StringFilter<"Provider"> | string
-  resourceType?: Prisma.EnumResourceTypeFilter<"Provider"> | $Enums.ResourceType
-  capacityKw?: Prisma.IntFilter<"Provider"> | number
-  address?: Prisma.StringFilter<"Provider"> | string
-  contactPerson?: Prisma.StringFilter<"Provider"> | string
-  contactPhone?: Prisma.StringFilter<"Provider"> | string
-  bankAccountNumber?: Prisma.StringNullableFilter<"Provider"> | string | null
-  verified?: Prisma.BoolFilter<"Provider"> | boolean
-  verifiedAt?: Prisma.DateTimeNullableFilter<"Provider"> | Date | string | null
-  verifiedBy?: Prisma.StringNullableFilter<"Provider"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
-  deletedAt?: Prisma.DateTimeNullableFilter<"Provider"> | Date | string | null
-}
-
 export type ProviderCreateWithoutUserInput = {
   id?: string
   companyName: string
@@ -1348,7 +1155,6 @@ export type ProviderCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutProvidersInput
   capacityOffers?: Prisma.CapacityOfferCreateNestedManyWithoutProviderInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutProviderInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutProviderInput
@@ -1357,7 +1163,6 @@ export type ProviderCreateWithoutUserInput = {
 
 export type ProviderUncheckedCreateWithoutUserInput = {
   id?: string
-  zoneId: string
   companyName: string
   licenseNumber: string
   resourceType: $Enums.ResourceType
@@ -1410,7 +1215,6 @@ export type ProviderUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutProvidersNestedInput
   capacityOffers?: Prisma.CapacityOfferUpdateManyWithoutProviderNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutProviderNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutProviderNestedInput
@@ -1419,7 +1223,6 @@ export type ProviderUpdateWithoutUserInput = {
 
 export type ProviderUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
   resourceType?: Prisma.EnumResourceTypeFieldUpdateOperationsInput | $Enums.ResourceType
@@ -1438,90 +1241,6 @@ export type ProviderUncheckedUpdateWithoutUserInput = {
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutProviderNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutProviderNestedInput
   ratings?: Prisma.RatingUncheckedUpdateManyWithoutProviderNestedInput
-}
-
-export type ProviderCreateManyZoneInput = {
-  id?: string
-  userId: string
-  companyName: string
-  licenseNumber: string
-  resourceType: $Enums.ResourceType
-  capacityKw: number
-  address: string
-  contactPerson: string
-  contactPhone: string
-  bankAccountNumber?: string | null
-  verified?: boolean
-  verifiedAt?: Date | string | null
-  verifiedBy?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-}
-
-export type ProviderUpdateWithoutZoneInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  companyName?: Prisma.StringFieldUpdateOperationsInput | string
-  licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  resourceType?: Prisma.EnumResourceTypeFieldUpdateOperationsInput | $Enums.ResourceType
-  capacityKw?: Prisma.IntFieldUpdateOperationsInput | number
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
-  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  user?: Prisma.UserUpdateOneRequiredWithoutProviderNestedInput
-  capacityOffers?: Prisma.CapacityOfferUpdateManyWithoutProviderNestedInput
-  reservations?: Prisma.ReservationUpdateManyWithoutProviderNestedInput
-  incidents?: Prisma.IncidentUpdateManyWithoutProviderNestedInput
-  ratings?: Prisma.RatingUpdateManyWithoutProviderNestedInput
-}
-
-export type ProviderUncheckedUpdateWithoutZoneInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  companyName?: Prisma.StringFieldUpdateOperationsInput | string
-  licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  resourceType?: Prisma.EnumResourceTypeFieldUpdateOperationsInput | $Enums.ResourceType
-  capacityKw?: Prisma.IntFieldUpdateOperationsInput | number
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
-  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  capacityOffers?: Prisma.CapacityOfferUncheckedUpdateManyWithoutProviderNestedInput
-  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutProviderNestedInput
-  incidents?: Prisma.IncidentUncheckedUpdateManyWithoutProviderNestedInput
-  ratings?: Prisma.RatingUncheckedUpdateManyWithoutProviderNestedInput
-}
-
-export type ProviderUncheckedUpdateManyWithoutZoneInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  companyName?: Prisma.StringFieldUpdateOperationsInput | string
-  licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  resourceType?: Prisma.EnumResourceTypeFieldUpdateOperationsInput | $Enums.ResourceType
-  capacityKw?: Prisma.IntFieldUpdateOperationsInput | number
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
-  contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
-  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -1585,7 +1304,6 @@ export type ProviderCountOutputTypeCountRatingsArgs<ExtArgs extends runtime.Type
 export type ProviderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  zoneId?: boolean
   companyName?: boolean
   licenseNumber?: boolean
   resourceType?: boolean
@@ -1601,7 +1319,6 @@ export type ProviderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   updatedAt?: boolean
   deletedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
   capacityOffers?: boolean | Prisma.Provider$capacityOffersArgs<ExtArgs>
   reservations?: boolean | Prisma.Provider$reservationsArgs<ExtArgs>
   incidents?: boolean | Prisma.Provider$incidentsArgs<ExtArgs>
@@ -1612,7 +1329,6 @@ export type ProviderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type ProviderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  zoneId?: boolean
   companyName?: boolean
   licenseNumber?: boolean
   resourceType?: boolean
@@ -1628,13 +1344,11 @@ export type ProviderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   updatedAt?: boolean
   deletedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["provider"]>
 
 export type ProviderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  zoneId?: boolean
   companyName?: boolean
   licenseNumber?: boolean
   resourceType?: boolean
@@ -1650,13 +1364,11 @@ export type ProviderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   updatedAt?: boolean
   deletedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["provider"]>
 
 export type ProviderSelectScalar = {
   id?: boolean
   userId?: boolean
-  zoneId?: boolean
   companyName?: boolean
   licenseNumber?: boolean
   resourceType?: boolean
@@ -1673,10 +1385,9 @@ export type ProviderSelectScalar = {
   deletedAt?: boolean
 }
 
-export type ProviderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "zoneId" | "companyName" | "licenseNumber" | "resourceType" | "capacityKw" | "address" | "contactPerson" | "contactPhone" | "bankAccountNumber" | "verified" | "verifiedAt" | "verifiedBy" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["provider"]>
+export type ProviderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "companyName" | "licenseNumber" | "resourceType" | "capacityKw" | "address" | "contactPerson" | "contactPhone" | "bankAccountNumber" | "verified" | "verifiedAt" | "verifiedBy" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["provider"]>
 export type ProviderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
   capacityOffers?: boolean | Prisma.Provider$capacityOffersArgs<ExtArgs>
   reservations?: boolean | Prisma.Provider$reservationsArgs<ExtArgs>
   incidents?: boolean | Prisma.Provider$incidentsArgs<ExtArgs>
@@ -1685,18 +1396,15 @@ export type ProviderInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
 }
 export type ProviderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
 }
 export type ProviderIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
 }
 
 export type $ProviderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Provider"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
-    zone: Prisma.$ServiceZonePayload<ExtArgs>
     capacityOffers: Prisma.$CapacityOfferPayload<ExtArgs>[]
     reservations: Prisma.$ReservationPayload<ExtArgs>[]
     incidents: Prisma.$IncidentPayload<ExtArgs>[]
@@ -1705,7 +1413,6 @@ export type $ProviderPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
-    zoneId: string
     companyName: string
     licenseNumber: string
     resourceType: $Enums.ResourceType
@@ -2115,7 +1822,6 @@ readonly fields: ProviderFieldRefs;
 export interface Prisma__ProviderClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  zone<T extends Prisma.ServiceZoneDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ServiceZoneDefaultArgs<ExtArgs>>): Prisma.Prisma__ServiceZoneClient<runtime.Types.Result.GetResult<Prisma.$ServiceZonePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   capacityOffers<T extends Prisma.Provider$capacityOffersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Provider$capacityOffersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CapacityOfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reservations<T extends Prisma.Provider$reservationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Provider$reservationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   incidents<T extends Prisma.Provider$incidentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Provider$incidentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$IncidentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2151,7 +1857,6 @@ export interface Prisma__ProviderClient<T, Null = never, ExtArgs extends runtime
 export interface ProviderFieldRefs {
   readonly id: Prisma.FieldRef<"Provider", 'String'>
   readonly userId: Prisma.FieldRef<"Provider", 'String'>
-  readonly zoneId: Prisma.FieldRef<"Provider", 'String'>
   readonly companyName: Prisma.FieldRef<"Provider", 'String'>
   readonly licenseNumber: Prisma.FieldRef<"Provider", 'String'>
   readonly resourceType: Prisma.FieldRef<"Provider", 'ResourceType'>

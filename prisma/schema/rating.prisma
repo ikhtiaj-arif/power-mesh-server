@@ -1,20 +1,19 @@
 model Rating {
-  id            String    @id @default(cuid())
-  consumerId    String
-  providerId    String
-  reservationId String?
-  rating        Int       @db.SmallInt // 1-5
-  reviewText    String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  deletedAt     DateTime?
+  id                    String       @id @default(uuid())
+  consumerId            String
+  providerId            String
+  reservationId         String       @unique
+  rating                Int          @db.SmallInt
+  reviewText            String?
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+  deletedAt             DateTime?
 
-  // Relations
-  consumer    Consumer     @relation("consumer_ratings", fields: [consumerId], references: [id], onDelete: Restrict)
-  provider    Provider     @relation("provider_ratings", fields: [providerId], references: [id], onDelete: Restrict)
-  reservation Reservation? @relation(fields: [reservationId], references: [id], onDelete: SetNull)
+  consumer              Consumer     @relation("consumer_ratings", fields: [consumerId], references: [id], onDelete: Restrict)
+  provider              Provider     @relation("provider_ratings", fields: [providerId], references: [id], onDelete: Restrict)
+  reservation           Reservation  @relation(fields: [reservationId], references: [id], onDelete: Restrict)
 
-  @@index([providerId])
-  @@index([createdAt])
+  @@index([providerId, createdAt])
+  @@index([consumerId, createdAt])
   @@map("ratings")
 }

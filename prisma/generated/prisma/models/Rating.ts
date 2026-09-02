@@ -207,7 +207,7 @@ export type RatingGroupByOutputType = {
   id: string
   consumerId: string
   providerId: string
-  reservationId: string | null
+  reservationId: string
   rating: number
   reviewText: string | null
   createdAt: Date
@@ -242,7 +242,7 @@ export type RatingWhereInput = {
   id?: Prisma.StringFilter<"Rating"> | string
   consumerId?: Prisma.StringFilter<"Rating"> | string
   providerId?: Prisma.StringFilter<"Rating"> | string
-  reservationId?: Prisma.StringNullableFilter<"Rating"> | string | null
+  reservationId?: Prisma.StringFilter<"Rating"> | string
   rating?: Prisma.IntFilter<"Rating"> | number
   reviewText?: Prisma.StringNullableFilter<"Rating"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Rating"> | Date | string
@@ -250,14 +250,14 @@ export type RatingWhereInput = {
   deletedAt?: Prisma.DateTimeNullableFilter<"Rating"> | Date | string | null
   consumer?: Prisma.XOR<Prisma.ConsumerScalarRelationFilter, Prisma.ConsumerWhereInput>
   provider?: Prisma.XOR<Prisma.ProviderScalarRelationFilter, Prisma.ProviderWhereInput>
-  reservation?: Prisma.XOR<Prisma.ReservationNullableScalarRelationFilter, Prisma.ReservationWhereInput> | null
+  reservation?: Prisma.XOR<Prisma.ReservationScalarRelationFilter, Prisma.ReservationWhereInput>
 }
 
 export type RatingOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   consumerId?: Prisma.SortOrder
   providerId?: Prisma.SortOrder
-  reservationId?: Prisma.SortOrderInput | Prisma.SortOrder
+  reservationId?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   reviewText?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -270,12 +270,12 @@ export type RatingOrderByWithRelationInput = {
 
 export type RatingWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  reservationId?: string
   AND?: Prisma.RatingWhereInput | Prisma.RatingWhereInput[]
   OR?: Prisma.RatingWhereInput[]
   NOT?: Prisma.RatingWhereInput | Prisma.RatingWhereInput[]
   consumerId?: Prisma.StringFilter<"Rating"> | string
   providerId?: Prisma.StringFilter<"Rating"> | string
-  reservationId?: Prisma.StringNullableFilter<"Rating"> | string | null
   rating?: Prisma.IntFilter<"Rating"> | number
   reviewText?: Prisma.StringNullableFilter<"Rating"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Rating"> | Date | string
@@ -283,14 +283,14 @@ export type RatingWhereUniqueInput = Prisma.AtLeast<{
   deletedAt?: Prisma.DateTimeNullableFilter<"Rating"> | Date | string | null
   consumer?: Prisma.XOR<Prisma.ConsumerScalarRelationFilter, Prisma.ConsumerWhereInput>
   provider?: Prisma.XOR<Prisma.ProviderScalarRelationFilter, Prisma.ProviderWhereInput>
-  reservation?: Prisma.XOR<Prisma.ReservationNullableScalarRelationFilter, Prisma.ReservationWhereInput> | null
-}, "id">
+  reservation?: Prisma.XOR<Prisma.ReservationScalarRelationFilter, Prisma.ReservationWhereInput>
+}, "id" | "reservationId">
 
 export type RatingOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   consumerId?: Prisma.SortOrder
   providerId?: Prisma.SortOrder
-  reservationId?: Prisma.SortOrderInput | Prisma.SortOrder
+  reservationId?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   reviewText?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -310,7 +310,7 @@ export type RatingScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Rating"> | string
   consumerId?: Prisma.StringWithAggregatesFilter<"Rating"> | string
   providerId?: Prisma.StringWithAggregatesFilter<"Rating"> | string
-  reservationId?: Prisma.StringNullableWithAggregatesFilter<"Rating"> | string | null
+  reservationId?: Prisma.StringWithAggregatesFilter<"Rating"> | string
   rating?: Prisma.IntWithAggregatesFilter<"Rating"> | number
   reviewText?: Prisma.StringNullableWithAggregatesFilter<"Rating"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Rating"> | Date | string
@@ -327,14 +327,14 @@ export type RatingCreateInput = {
   deletedAt?: Date | string | null
   consumer: Prisma.ConsumerCreateNestedOneWithoutRatingsInput
   provider: Prisma.ProviderCreateNestedOneWithoutRatingsInput
-  reservation?: Prisma.ReservationCreateNestedOneWithoutRatingsInput
+  reservation: Prisma.ReservationCreateNestedOneWithoutRatingInput
 }
 
 export type RatingUncheckedCreateInput = {
   id?: string
   consumerId: string
   providerId: string
-  reservationId?: string | null
+  reservationId: string
   rating: number
   reviewText?: string | null
   createdAt?: Date | string
@@ -351,14 +351,14 @@ export type RatingUpdateInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consumer?: Prisma.ConsumerUpdateOneRequiredWithoutRatingsNestedInput
   provider?: Prisma.ProviderUpdateOneRequiredWithoutRatingsNestedInput
-  reservation?: Prisma.ReservationUpdateOneWithoutRatingsNestedInput
+  reservation?: Prisma.ReservationUpdateOneRequiredWithoutRatingNestedInput
 }
 
 export type RatingUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   consumerId?: Prisma.StringFieldUpdateOperationsInput | string
   providerId?: Prisma.StringFieldUpdateOperationsInput | string
-  reservationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reservationId?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   reviewText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -370,7 +370,7 @@ export type RatingCreateManyInput = {
   id?: string
   consumerId: string
   providerId: string
-  reservationId?: string | null
+  reservationId: string
   rating: number
   reviewText?: string | null
   createdAt?: Date | string
@@ -391,7 +391,7 @@ export type RatingUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   consumerId?: Prisma.StringFieldUpdateOperationsInput | string
   providerId?: Prisma.StringFieldUpdateOperationsInput | string
-  reservationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reservationId?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   reviewText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -451,6 +451,11 @@ export type RatingMinOrderByAggregateInput = {
 
 export type RatingSumOrderByAggregateInput = {
   rating?: Prisma.SortOrder
+}
+
+export type RatingNullableScalarRelationFilter = {
+  is?: Prisma.RatingWhereInput | null
+  isNot?: Prisma.RatingWhereInput | null
 }
 
 export type RatingCreateNestedManyWithoutConsumerInput = {
@@ -537,46 +542,36 @@ export type RatingUncheckedUpdateManyWithoutProviderNestedInput = {
   deleteMany?: Prisma.RatingScalarWhereInput | Prisma.RatingScalarWhereInput[]
 }
 
-export type RatingCreateNestedManyWithoutReservationInput = {
-  create?: Prisma.XOR<Prisma.RatingCreateWithoutReservationInput, Prisma.RatingUncheckedCreateWithoutReservationInput> | Prisma.RatingCreateWithoutReservationInput[] | Prisma.RatingUncheckedCreateWithoutReservationInput[]
-  connectOrCreate?: Prisma.RatingCreateOrConnectWithoutReservationInput | Prisma.RatingCreateOrConnectWithoutReservationInput[]
-  createMany?: Prisma.RatingCreateManyReservationInputEnvelope
-  connect?: Prisma.RatingWhereUniqueInput | Prisma.RatingWhereUniqueInput[]
+export type RatingCreateNestedOneWithoutReservationInput = {
+  create?: Prisma.XOR<Prisma.RatingCreateWithoutReservationInput, Prisma.RatingUncheckedCreateWithoutReservationInput>
+  connectOrCreate?: Prisma.RatingCreateOrConnectWithoutReservationInput
+  connect?: Prisma.RatingWhereUniqueInput
 }
 
-export type RatingUncheckedCreateNestedManyWithoutReservationInput = {
-  create?: Prisma.XOR<Prisma.RatingCreateWithoutReservationInput, Prisma.RatingUncheckedCreateWithoutReservationInput> | Prisma.RatingCreateWithoutReservationInput[] | Prisma.RatingUncheckedCreateWithoutReservationInput[]
-  connectOrCreate?: Prisma.RatingCreateOrConnectWithoutReservationInput | Prisma.RatingCreateOrConnectWithoutReservationInput[]
-  createMany?: Prisma.RatingCreateManyReservationInputEnvelope
-  connect?: Prisma.RatingWhereUniqueInput | Prisma.RatingWhereUniqueInput[]
+export type RatingUncheckedCreateNestedOneWithoutReservationInput = {
+  create?: Prisma.XOR<Prisma.RatingCreateWithoutReservationInput, Prisma.RatingUncheckedCreateWithoutReservationInput>
+  connectOrCreate?: Prisma.RatingCreateOrConnectWithoutReservationInput
+  connect?: Prisma.RatingWhereUniqueInput
 }
 
-export type RatingUpdateManyWithoutReservationNestedInput = {
-  create?: Prisma.XOR<Prisma.RatingCreateWithoutReservationInput, Prisma.RatingUncheckedCreateWithoutReservationInput> | Prisma.RatingCreateWithoutReservationInput[] | Prisma.RatingUncheckedCreateWithoutReservationInput[]
-  connectOrCreate?: Prisma.RatingCreateOrConnectWithoutReservationInput | Prisma.RatingCreateOrConnectWithoutReservationInput[]
-  upsert?: Prisma.RatingUpsertWithWhereUniqueWithoutReservationInput | Prisma.RatingUpsertWithWhereUniqueWithoutReservationInput[]
-  createMany?: Prisma.RatingCreateManyReservationInputEnvelope
-  set?: Prisma.RatingWhereUniqueInput | Prisma.RatingWhereUniqueInput[]
-  disconnect?: Prisma.RatingWhereUniqueInput | Prisma.RatingWhereUniqueInput[]
-  delete?: Prisma.RatingWhereUniqueInput | Prisma.RatingWhereUniqueInput[]
-  connect?: Prisma.RatingWhereUniqueInput | Prisma.RatingWhereUniqueInput[]
-  update?: Prisma.RatingUpdateWithWhereUniqueWithoutReservationInput | Prisma.RatingUpdateWithWhereUniqueWithoutReservationInput[]
-  updateMany?: Prisma.RatingUpdateManyWithWhereWithoutReservationInput | Prisma.RatingUpdateManyWithWhereWithoutReservationInput[]
-  deleteMany?: Prisma.RatingScalarWhereInput | Prisma.RatingScalarWhereInput[]
+export type RatingUpdateOneWithoutReservationNestedInput = {
+  create?: Prisma.XOR<Prisma.RatingCreateWithoutReservationInput, Prisma.RatingUncheckedCreateWithoutReservationInput>
+  connectOrCreate?: Prisma.RatingCreateOrConnectWithoutReservationInput
+  upsert?: Prisma.RatingUpsertWithoutReservationInput
+  disconnect?: Prisma.RatingWhereInput | boolean
+  delete?: Prisma.RatingWhereInput | boolean
+  connect?: Prisma.RatingWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RatingUpdateToOneWithWhereWithoutReservationInput, Prisma.RatingUpdateWithoutReservationInput>, Prisma.RatingUncheckedUpdateWithoutReservationInput>
 }
 
-export type RatingUncheckedUpdateManyWithoutReservationNestedInput = {
-  create?: Prisma.XOR<Prisma.RatingCreateWithoutReservationInput, Prisma.RatingUncheckedCreateWithoutReservationInput> | Prisma.RatingCreateWithoutReservationInput[] | Prisma.RatingUncheckedCreateWithoutReservationInput[]
-  connectOrCreate?: Prisma.RatingCreateOrConnectWithoutReservationInput | Prisma.RatingCreateOrConnectWithoutReservationInput[]
-  upsert?: Prisma.RatingUpsertWithWhereUniqueWithoutReservationInput | Prisma.RatingUpsertWithWhereUniqueWithoutReservationInput[]
-  createMany?: Prisma.RatingCreateManyReservationInputEnvelope
-  set?: Prisma.RatingWhereUniqueInput | Prisma.RatingWhereUniqueInput[]
-  disconnect?: Prisma.RatingWhereUniqueInput | Prisma.RatingWhereUniqueInput[]
-  delete?: Prisma.RatingWhereUniqueInput | Prisma.RatingWhereUniqueInput[]
-  connect?: Prisma.RatingWhereUniqueInput | Prisma.RatingWhereUniqueInput[]
-  update?: Prisma.RatingUpdateWithWhereUniqueWithoutReservationInput | Prisma.RatingUpdateWithWhereUniqueWithoutReservationInput[]
-  updateMany?: Prisma.RatingUpdateManyWithWhereWithoutReservationInput | Prisma.RatingUpdateManyWithWhereWithoutReservationInput[]
-  deleteMany?: Prisma.RatingScalarWhereInput | Prisma.RatingScalarWhereInput[]
+export type RatingUncheckedUpdateOneWithoutReservationNestedInput = {
+  create?: Prisma.XOR<Prisma.RatingCreateWithoutReservationInput, Prisma.RatingUncheckedCreateWithoutReservationInput>
+  connectOrCreate?: Prisma.RatingCreateOrConnectWithoutReservationInput
+  upsert?: Prisma.RatingUpsertWithoutReservationInput
+  disconnect?: Prisma.RatingWhereInput | boolean
+  delete?: Prisma.RatingWhereInput | boolean
+  connect?: Prisma.RatingWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RatingUpdateToOneWithWhereWithoutReservationInput, Prisma.RatingUpdateWithoutReservationInput>, Prisma.RatingUncheckedUpdateWithoutReservationInput>
 }
 
 export type RatingCreateWithoutConsumerInput = {
@@ -587,13 +582,13 @@ export type RatingCreateWithoutConsumerInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   provider: Prisma.ProviderCreateNestedOneWithoutRatingsInput
-  reservation?: Prisma.ReservationCreateNestedOneWithoutRatingsInput
+  reservation: Prisma.ReservationCreateNestedOneWithoutRatingInput
 }
 
 export type RatingUncheckedCreateWithoutConsumerInput = {
   id?: string
   providerId: string
-  reservationId?: string | null
+  reservationId: string
   rating: number
   reviewText?: string | null
   createdAt?: Date | string
@@ -634,7 +629,7 @@ export type RatingScalarWhereInput = {
   id?: Prisma.StringFilter<"Rating"> | string
   consumerId?: Prisma.StringFilter<"Rating"> | string
   providerId?: Prisma.StringFilter<"Rating"> | string
-  reservationId?: Prisma.StringNullableFilter<"Rating"> | string | null
+  reservationId?: Prisma.StringFilter<"Rating"> | string
   rating?: Prisma.IntFilter<"Rating"> | number
   reviewText?: Prisma.StringNullableFilter<"Rating"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Rating"> | Date | string
@@ -650,13 +645,13 @@ export type RatingCreateWithoutProviderInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   consumer: Prisma.ConsumerCreateNestedOneWithoutRatingsInput
-  reservation?: Prisma.ReservationCreateNestedOneWithoutRatingsInput
+  reservation: Prisma.ReservationCreateNestedOneWithoutRatingInput
 }
 
 export type RatingUncheckedCreateWithoutProviderInput = {
   id?: string
   consumerId: string
-  reservationId?: string | null
+  reservationId: string
   rating: number
   reviewText?: string | null
   createdAt?: Date | string
@@ -717,124 +712,15 @@ export type RatingCreateOrConnectWithoutReservationInput = {
   create: Prisma.XOR<Prisma.RatingCreateWithoutReservationInput, Prisma.RatingUncheckedCreateWithoutReservationInput>
 }
 
-export type RatingCreateManyReservationInputEnvelope = {
-  data: Prisma.RatingCreateManyReservationInput | Prisma.RatingCreateManyReservationInput[]
-  skipDuplicates?: boolean
-}
-
-export type RatingUpsertWithWhereUniqueWithoutReservationInput = {
-  where: Prisma.RatingWhereUniqueInput
+export type RatingUpsertWithoutReservationInput = {
   update: Prisma.XOR<Prisma.RatingUpdateWithoutReservationInput, Prisma.RatingUncheckedUpdateWithoutReservationInput>
   create: Prisma.XOR<Prisma.RatingCreateWithoutReservationInput, Prisma.RatingUncheckedCreateWithoutReservationInput>
+  where?: Prisma.RatingWhereInput
 }
 
-export type RatingUpdateWithWhereUniqueWithoutReservationInput = {
-  where: Prisma.RatingWhereUniqueInput
+export type RatingUpdateToOneWithWhereWithoutReservationInput = {
+  where?: Prisma.RatingWhereInput
   data: Prisma.XOR<Prisma.RatingUpdateWithoutReservationInput, Prisma.RatingUncheckedUpdateWithoutReservationInput>
-}
-
-export type RatingUpdateManyWithWhereWithoutReservationInput = {
-  where: Prisma.RatingScalarWhereInput
-  data: Prisma.XOR<Prisma.RatingUpdateManyMutationInput, Prisma.RatingUncheckedUpdateManyWithoutReservationInput>
-}
-
-export type RatingCreateManyConsumerInput = {
-  id?: string
-  providerId: string
-  reservationId?: string | null
-  rating: number
-  reviewText?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-}
-
-export type RatingUpdateWithoutConsumerInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  rating?: Prisma.IntFieldUpdateOperationsInput | number
-  reviewText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  provider?: Prisma.ProviderUpdateOneRequiredWithoutRatingsNestedInput
-  reservation?: Prisma.ReservationUpdateOneWithoutRatingsNestedInput
-}
-
-export type RatingUncheckedUpdateWithoutConsumerInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  providerId?: Prisma.StringFieldUpdateOperationsInput | string
-  reservationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rating?: Prisma.IntFieldUpdateOperationsInput | number
-  reviewText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
-
-export type RatingUncheckedUpdateManyWithoutConsumerInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  providerId?: Prisma.StringFieldUpdateOperationsInput | string
-  reservationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rating?: Prisma.IntFieldUpdateOperationsInput | number
-  reviewText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
-
-export type RatingCreateManyProviderInput = {
-  id?: string
-  consumerId: string
-  reservationId?: string | null
-  rating: number
-  reviewText?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-}
-
-export type RatingUpdateWithoutProviderInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  rating?: Prisma.IntFieldUpdateOperationsInput | number
-  reviewText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  consumer?: Prisma.ConsumerUpdateOneRequiredWithoutRatingsNestedInput
-  reservation?: Prisma.ReservationUpdateOneWithoutRatingsNestedInput
-}
-
-export type RatingUncheckedUpdateWithoutProviderInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  consumerId?: Prisma.StringFieldUpdateOperationsInput | string
-  reservationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rating?: Prisma.IntFieldUpdateOperationsInput | number
-  reviewText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
-
-export type RatingUncheckedUpdateManyWithoutProviderInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  consumerId?: Prisma.StringFieldUpdateOperationsInput | string
-  reservationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rating?: Prisma.IntFieldUpdateOperationsInput | number
-  reviewText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
-
-export type RatingCreateManyReservationInput = {
-  id?: string
-  consumerId: string
-  providerId: string
-  rating: number
-  reviewText?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
 }
 
 export type RatingUpdateWithoutReservationInput = {
@@ -859,10 +745,87 @@ export type RatingUncheckedUpdateWithoutReservationInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
-export type RatingUncheckedUpdateManyWithoutReservationInput = {
+export type RatingCreateManyConsumerInput = {
+  id?: string
+  providerId: string
+  reservationId: string
+  rating: number
+  reviewText?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type RatingUpdateWithoutConsumerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  reviewText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  provider?: Prisma.ProviderUpdateOneRequiredWithoutRatingsNestedInput
+  reservation?: Prisma.ReservationUpdateOneRequiredWithoutRatingNestedInput
+}
+
+export type RatingUncheckedUpdateWithoutConsumerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  providerId?: Prisma.StringFieldUpdateOperationsInput | string
+  reservationId?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  reviewText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type RatingUncheckedUpdateManyWithoutConsumerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  providerId?: Prisma.StringFieldUpdateOperationsInput | string
+  reservationId?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  reviewText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type RatingCreateManyProviderInput = {
+  id?: string
+  consumerId: string
+  reservationId: string
+  rating: number
+  reviewText?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type RatingUpdateWithoutProviderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  reviewText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  consumer?: Prisma.ConsumerUpdateOneRequiredWithoutRatingsNestedInput
+  reservation?: Prisma.ReservationUpdateOneRequiredWithoutRatingNestedInput
+}
+
+export type RatingUncheckedUpdateWithoutProviderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   consumerId?: Prisma.StringFieldUpdateOperationsInput | string
-  providerId?: Prisma.StringFieldUpdateOperationsInput | string
+  reservationId?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  reviewText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type RatingUncheckedUpdateManyWithoutProviderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  consumerId?: Prisma.StringFieldUpdateOperationsInput | string
+  reservationId?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   reviewText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -884,7 +847,7 @@ export type RatingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   deletedAt?: boolean
   consumer?: boolean | Prisma.ConsumerDefaultArgs<ExtArgs>
   provider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
-  reservation?: boolean | Prisma.Rating$reservationArgs<ExtArgs>
+  reservation?: boolean | Prisma.ReservationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["rating"]>
 
 export type RatingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -899,7 +862,7 @@ export type RatingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   deletedAt?: boolean
   consumer?: boolean | Prisma.ConsumerDefaultArgs<ExtArgs>
   provider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
-  reservation?: boolean | Prisma.Rating$reservationArgs<ExtArgs>
+  reservation?: boolean | Prisma.ReservationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["rating"]>
 
 export type RatingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -914,7 +877,7 @@ export type RatingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   deletedAt?: boolean
   consumer?: boolean | Prisma.ConsumerDefaultArgs<ExtArgs>
   provider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
-  reservation?: boolean | Prisma.Rating$reservationArgs<ExtArgs>
+  reservation?: boolean | Prisma.ReservationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["rating"]>
 
 export type RatingSelectScalar = {
@@ -933,17 +896,17 @@ export type RatingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type RatingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   consumer?: boolean | Prisma.ConsumerDefaultArgs<ExtArgs>
   provider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
-  reservation?: boolean | Prisma.Rating$reservationArgs<ExtArgs>
+  reservation?: boolean | Prisma.ReservationDefaultArgs<ExtArgs>
 }
 export type RatingIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   consumer?: boolean | Prisma.ConsumerDefaultArgs<ExtArgs>
   provider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
-  reservation?: boolean | Prisma.Rating$reservationArgs<ExtArgs>
+  reservation?: boolean | Prisma.ReservationDefaultArgs<ExtArgs>
 }
 export type RatingIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   consumer?: boolean | Prisma.ConsumerDefaultArgs<ExtArgs>
   provider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
-  reservation?: boolean | Prisma.Rating$reservationArgs<ExtArgs>
+  reservation?: boolean | Prisma.ReservationDefaultArgs<ExtArgs>
 }
 
 export type $RatingPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -951,13 +914,13 @@ export type $RatingPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   objects: {
     consumer: Prisma.$ConsumerPayload<ExtArgs>
     provider: Prisma.$ProviderPayload<ExtArgs>
-    reservation: Prisma.$ReservationPayload<ExtArgs> | null
+    reservation: Prisma.$ReservationPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     consumerId: string
     providerId: string
-    reservationId: string | null
+    reservationId: string
     rating: number
     reviewText: string | null
     createdAt: Date
@@ -1359,7 +1322,7 @@ export interface Prisma__RatingClient<T, Null = never, ExtArgs extends runtime.T
   readonly [Symbol.toStringTag]: "PrismaPromise"
   consumer<T extends Prisma.ConsumerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ConsumerDefaultArgs<ExtArgs>>): Prisma.Prisma__ConsumerClient<runtime.Types.Result.GetResult<Prisma.$ConsumerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   provider<T extends Prisma.ProviderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProviderDefaultArgs<ExtArgs>>): Prisma.Prisma__ProviderClient<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  reservation<T extends Prisma.Rating$reservationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Rating$reservationArgs<ExtArgs>>): Prisma.Prisma__ReservationClient<runtime.Types.Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  reservation<T extends Prisma.ReservationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReservationDefaultArgs<ExtArgs>>): Prisma.Prisma__ReservationClient<runtime.Types.Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1796,25 +1759,6 @@ export type RatingDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many Ratings to delete.
    */
   limit?: number
-}
-
-/**
- * Rating.reservation
- */
-export type Rating$reservationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Reservation
-   */
-  select?: Prisma.ReservationSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Reservation
-   */
-  omit?: Prisma.ReservationOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ReservationInclude<ExtArgs> | null
-  where?: Prisma.ReservationWhereInput
 }
 
 /**

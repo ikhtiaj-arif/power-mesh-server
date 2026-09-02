@@ -1,25 +1,21 @@
 model Consumer {
-  id               String    @id @default(cuid())
-  userId           String    @unique
-  zoneId           String
-  organizationName String
-  criticalLoadKw   Int
-  address          String
-  contactPerson    String
-  contactPhone     String
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  deletedAt        DateTime?
+  id                    String       @id @default(uuid())
+  userId                String       @unique
+  organizationName      String
+  criticalLoadKw        Int
+  address               String
+  contactPerson         String
+  contactPhone          String
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+  deletedAt             DateTime?
 
-  // Relations
-  user             User              @relation(fields: [userId], references: [id], onDelete: Restrict)
-  zone             ServiceZone       @relation(fields: [zoneId], references: [id], onDelete: Restrict)
-  capacityRequests CapacityRequest[]
-  reservations     Reservation[]
-  ratings          Rating[]          @relation("consumer_ratings")
+  user                  User         @relation(fields: [userId], references: [id], onDelete: Restrict)
+  capacityRequests      CapacityRequest[]
+  reservations          Reservation[]
+  ratings               Rating[]     @relation("consumer_ratings")
 
-  @@unique([userId, zoneId])
-  @@index([zoneId])
   @@index([createdAt])
+  @@index([deletedAt])
   @@map("consumers")
 }

@@ -11,6 +11,11 @@ enum UserStatus {
     DELETED
 }
 
+enum AuthProvider {
+    GOOGLE
+    CREDENTIAL
+}
+
 enum ResourceType {
     GENERATOR
     SOLAR_BESS

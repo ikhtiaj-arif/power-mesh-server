@@ -1,4 +1,4 @@
-import type { SignOptions } from "jsonwebtoken";
+import type { JwtPayload, SignOptions } from "jsonwebtoken";
 import config from "../../app/config";
 import { jwtUtils } from "../../utils/jwt";
 import { AppError } from "../../utils/appError";
@@ -7,8 +7,13 @@ import httpStatus from "http-status";
 import crypto from "crypto";
 import { prisma } from "../../app/lib/primsa";
 import path from "path";
-import { UserRole, UserStatus } from "../../../prisma/generated/prisma/enums";
+import {
+  AuthProvider,
+  UserRole,
+  UserStatus,
+} from "../../../prisma/generated/prisma/enums";
 import type {
+  IGoogleLoginPayload,
   ILoginUserPayload,
   IRegisterConsumerPayload,
   IVerifyConsumerPayload,
@@ -16,6 +21,9 @@ import type {
 import { redisClient } from "../../app/lib/redis";
 import { transporter } from "../../app/lib/nodemailer";
 import ejs from "ejs";
+import type { TokenPayload } from "google-auth-library";
+import { googleClient } from "../../app/lib/googleAuth";
+import type { RequestUser } from "../../app/middleware/checkAuth";
 
 const registerConsumer = async (payload: IRegisterConsumerPayload) => {
   const { firstName, lastName, password, consumer: consumerData } = payload;
@@ -51,7 +59,7 @@ const registerConsumer = async (payload: IRegisterConsumerPayload) => {
     password: hashedPassword,
     consumer: consumerData,
   };
-//   console.log(redisUserDataPayload);
+  //   console.log(redisUserDataPayload);
   await redisClient.set(
     consumerRegistrationKey,
     JSON.stringify(redisUserDataPayload),
@@ -135,7 +143,7 @@ const verifyConsumerEmail = async (payload: IVerifyConsumerPayload) => {
           organizationName: consumerPayload?.consumer.organizationName || "",
           criticalLoadKw: consumerPayload?.consumer.criticalLoadKw || 0,
           address: consumerPayload?.consumer.address || "",
-          contactPerson: consumerPayload?.consumer.contactPerson || "" ,
+          contactPerson: consumerPayload?.consumer.contactPerson || "",
           contactPhone: consumerPayload?.consumer?.contactPhone || "",
         },
       },
@@ -252,8 +260,253 @@ const loginUser = async (payload: ILoginUserPayload) => {
   };
 };
 
+const refreshToken = async (token: string) => {
+  const verifiedRefreshToken = jwtUtils.verifyToken(
+    token,
+    config.jwt_refresh_secret,
+  );
+
+  if (!verifiedRefreshToken.success || !verifiedRefreshToken.data) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      config.node_env === "development"
+        ? verifiedRefreshToken.error
+        : "Invalid refresh token",
+    );
+  }
+
+  const data = verifiedRefreshToken.data as JwtPayload;
+
+  const user = await prisma.user.findUnique({
+    where: { id: data.userId },
+  });
+
+  if (!user || user.isDeleted || user.status !== UserStatus.ACTIVE) {
+    throw new AppError(httpStatus.NOT_FOUND, "User is inactive or not found");
+  }
+
+  const jwtPayload = {
+    userId: user.id,
+    name: user.firstName + " " + user.lastName,
+    email: user.email,
+    role: user.role,
+  };
+
+  const accessToken = jwtUtils.createToken(
+    jwtPayload,
+    config.jwt_access_secret,
+    config.jwt_access_expires_in as SignOptions,
+  );
+
+  const refreshToken = jwtUtils.createToken(
+    jwtPayload,
+    config.jwt_refresh_secret,
+    config.jwt_refresh_expires_in as SignOptions,
+  );
+
+  return {
+    accessToken,
+    refreshToken,
+  };
+};
+
+const googleLogin = async (payload: IGoogleLoginPayload) => {
+  let googlePayload: TokenPayload | undefined;
+
+  try {
+    const ticket = await googleClient.verifyIdToken({
+      idToken: payload.idToken,
+      audience: config.google_client_id,
+    });
+
+    googlePayload = ticket.getPayload();
+  } catch (error) {
+    console.log("Google ID Token Verification Failed", error);
+
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Invalid or expired Google ID token",
+    );
+  }
+
+  if (!googlePayload) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Invalid or expired Google ID token",
+    );
+  }
+
+  if (!googlePayload.sub) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Google user ID not found");
+  }
+
+  if (!googlePayload.email) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Google email not found");
+  }
+
+  const email = googlePayload.email;
+  const googleId = googlePayload.sub;
+
+  const firstName =
+    googlePayload.given_name || googlePayload.name?.split(" ")[0] || "Google";
+
+  const lastName =
+    googlePayload.family_name ||
+    googlePayload.name?.split(" ").slice(1).join(" ") ||
+    "User";
+
+  // 1. Try to find existing Google account
+  let user = await prisma.user.findFirst({
+    where: {
+      googleId,
+      role: UserRole.CONSUMER,
+      deletedAt: null,
+    },
+    include: {
+      consumer: true,
+    },
+  });
+
+  // 2. If no Google account, check existing email account
+  if (!user) {
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+      include: {
+        consumer: true,
+      },
+    });
+
+    if (existingUser) {
+      if (existingUser.deletedAt || !existingUser.isActive) {
+        throw new AppError(
+          httpStatus.FORBIDDEN,
+          "User account is inactive or deleted",
+        );
+      }
+
+      if (existingUser.role !== UserRole.CONSUMER) {
+        throw new AppError(
+          httpStatus.FORBIDDEN,
+          "This email is already registered with another role",
+        );
+      }
+
+      // Existing credential account → link Google
+      // if (!existingUser.emailVerifiedAt) {
+      // 	throw new AppError(
+      // 		httpStatus.FORBIDDEN,
+      // 		"Please verify your email before linking Google",
+      // 	);
+      // }
+
+      user = await prisma.user.update({
+        where: {
+          id: existingUser.id,
+        },
+        data: {
+          googleId,
+          authProvider: AuthProvider.GOOGLE,
+          lastLoginAt: new Date(),
+        },
+        include: {
+          consumer: true,
+        },
+      });
+    } else {
+      // 3. Completely new Consumer via Google
+      user = await prisma.user.create({
+        data: {
+          email,
+          googleId,
+          authProvider: AuthProvider.GOOGLE,
+          firstName,
+          lastName,
+          role: UserRole.CONSUMER,
+          emailVerifiedAt: new Date(),
+          lastLoginAt: new Date(),
+
+          consumer: {
+            create: {
+              organizationName: "",
+              criticalLoadKw: 0,
+              address: "",
+              contactPerson: `${firstName} ${lastName}`,
+              contactPhone: "",
+            },
+          },
+        },
+        include: {
+          consumer: true,
+        },
+      });
+    }
+  }
+
+  // 4. Final account checks
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  if (!user.isActive || user.deletedAt) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "User account is inactive or deleted",
+    );
+  }
+
+  // 5. Issue application JWT
+  const jwtPayload = {
+    userId: user.id,
+    email: user.email,
+    role: user.role,
+    name: `${user.firstName} ${user.lastName}`,
+  };
+
+  const accessToken = jwtUtils.createToken(
+    jwtPayload,
+    config.jwt_access_secret,
+    config.jwt_access_expires_in as SignOptions,
+  );
+
+  const refreshToken = jwtUtils.createToken(
+    jwtPayload,
+    config.jwt_refresh_secret,
+    config.jwt_refresh_expires_in as SignOptions,
+  );
+
+  return {
+    accessToken,
+    refreshToken,
+  };
+};
+
+const getMe = async (user: RequestUser) => {
+  const isUserExists = await prisma.user.findUnique({
+    where: {
+      id: user.userId,
+    },
+    include: {
+      consumer: true,
+    },
+    omit: {
+      password: true,
+    },
+  });
+
+  if (!isUserExists) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  return isUserExists;
+};
+
 export const AuthServices = {
   registerConsumer,
   loginUser,
   verifyConsumerEmail,
+  refreshToken,
+  googleLogin,
+  getMe,
 };

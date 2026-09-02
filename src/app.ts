@@ -10,6 +10,8 @@ import crypto from "crypto";
 import config from "./app/config";
 import httpStatus from "http-status";
 import { AuthRoutes } from "./modules/auth/auth.routes";
+import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
+import { notFound } from "./app/middleware/notFound";
  
 
 const app: Application = express();
@@ -57,7 +59,8 @@ app.get("/", async (req: Request, res: Response) => {
 		message: "Welcome to power-mesh Backend",
 	});
 });
-
+app.use(globalErrorHandler);
+app.use(notFound);
 
 
 export default app;

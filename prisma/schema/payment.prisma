@@ -1,27 +1,26 @@
 model Payment {
-  id                 String        @id @default(cuid())
-  reservationId      String        @unique
-  gatewayId          String        @unique
-  gatewayStatus      PaymentStatus @default(INITIATED)
-  amount             Decimal       @db.Decimal(14, 2)
-  currency           String        @default("BDT")
-  paymentMethod      String // "sslcommerz" | "bkash" | "card"
-  initiatedAt        DateTime      @default(now())
-  completedAt        DateTime?
-  idempotencyKey     String        @unique
-  webhookStatus      String        @default("PENDING") // "PENDING" | "PROCESSED" | "FAILED"
-  webhookReceivedAt  DateTime?
-  webhookProcessedAt DateTime?
-  createdAt          DateTime      @default(now())
-  updatedAt          DateTime      @updatedAt
-  deletedAt          DateTime?
+  id                    String         @id @default(uuid())
+  reservationId         String         @unique
+  gatewayId             String?        @unique
+  gatewayStatus         PaymentStatus  @default(INITIATED)
+  amount                Decimal        @db.Decimal(14, 2)
+  currency              String         @default("BDT")
+//   paymentMethod         PaymentMethod
+  initiatedAt           DateTime       @default(now())
+  completedAt           DateTime?
+  idempotencyKey        String         @unique
+//   webhookStatus         WebhookStatus  @default(PENDING)
+  webhookReceivedAt     DateTime?
+  webhookProcessedAt    DateTime?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  deletedAt             DateTime?
 
-  // Relations
-  reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Restrict)
-  refunds     Refund[]
+  reservation           Reservation    @relation(fields: [reservationId], references: [id], onDelete: Restrict)
+  refunds               Refund[]
 
   @@index([gatewayStatus])
-  @@index([webhookStatus])
+//   @@index([webhookStatus])
   @@index([createdAt])
   @@map("payments")
 }

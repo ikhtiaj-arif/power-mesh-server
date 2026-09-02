@@ -27,21 +27,26 @@ export type AggregateOutageEvent = {
 }
 
 export type OutageEventAvgAggregateOutputType = {
-  estimatedDurationMins: number | null
+  totalCapacityKw: number | null
+  survivalQuotaKw: number | null
+  allocatedKw: number | null
 }
 
 export type OutageEventSumAggregateOutputType = {
-  estimatedDurationMins: number | null
+  totalCapacityKw: number | null
+  survivalQuotaKw: number | null
+  allocatedKw: number | null
 }
 
 export type OutageEventMinAggregateOutputType = {
   id: string | null
-  zoneId: string | null
   operatorId: string | null
   scheduledStart: Date | null
   scheduledEnd: Date | null
   status: $Enums.OutageEventStatus | null
-  estimatedDurationMins: number | null
+  totalCapacityKw: number | null
+  survivalQuotaKw: number | null
+  allocatedKw: number | null
   notes: string | null
   actualStart: Date | null
   actualEnd: Date | null
@@ -52,12 +57,13 @@ export type OutageEventMinAggregateOutputType = {
 
 export type OutageEventMaxAggregateOutputType = {
   id: string | null
-  zoneId: string | null
   operatorId: string | null
   scheduledStart: Date | null
   scheduledEnd: Date | null
   status: $Enums.OutageEventStatus | null
-  estimatedDurationMins: number | null
+  totalCapacityKw: number | null
+  survivalQuotaKw: number | null
+  allocatedKw: number | null
   notes: string | null
   actualStart: Date | null
   actualEnd: Date | null
@@ -68,12 +74,13 @@ export type OutageEventMaxAggregateOutputType = {
 
 export type OutageEventCountAggregateOutputType = {
   id: number
-  zoneId: number
   operatorId: number
   scheduledStart: number
   scheduledEnd: number
   status: number
-  estimatedDurationMins: number
+  totalCapacityKw: number
+  survivalQuotaKw: number
+  allocatedKw: number
   notes: number
   actualStart: number
   actualEnd: number
@@ -85,21 +92,26 @@ export type OutageEventCountAggregateOutputType = {
 
 
 export type OutageEventAvgAggregateInputType = {
-  estimatedDurationMins?: true
+  totalCapacityKw?: true
+  survivalQuotaKw?: true
+  allocatedKw?: true
 }
 
 export type OutageEventSumAggregateInputType = {
-  estimatedDurationMins?: true
+  totalCapacityKw?: true
+  survivalQuotaKw?: true
+  allocatedKw?: true
 }
 
 export type OutageEventMinAggregateInputType = {
   id?: true
-  zoneId?: true
   operatorId?: true
   scheduledStart?: true
   scheduledEnd?: true
   status?: true
-  estimatedDurationMins?: true
+  totalCapacityKw?: true
+  survivalQuotaKw?: true
+  allocatedKw?: true
   notes?: true
   actualStart?: true
   actualEnd?: true
@@ -110,12 +122,13 @@ export type OutageEventMinAggregateInputType = {
 
 export type OutageEventMaxAggregateInputType = {
   id?: true
-  zoneId?: true
   operatorId?: true
   scheduledStart?: true
   scheduledEnd?: true
   status?: true
-  estimatedDurationMins?: true
+  totalCapacityKw?: true
+  survivalQuotaKw?: true
+  allocatedKw?: true
   notes?: true
   actualStart?: true
   actualEnd?: true
@@ -126,12 +139,13 @@ export type OutageEventMaxAggregateInputType = {
 
 export type OutageEventCountAggregateInputType = {
   id?: true
-  zoneId?: true
   operatorId?: true
   scheduledStart?: true
   scheduledEnd?: true
   status?: true
-  estimatedDurationMins?: true
+  totalCapacityKw?: true
+  survivalQuotaKw?: true
+  allocatedKw?: true
   notes?: true
   actualStart?: true
   actualEnd?: true
@@ -229,12 +243,13 @@ export type OutageEventGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 
 export type OutageEventGroupByOutputType = {
   id: string
-  zoneId: string
   operatorId: string
   scheduledStart: Date
   scheduledEnd: Date
   status: $Enums.OutageEventStatus
-  estimatedDurationMins: number
+  totalCapacityKw: number
+  survivalQuotaKw: number
+  allocatedKw: number
   notes: string | null
   actualStart: Date | null
   actualEnd: Date | null
@@ -268,19 +283,19 @@ export type OutageEventWhereInput = {
   OR?: Prisma.OutageEventWhereInput[]
   NOT?: Prisma.OutageEventWhereInput | Prisma.OutageEventWhereInput[]
   id?: Prisma.StringFilter<"OutageEvent"> | string
-  zoneId?: Prisma.StringFilter<"OutageEvent"> | string
   operatorId?: Prisma.StringFilter<"OutageEvent"> | string
   scheduledStart?: Prisma.DateTimeFilter<"OutageEvent"> | Date | string
   scheduledEnd?: Prisma.DateTimeFilter<"OutageEvent"> | Date | string
   status?: Prisma.EnumOutageEventStatusFilter<"OutageEvent"> | $Enums.OutageEventStatus
-  estimatedDurationMins?: Prisma.IntFilter<"OutageEvent"> | number
+  totalCapacityKw?: Prisma.IntFilter<"OutageEvent"> | number
+  survivalQuotaKw?: Prisma.IntFilter<"OutageEvent"> | number
+  allocatedKw?: Prisma.IntFilter<"OutageEvent"> | number
   notes?: Prisma.StringNullableFilter<"OutageEvent"> | string | null
   actualStart?: Prisma.DateTimeNullableFilter<"OutageEvent"> | Date | string | null
   actualEnd?: Prisma.DateTimeNullableFilter<"OutageEvent"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"OutageEvent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OutageEvent"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"OutageEvent"> | Date | string | null
-  zone?: Prisma.XOR<Prisma.ServiceZoneScalarRelationFilter, Prisma.ServiceZoneWhereInput>
   operator?: Prisma.XOR<Prisma.OperatorScalarRelationFilter, Prisma.OperatorWhereInput>
   capacityOffers?: Prisma.CapacityOfferListRelationFilter
   capacityRequests?: Prisma.CapacityRequestListRelationFilter
@@ -288,19 +303,19 @@ export type OutageEventWhereInput = {
 
 export type OutageEventOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   operatorId?: Prisma.SortOrder
   scheduledStart?: Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  estimatedDurationMins?: Prisma.SortOrder
+  totalCapacityKw?: Prisma.SortOrder
+  survivalQuotaKw?: Prisma.SortOrder
+  allocatedKw?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   actualStart?: Prisma.SortOrderInput | Prisma.SortOrder
   actualEnd?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  zone?: Prisma.ServiceZoneOrderByWithRelationInput
   operator?: Prisma.OperatorOrderByWithRelationInput
   capacityOffers?: Prisma.CapacityOfferOrderByRelationAggregateInput
   capacityRequests?: Prisma.CapacityRequestOrderByRelationAggregateInput
@@ -311,19 +326,19 @@ export type OutageEventWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.OutageEventWhereInput | Prisma.OutageEventWhereInput[]
   OR?: Prisma.OutageEventWhereInput[]
   NOT?: Prisma.OutageEventWhereInput | Prisma.OutageEventWhereInput[]
-  zoneId?: Prisma.StringFilter<"OutageEvent"> | string
   operatorId?: Prisma.StringFilter<"OutageEvent"> | string
   scheduledStart?: Prisma.DateTimeFilter<"OutageEvent"> | Date | string
   scheduledEnd?: Prisma.DateTimeFilter<"OutageEvent"> | Date | string
   status?: Prisma.EnumOutageEventStatusFilter<"OutageEvent"> | $Enums.OutageEventStatus
-  estimatedDurationMins?: Prisma.IntFilter<"OutageEvent"> | number
+  totalCapacityKw?: Prisma.IntFilter<"OutageEvent"> | number
+  survivalQuotaKw?: Prisma.IntFilter<"OutageEvent"> | number
+  allocatedKw?: Prisma.IntFilter<"OutageEvent"> | number
   notes?: Prisma.StringNullableFilter<"OutageEvent"> | string | null
   actualStart?: Prisma.DateTimeNullableFilter<"OutageEvent"> | Date | string | null
   actualEnd?: Prisma.DateTimeNullableFilter<"OutageEvent"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"OutageEvent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OutageEvent"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"OutageEvent"> | Date | string | null
-  zone?: Prisma.XOR<Prisma.ServiceZoneScalarRelationFilter, Prisma.ServiceZoneWhereInput>
   operator?: Prisma.XOR<Prisma.OperatorScalarRelationFilter, Prisma.OperatorWhereInput>
   capacityOffers?: Prisma.CapacityOfferListRelationFilter
   capacityRequests?: Prisma.CapacityRequestListRelationFilter
@@ -331,12 +346,13 @@ export type OutageEventWhereUniqueInput = Prisma.AtLeast<{
 
 export type OutageEventOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   operatorId?: Prisma.SortOrder
   scheduledStart?: Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  estimatedDurationMins?: Prisma.SortOrder
+  totalCapacityKw?: Prisma.SortOrder
+  survivalQuotaKw?: Prisma.SortOrder
+  allocatedKw?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   actualStart?: Prisma.SortOrderInput | Prisma.SortOrder
   actualEnd?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -355,12 +371,13 @@ export type OutageEventScalarWhereWithAggregatesInput = {
   OR?: Prisma.OutageEventScalarWhereWithAggregatesInput[]
   NOT?: Prisma.OutageEventScalarWhereWithAggregatesInput | Prisma.OutageEventScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"OutageEvent"> | string
-  zoneId?: Prisma.StringWithAggregatesFilter<"OutageEvent"> | string
   operatorId?: Prisma.StringWithAggregatesFilter<"OutageEvent"> | string
   scheduledStart?: Prisma.DateTimeWithAggregatesFilter<"OutageEvent"> | Date | string
   scheduledEnd?: Prisma.DateTimeWithAggregatesFilter<"OutageEvent"> | Date | string
   status?: Prisma.EnumOutageEventStatusWithAggregatesFilter<"OutageEvent"> | $Enums.OutageEventStatus
-  estimatedDurationMins?: Prisma.IntWithAggregatesFilter<"OutageEvent"> | number
+  totalCapacityKw?: Prisma.IntWithAggregatesFilter<"OutageEvent"> | number
+  survivalQuotaKw?: Prisma.IntWithAggregatesFilter<"OutageEvent"> | number
+  allocatedKw?: Prisma.IntWithAggregatesFilter<"OutageEvent"> | number
   notes?: Prisma.StringNullableWithAggregatesFilter<"OutageEvent"> | string | null
   actualStart?: Prisma.DateTimeNullableWithAggregatesFilter<"OutageEvent"> | Date | string | null
   actualEnd?: Prisma.DateTimeNullableWithAggregatesFilter<"OutageEvent"> | Date | string | null
@@ -374,14 +391,15 @@ export type OutageEventCreateInput = {
   scheduledStart: Date | string
   scheduledEnd: Date | string
   status?: $Enums.OutageEventStatus
-  estimatedDurationMins: number
+  totalCapacityKw: number
+  survivalQuotaKw: number
+  allocatedKw?: number
   notes?: string | null
   actualStart?: Date | string | null
   actualEnd?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutOutageEventsInput
   operator: Prisma.OperatorCreateNestedOneWithoutOutageEventsInput
   capacityOffers?: Prisma.CapacityOfferCreateNestedManyWithoutEventInput
   capacityRequests?: Prisma.CapacityRequestCreateNestedManyWithoutEventInput
@@ -389,12 +407,13 @@ export type OutageEventCreateInput = {
 
 export type OutageEventUncheckedCreateInput = {
   id?: string
-  zoneId: string
   operatorId: string
   scheduledStart: Date | string
   scheduledEnd: Date | string
   status?: $Enums.OutageEventStatus
-  estimatedDurationMins: number
+  totalCapacityKw: number
+  survivalQuotaKw: number
+  allocatedKw?: number
   notes?: string | null
   actualStart?: Date | string | null
   actualEnd?: Date | string | null
@@ -410,14 +429,15 @@ export type OutageEventUpdateInput = {
   scheduledStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scheduledEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumOutageEventStatusFieldUpdateOperationsInput | $Enums.OutageEventStatus
-  estimatedDurationMins?: Prisma.IntFieldUpdateOperationsInput | number
+  totalCapacityKw?: Prisma.IntFieldUpdateOperationsInput | number
+  survivalQuotaKw?: Prisma.IntFieldUpdateOperationsInput | number
+  allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actualStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   actualEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutOutageEventsNestedInput
   operator?: Prisma.OperatorUpdateOneRequiredWithoutOutageEventsNestedInput
   capacityOffers?: Prisma.CapacityOfferUpdateManyWithoutEventNestedInput
   capacityRequests?: Prisma.CapacityRequestUpdateManyWithoutEventNestedInput
@@ -425,12 +445,13 @@ export type OutageEventUpdateInput = {
 
 export type OutageEventUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   operatorId?: Prisma.StringFieldUpdateOperationsInput | string
   scheduledStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scheduledEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumOutageEventStatusFieldUpdateOperationsInput | $Enums.OutageEventStatus
-  estimatedDurationMins?: Prisma.IntFieldUpdateOperationsInput | number
+  totalCapacityKw?: Prisma.IntFieldUpdateOperationsInput | number
+  survivalQuotaKw?: Prisma.IntFieldUpdateOperationsInput | number
+  allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actualStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   actualEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -443,12 +464,13 @@ export type OutageEventUncheckedUpdateInput = {
 
 export type OutageEventCreateManyInput = {
   id?: string
-  zoneId: string
   operatorId: string
   scheduledStart: Date | string
   scheduledEnd: Date | string
   status?: $Enums.OutageEventStatus
-  estimatedDurationMins: number
+  totalCapacityKw: number
+  survivalQuotaKw: number
+  allocatedKw?: number
   notes?: string | null
   actualStart?: Date | string | null
   actualEnd?: Date | string | null
@@ -462,7 +484,9 @@ export type OutageEventUpdateManyMutationInput = {
   scheduledStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scheduledEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumOutageEventStatusFieldUpdateOperationsInput | $Enums.OutageEventStatus
-  estimatedDurationMins?: Prisma.IntFieldUpdateOperationsInput | number
+  totalCapacityKw?: Prisma.IntFieldUpdateOperationsInput | number
+  survivalQuotaKw?: Prisma.IntFieldUpdateOperationsInput | number
+  allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actualStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   actualEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -473,12 +497,13 @@ export type OutageEventUpdateManyMutationInput = {
 
 export type OutageEventUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   operatorId?: Prisma.StringFieldUpdateOperationsInput | string
   scheduledStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scheduledEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumOutageEventStatusFieldUpdateOperationsInput | $Enums.OutageEventStatus
-  estimatedDurationMins?: Prisma.IntFieldUpdateOperationsInput | number
+  totalCapacityKw?: Prisma.IntFieldUpdateOperationsInput | number
+  survivalQuotaKw?: Prisma.IntFieldUpdateOperationsInput | number
+  allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actualStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   actualEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -487,9 +512,9 @@ export type OutageEventUncheckedUpdateManyInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
-export type OutageEventNullableScalarRelationFilter = {
-  is?: Prisma.OutageEventWhereInput | null
-  isNot?: Prisma.OutageEventWhereInput | null
+export type OutageEventScalarRelationFilter = {
+  is?: Prisma.OutageEventWhereInput
+  isNot?: Prisma.OutageEventWhereInput
 }
 
 export type OutageEventListRelationFilter = {
@@ -504,12 +529,13 @@ export type OutageEventOrderByRelationAggregateInput = {
 
 export type OutageEventCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   operatorId?: Prisma.SortOrder
   scheduledStart?: Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  estimatedDurationMins?: Prisma.SortOrder
+  totalCapacityKw?: Prisma.SortOrder
+  survivalQuotaKw?: Prisma.SortOrder
+  allocatedKw?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   actualStart?: Prisma.SortOrder
   actualEnd?: Prisma.SortOrder
@@ -519,17 +545,20 @@ export type OutageEventCountOrderByAggregateInput = {
 }
 
 export type OutageEventAvgOrderByAggregateInput = {
-  estimatedDurationMins?: Prisma.SortOrder
+  totalCapacityKw?: Prisma.SortOrder
+  survivalQuotaKw?: Prisma.SortOrder
+  allocatedKw?: Prisma.SortOrder
 }
 
 export type OutageEventMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   operatorId?: Prisma.SortOrder
   scheduledStart?: Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  estimatedDurationMins?: Prisma.SortOrder
+  totalCapacityKw?: Prisma.SortOrder
+  survivalQuotaKw?: Prisma.SortOrder
+  allocatedKw?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   actualStart?: Prisma.SortOrder
   actualEnd?: Prisma.SortOrder
@@ -540,12 +569,13 @@ export type OutageEventMaxOrderByAggregateInput = {
 
 export type OutageEventMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   operatorId?: Prisma.SortOrder
   scheduledStart?: Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  estimatedDurationMins?: Prisma.SortOrder
+  totalCapacityKw?: Prisma.SortOrder
+  survivalQuotaKw?: Prisma.SortOrder
+  allocatedKw?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   actualStart?: Prisma.SortOrder
   actualEnd?: Prisma.SortOrder
@@ -555,7 +585,9 @@ export type OutageEventMinOrderByAggregateInput = {
 }
 
 export type OutageEventSumOrderByAggregateInput = {
-  estimatedDurationMins?: Prisma.SortOrder
+  totalCapacityKw?: Prisma.SortOrder
+  survivalQuotaKw?: Prisma.SortOrder
+  allocatedKw?: Prisma.SortOrder
 }
 
 export type OutageEventCreateNestedOneWithoutCapacityOffersInput = {
@@ -564,12 +596,10 @@ export type OutageEventCreateNestedOneWithoutCapacityOffersInput = {
   connect?: Prisma.OutageEventWhereUniqueInput
 }
 
-export type OutageEventUpdateOneWithoutCapacityOffersNestedInput = {
+export type OutageEventUpdateOneRequiredWithoutCapacityOffersNestedInput = {
   create?: Prisma.XOR<Prisma.OutageEventCreateWithoutCapacityOffersInput, Prisma.OutageEventUncheckedCreateWithoutCapacityOffersInput>
   connectOrCreate?: Prisma.OutageEventCreateOrConnectWithoutCapacityOffersInput
   upsert?: Prisma.OutageEventUpsertWithoutCapacityOffersInput
-  disconnect?: Prisma.OutageEventWhereInput | boolean
-  delete?: Prisma.OutageEventWhereInput | boolean
   connect?: Prisma.OutageEventWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.OutageEventUpdateToOneWithWhereWithoutCapacityOffersInput, Prisma.OutageEventUpdateWithoutCapacityOffersInput>, Prisma.OutageEventUncheckedUpdateWithoutCapacityOffersInput>
 }
@@ -580,12 +610,10 @@ export type OutageEventCreateNestedOneWithoutCapacityRequestsInput = {
   connect?: Prisma.OutageEventWhereUniqueInput
 }
 
-export type OutageEventUpdateOneWithoutCapacityRequestsNestedInput = {
+export type OutageEventUpdateOneRequiredWithoutCapacityRequestsNestedInput = {
   create?: Prisma.XOR<Prisma.OutageEventCreateWithoutCapacityRequestsInput, Prisma.OutageEventUncheckedCreateWithoutCapacityRequestsInput>
   connectOrCreate?: Prisma.OutageEventCreateOrConnectWithoutCapacityRequestsInput
   upsert?: Prisma.OutageEventUpsertWithoutCapacityRequestsInput
-  disconnect?: Prisma.OutageEventWhereInput | boolean
-  delete?: Prisma.OutageEventWhereInput | boolean
   connect?: Prisma.OutageEventWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.OutageEventUpdateToOneWithWhereWithoutCapacityRequestsInput, Prisma.OutageEventUpdateWithoutCapacityRequestsInput>, Prisma.OutageEventUncheckedUpdateWithoutCapacityRequestsInput>
 }
@@ -636,73 +664,33 @@ export type EnumOutageEventStatusFieldUpdateOperationsInput = {
   set?: $Enums.OutageEventStatus
 }
 
-export type OutageEventCreateNestedManyWithoutZoneInput = {
-  create?: Prisma.XOR<Prisma.OutageEventCreateWithoutZoneInput, Prisma.OutageEventUncheckedCreateWithoutZoneInput> | Prisma.OutageEventCreateWithoutZoneInput[] | Prisma.OutageEventUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.OutageEventCreateOrConnectWithoutZoneInput | Prisma.OutageEventCreateOrConnectWithoutZoneInput[]
-  createMany?: Prisma.OutageEventCreateManyZoneInputEnvelope
-  connect?: Prisma.OutageEventWhereUniqueInput | Prisma.OutageEventWhereUniqueInput[]
-}
-
-export type OutageEventUncheckedCreateNestedManyWithoutZoneInput = {
-  create?: Prisma.XOR<Prisma.OutageEventCreateWithoutZoneInput, Prisma.OutageEventUncheckedCreateWithoutZoneInput> | Prisma.OutageEventCreateWithoutZoneInput[] | Prisma.OutageEventUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.OutageEventCreateOrConnectWithoutZoneInput | Prisma.OutageEventCreateOrConnectWithoutZoneInput[]
-  createMany?: Prisma.OutageEventCreateManyZoneInputEnvelope
-  connect?: Prisma.OutageEventWhereUniqueInput | Prisma.OutageEventWhereUniqueInput[]
-}
-
-export type OutageEventUpdateManyWithoutZoneNestedInput = {
-  create?: Prisma.XOR<Prisma.OutageEventCreateWithoutZoneInput, Prisma.OutageEventUncheckedCreateWithoutZoneInput> | Prisma.OutageEventCreateWithoutZoneInput[] | Prisma.OutageEventUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.OutageEventCreateOrConnectWithoutZoneInput | Prisma.OutageEventCreateOrConnectWithoutZoneInput[]
-  upsert?: Prisma.OutageEventUpsertWithWhereUniqueWithoutZoneInput | Prisma.OutageEventUpsertWithWhereUniqueWithoutZoneInput[]
-  createMany?: Prisma.OutageEventCreateManyZoneInputEnvelope
-  set?: Prisma.OutageEventWhereUniqueInput | Prisma.OutageEventWhereUniqueInput[]
-  disconnect?: Prisma.OutageEventWhereUniqueInput | Prisma.OutageEventWhereUniqueInput[]
-  delete?: Prisma.OutageEventWhereUniqueInput | Prisma.OutageEventWhereUniqueInput[]
-  connect?: Prisma.OutageEventWhereUniqueInput | Prisma.OutageEventWhereUniqueInput[]
-  update?: Prisma.OutageEventUpdateWithWhereUniqueWithoutZoneInput | Prisma.OutageEventUpdateWithWhereUniqueWithoutZoneInput[]
-  updateMany?: Prisma.OutageEventUpdateManyWithWhereWithoutZoneInput | Prisma.OutageEventUpdateManyWithWhereWithoutZoneInput[]
-  deleteMany?: Prisma.OutageEventScalarWhereInput | Prisma.OutageEventScalarWhereInput[]
-}
-
-export type OutageEventUncheckedUpdateManyWithoutZoneNestedInput = {
-  create?: Prisma.XOR<Prisma.OutageEventCreateWithoutZoneInput, Prisma.OutageEventUncheckedCreateWithoutZoneInput> | Prisma.OutageEventCreateWithoutZoneInput[] | Prisma.OutageEventUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.OutageEventCreateOrConnectWithoutZoneInput | Prisma.OutageEventCreateOrConnectWithoutZoneInput[]
-  upsert?: Prisma.OutageEventUpsertWithWhereUniqueWithoutZoneInput | Prisma.OutageEventUpsertWithWhereUniqueWithoutZoneInput[]
-  createMany?: Prisma.OutageEventCreateManyZoneInputEnvelope
-  set?: Prisma.OutageEventWhereUniqueInput | Prisma.OutageEventWhereUniqueInput[]
-  disconnect?: Prisma.OutageEventWhereUniqueInput | Prisma.OutageEventWhereUniqueInput[]
-  delete?: Prisma.OutageEventWhereUniqueInput | Prisma.OutageEventWhereUniqueInput[]
-  connect?: Prisma.OutageEventWhereUniqueInput | Prisma.OutageEventWhereUniqueInput[]
-  update?: Prisma.OutageEventUpdateWithWhereUniqueWithoutZoneInput | Prisma.OutageEventUpdateWithWhereUniqueWithoutZoneInput[]
-  updateMany?: Prisma.OutageEventUpdateManyWithWhereWithoutZoneInput | Prisma.OutageEventUpdateManyWithWhereWithoutZoneInput[]
-  deleteMany?: Prisma.OutageEventScalarWhereInput | Prisma.OutageEventScalarWhereInput[]
-}
-
 export type OutageEventCreateWithoutCapacityOffersInput = {
   id?: string
   scheduledStart: Date | string
   scheduledEnd: Date | string
   status?: $Enums.OutageEventStatus
-  estimatedDurationMins: number
+  totalCapacityKw: number
+  survivalQuotaKw: number
+  allocatedKw?: number
   notes?: string | null
   actualStart?: Date | string | null
   actualEnd?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutOutageEventsInput
   operator: Prisma.OperatorCreateNestedOneWithoutOutageEventsInput
   capacityRequests?: Prisma.CapacityRequestCreateNestedManyWithoutEventInput
 }
 
 export type OutageEventUncheckedCreateWithoutCapacityOffersInput = {
   id?: string
-  zoneId: string
   operatorId: string
   scheduledStart: Date | string
   scheduledEnd: Date | string
   status?: $Enums.OutageEventStatus
-  estimatedDurationMins: number
+  totalCapacityKw: number
+  survivalQuotaKw: number
+  allocatedKw?: number
   notes?: string | null
   actualStart?: Date | string | null
   actualEnd?: Date | string | null
@@ -733,26 +721,28 @@ export type OutageEventUpdateWithoutCapacityOffersInput = {
   scheduledStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scheduledEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumOutageEventStatusFieldUpdateOperationsInput | $Enums.OutageEventStatus
-  estimatedDurationMins?: Prisma.IntFieldUpdateOperationsInput | number
+  totalCapacityKw?: Prisma.IntFieldUpdateOperationsInput | number
+  survivalQuotaKw?: Prisma.IntFieldUpdateOperationsInput | number
+  allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actualStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   actualEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutOutageEventsNestedInput
   operator?: Prisma.OperatorUpdateOneRequiredWithoutOutageEventsNestedInput
   capacityRequests?: Prisma.CapacityRequestUpdateManyWithoutEventNestedInput
 }
 
 export type OutageEventUncheckedUpdateWithoutCapacityOffersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   operatorId?: Prisma.StringFieldUpdateOperationsInput | string
   scheduledStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scheduledEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumOutageEventStatusFieldUpdateOperationsInput | $Enums.OutageEventStatus
-  estimatedDurationMins?: Prisma.IntFieldUpdateOperationsInput | number
+  totalCapacityKw?: Prisma.IntFieldUpdateOperationsInput | number
+  survivalQuotaKw?: Prisma.IntFieldUpdateOperationsInput | number
+  allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actualStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   actualEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -767,26 +757,28 @@ export type OutageEventCreateWithoutCapacityRequestsInput = {
   scheduledStart: Date | string
   scheduledEnd: Date | string
   status?: $Enums.OutageEventStatus
-  estimatedDurationMins: number
+  totalCapacityKw: number
+  survivalQuotaKw: number
+  allocatedKw?: number
   notes?: string | null
   actualStart?: Date | string | null
   actualEnd?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutOutageEventsInput
   operator: Prisma.OperatorCreateNestedOneWithoutOutageEventsInput
   capacityOffers?: Prisma.CapacityOfferCreateNestedManyWithoutEventInput
 }
 
 export type OutageEventUncheckedCreateWithoutCapacityRequestsInput = {
   id?: string
-  zoneId: string
   operatorId: string
   scheduledStart: Date | string
   scheduledEnd: Date | string
   status?: $Enums.OutageEventStatus
-  estimatedDurationMins: number
+  totalCapacityKw: number
+  survivalQuotaKw: number
+  allocatedKw?: number
   notes?: string | null
   actualStart?: Date | string | null
   actualEnd?: Date | string | null
@@ -817,26 +809,28 @@ export type OutageEventUpdateWithoutCapacityRequestsInput = {
   scheduledStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scheduledEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumOutageEventStatusFieldUpdateOperationsInput | $Enums.OutageEventStatus
-  estimatedDurationMins?: Prisma.IntFieldUpdateOperationsInput | number
+  totalCapacityKw?: Prisma.IntFieldUpdateOperationsInput | number
+  survivalQuotaKw?: Prisma.IntFieldUpdateOperationsInput | number
+  allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actualStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   actualEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutOutageEventsNestedInput
   operator?: Prisma.OperatorUpdateOneRequiredWithoutOutageEventsNestedInput
   capacityOffers?: Prisma.CapacityOfferUpdateManyWithoutEventNestedInput
 }
 
 export type OutageEventUncheckedUpdateWithoutCapacityRequestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   operatorId?: Prisma.StringFieldUpdateOperationsInput | string
   scheduledStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scheduledEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumOutageEventStatusFieldUpdateOperationsInput | $Enums.OutageEventStatus
-  estimatedDurationMins?: Prisma.IntFieldUpdateOperationsInput | number
+  totalCapacityKw?: Prisma.IntFieldUpdateOperationsInput | number
+  survivalQuotaKw?: Prisma.IntFieldUpdateOperationsInput | number
+  allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actualStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   actualEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -851,25 +845,27 @@ export type OutageEventCreateWithoutOperatorInput = {
   scheduledStart: Date | string
   scheduledEnd: Date | string
   status?: $Enums.OutageEventStatus
-  estimatedDurationMins: number
+  totalCapacityKw: number
+  survivalQuotaKw: number
+  allocatedKw?: number
   notes?: string | null
   actualStart?: Date | string | null
   actualEnd?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutOutageEventsInput
   capacityOffers?: Prisma.CapacityOfferCreateNestedManyWithoutEventInput
   capacityRequests?: Prisma.CapacityRequestCreateNestedManyWithoutEventInput
 }
 
 export type OutageEventUncheckedCreateWithoutOperatorInput = {
   id?: string
-  zoneId: string
   scheduledStart: Date | string
   scheduledEnd: Date | string
   status?: $Enums.OutageEventStatus
-  estimatedDurationMins: number
+  totalCapacityKw: number
+  survivalQuotaKw: number
+  allocatedKw?: number
   notes?: string | null
   actualStart?: Date | string | null
   actualEnd?: Date | string | null
@@ -911,12 +907,13 @@ export type OutageEventScalarWhereInput = {
   OR?: Prisma.OutageEventScalarWhereInput[]
   NOT?: Prisma.OutageEventScalarWhereInput | Prisma.OutageEventScalarWhereInput[]
   id?: Prisma.StringFilter<"OutageEvent"> | string
-  zoneId?: Prisma.StringFilter<"OutageEvent"> | string
   operatorId?: Prisma.StringFilter<"OutageEvent"> | string
   scheduledStart?: Prisma.DateTimeFilter<"OutageEvent"> | Date | string
   scheduledEnd?: Prisma.DateTimeFilter<"OutageEvent"> | Date | string
   status?: Prisma.EnumOutageEventStatusFilter<"OutageEvent"> | $Enums.OutageEventStatus
-  estimatedDurationMins?: Prisma.IntFilter<"OutageEvent"> | number
+  totalCapacityKw?: Prisma.IntFilter<"OutageEvent"> | number
+  survivalQuotaKw?: Prisma.IntFilter<"OutageEvent"> | number
+  allocatedKw?: Prisma.IntFilter<"OutageEvent"> | number
   notes?: Prisma.StringNullableFilter<"OutageEvent"> | string | null
   actualStart?: Prisma.DateTimeNullableFilter<"OutageEvent"> | Date | string | null
   actualEnd?: Prisma.DateTimeNullableFilter<"OutageEvent"> | Date | string | null
@@ -925,73 +922,14 @@ export type OutageEventScalarWhereInput = {
   deletedAt?: Prisma.DateTimeNullableFilter<"OutageEvent"> | Date | string | null
 }
 
-export type OutageEventCreateWithoutZoneInput = {
-  id?: string
-  scheduledStart: Date | string
-  scheduledEnd: Date | string
-  status?: $Enums.OutageEventStatus
-  estimatedDurationMins: number
-  notes?: string | null
-  actualStart?: Date | string | null
-  actualEnd?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  operator: Prisma.OperatorCreateNestedOneWithoutOutageEventsInput
-  capacityOffers?: Prisma.CapacityOfferCreateNestedManyWithoutEventInput
-  capacityRequests?: Prisma.CapacityRequestCreateNestedManyWithoutEventInput
-}
-
-export type OutageEventUncheckedCreateWithoutZoneInput = {
-  id?: string
-  operatorId: string
-  scheduledStart: Date | string
-  scheduledEnd: Date | string
-  status?: $Enums.OutageEventStatus
-  estimatedDurationMins: number
-  notes?: string | null
-  actualStart?: Date | string | null
-  actualEnd?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  capacityOffers?: Prisma.CapacityOfferUncheckedCreateNestedManyWithoutEventInput
-  capacityRequests?: Prisma.CapacityRequestUncheckedCreateNestedManyWithoutEventInput
-}
-
-export type OutageEventCreateOrConnectWithoutZoneInput = {
-  where: Prisma.OutageEventWhereUniqueInput
-  create: Prisma.XOR<Prisma.OutageEventCreateWithoutZoneInput, Prisma.OutageEventUncheckedCreateWithoutZoneInput>
-}
-
-export type OutageEventCreateManyZoneInputEnvelope = {
-  data: Prisma.OutageEventCreateManyZoneInput | Prisma.OutageEventCreateManyZoneInput[]
-  skipDuplicates?: boolean
-}
-
-export type OutageEventUpsertWithWhereUniqueWithoutZoneInput = {
-  where: Prisma.OutageEventWhereUniqueInput
-  update: Prisma.XOR<Prisma.OutageEventUpdateWithoutZoneInput, Prisma.OutageEventUncheckedUpdateWithoutZoneInput>
-  create: Prisma.XOR<Prisma.OutageEventCreateWithoutZoneInput, Prisma.OutageEventUncheckedCreateWithoutZoneInput>
-}
-
-export type OutageEventUpdateWithWhereUniqueWithoutZoneInput = {
-  where: Prisma.OutageEventWhereUniqueInput
-  data: Prisma.XOR<Prisma.OutageEventUpdateWithoutZoneInput, Prisma.OutageEventUncheckedUpdateWithoutZoneInput>
-}
-
-export type OutageEventUpdateManyWithWhereWithoutZoneInput = {
-  where: Prisma.OutageEventScalarWhereInput
-  data: Prisma.XOR<Prisma.OutageEventUpdateManyMutationInput, Prisma.OutageEventUncheckedUpdateManyWithoutZoneInput>
-}
-
 export type OutageEventCreateManyOperatorInput = {
   id?: string
-  zoneId: string
   scheduledStart: Date | string
   scheduledEnd: Date | string
   status?: $Enums.OutageEventStatus
-  estimatedDurationMins: number
+  totalCapacityKw: number
+  survivalQuotaKw: number
+  allocatedKw?: number
   notes?: string | null
   actualStart?: Date | string | null
   actualEnd?: Date | string | null
@@ -1005,25 +943,27 @@ export type OutageEventUpdateWithoutOperatorInput = {
   scheduledStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scheduledEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumOutageEventStatusFieldUpdateOperationsInput | $Enums.OutageEventStatus
-  estimatedDurationMins?: Prisma.IntFieldUpdateOperationsInput | number
+  totalCapacityKw?: Prisma.IntFieldUpdateOperationsInput | number
+  survivalQuotaKw?: Prisma.IntFieldUpdateOperationsInput | number
+  allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actualStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   actualEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutOutageEventsNestedInput
   capacityOffers?: Prisma.CapacityOfferUpdateManyWithoutEventNestedInput
   capacityRequests?: Prisma.CapacityRequestUpdateManyWithoutEventNestedInput
 }
 
 export type OutageEventUncheckedUpdateWithoutOperatorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   scheduledStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scheduledEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumOutageEventStatusFieldUpdateOperationsInput | $Enums.OutageEventStatus
-  estimatedDurationMins?: Prisma.IntFieldUpdateOperationsInput | number
+  totalCapacityKw?: Prisma.IntFieldUpdateOperationsInput | number
+  survivalQuotaKw?: Prisma.IntFieldUpdateOperationsInput | number
+  allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actualStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   actualEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1036,75 +976,12 @@ export type OutageEventUncheckedUpdateWithoutOperatorInput = {
 
 export type OutageEventUncheckedUpdateManyWithoutOperatorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   scheduledStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scheduledEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumOutageEventStatusFieldUpdateOperationsInput | $Enums.OutageEventStatus
-  estimatedDurationMins?: Prisma.IntFieldUpdateOperationsInput | number
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  actualStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  actualEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
-
-export type OutageEventCreateManyZoneInput = {
-  id?: string
-  operatorId: string
-  scheduledStart: Date | string
-  scheduledEnd: Date | string
-  status?: $Enums.OutageEventStatus
-  estimatedDurationMins: number
-  notes?: string | null
-  actualStart?: Date | string | null
-  actualEnd?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-}
-
-export type OutageEventUpdateWithoutZoneInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  scheduledStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  scheduledEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumOutageEventStatusFieldUpdateOperationsInput | $Enums.OutageEventStatus
-  estimatedDurationMins?: Prisma.IntFieldUpdateOperationsInput | number
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  actualStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  actualEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  operator?: Prisma.OperatorUpdateOneRequiredWithoutOutageEventsNestedInput
-  capacityOffers?: Prisma.CapacityOfferUpdateManyWithoutEventNestedInput
-  capacityRequests?: Prisma.CapacityRequestUpdateManyWithoutEventNestedInput
-}
-
-export type OutageEventUncheckedUpdateWithoutZoneInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  operatorId?: Prisma.StringFieldUpdateOperationsInput | string
-  scheduledStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  scheduledEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumOutageEventStatusFieldUpdateOperationsInput | $Enums.OutageEventStatus
-  estimatedDurationMins?: Prisma.IntFieldUpdateOperationsInput | number
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  actualStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  actualEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  capacityOffers?: Prisma.CapacityOfferUncheckedUpdateManyWithoutEventNestedInput
-  capacityRequests?: Prisma.CapacityRequestUncheckedUpdateManyWithoutEventNestedInput
-}
-
-export type OutageEventUncheckedUpdateManyWithoutZoneInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  operatorId?: Prisma.StringFieldUpdateOperationsInput | string
-  scheduledStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  scheduledEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumOutageEventStatusFieldUpdateOperationsInput | $Enums.OutageEventStatus
-  estimatedDurationMins?: Prisma.IntFieldUpdateOperationsInput | number
+  totalCapacityKw?: Prisma.IntFieldUpdateOperationsInput | number
+  survivalQuotaKw?: Prisma.IntFieldUpdateOperationsInput | number
+  allocatedKw?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actualStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   actualEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1155,19 +1032,19 @@ export type OutageEventCountOutputTypeCountCapacityRequestsArgs<ExtArgs extends 
 
 export type OutageEventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  zoneId?: boolean
   operatorId?: boolean
   scheduledStart?: boolean
   scheduledEnd?: boolean
   status?: boolean
-  estimatedDurationMins?: boolean
+  totalCapacityKw?: boolean
+  survivalQuotaKw?: boolean
+  allocatedKw?: boolean
   notes?: boolean
   actualStart?: boolean
   actualEnd?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
   operator?: boolean | Prisma.OperatorDefaultArgs<ExtArgs>
   capacityOffers?: boolean | Prisma.OutageEvent$capacityOffersArgs<ExtArgs>
   capacityRequests?: boolean | Prisma.OutageEvent$capacityRequestsArgs<ExtArgs>
@@ -1176,48 +1053,49 @@ export type OutageEventSelect<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type OutageEventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  zoneId?: boolean
   operatorId?: boolean
   scheduledStart?: boolean
   scheduledEnd?: boolean
   status?: boolean
-  estimatedDurationMins?: boolean
+  totalCapacityKw?: boolean
+  survivalQuotaKw?: boolean
+  allocatedKw?: boolean
   notes?: boolean
   actualStart?: boolean
   actualEnd?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
   operator?: boolean | Prisma.OperatorDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["outageEvent"]>
 
 export type OutageEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  zoneId?: boolean
   operatorId?: boolean
   scheduledStart?: boolean
   scheduledEnd?: boolean
   status?: boolean
-  estimatedDurationMins?: boolean
+  totalCapacityKw?: boolean
+  survivalQuotaKw?: boolean
+  allocatedKw?: boolean
   notes?: boolean
   actualStart?: boolean
   actualEnd?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
   operator?: boolean | Prisma.OperatorDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["outageEvent"]>
 
 export type OutageEventSelectScalar = {
   id?: boolean
-  zoneId?: boolean
   operatorId?: boolean
   scheduledStart?: boolean
   scheduledEnd?: boolean
   status?: boolean
-  estimatedDurationMins?: boolean
+  totalCapacityKw?: boolean
+  survivalQuotaKw?: boolean
+  allocatedKw?: boolean
   notes?: boolean
   actualStart?: boolean
   actualEnd?: boolean
@@ -1226,39 +1104,36 @@ export type OutageEventSelectScalar = {
   deletedAt?: boolean
 }
 
-export type OutageEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "zoneId" | "operatorId" | "scheduledStart" | "scheduledEnd" | "status" | "estimatedDurationMins" | "notes" | "actualStart" | "actualEnd" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["outageEvent"]>
+export type OutageEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "operatorId" | "scheduledStart" | "scheduledEnd" | "status" | "totalCapacityKw" | "survivalQuotaKw" | "allocatedKw" | "notes" | "actualStart" | "actualEnd" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["outageEvent"]>
 export type OutageEventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
   operator?: boolean | Prisma.OperatorDefaultArgs<ExtArgs>
   capacityOffers?: boolean | Prisma.OutageEvent$capacityOffersArgs<ExtArgs>
   capacityRequests?: boolean | Prisma.OutageEvent$capacityRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.OutageEventCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OutageEventIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
   operator?: boolean | Prisma.OperatorDefaultArgs<ExtArgs>
 }
 export type OutageEventIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
   operator?: boolean | Prisma.OperatorDefaultArgs<ExtArgs>
 }
 
 export type $OutageEventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "OutageEvent"
   objects: {
-    zone: Prisma.$ServiceZonePayload<ExtArgs>
     operator: Prisma.$OperatorPayload<ExtArgs>
     capacityOffers: Prisma.$CapacityOfferPayload<ExtArgs>[]
     capacityRequests: Prisma.$CapacityRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    zoneId: string
     operatorId: string
     scheduledStart: Date
     scheduledEnd: Date
     status: $Enums.OutageEventStatus
-    estimatedDurationMins: number
+    totalCapacityKw: number
+    survivalQuotaKw: number
+    allocatedKw: number
     notes: string | null
     actualStart: Date | null
     actualEnd: Date | null
@@ -1659,7 +1534,6 @@ readonly fields: OutageEventFieldRefs;
  */
 export interface Prisma__OutageEventClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  zone<T extends Prisma.ServiceZoneDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ServiceZoneDefaultArgs<ExtArgs>>): Prisma.Prisma__ServiceZoneClient<runtime.Types.Result.GetResult<Prisma.$ServiceZonePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   operator<T extends Prisma.OperatorDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OperatorDefaultArgs<ExtArgs>>): Prisma.Prisma__OperatorClient<runtime.Types.Result.GetResult<Prisma.$OperatorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   capacityOffers<T extends Prisma.OutageEvent$capacityOffersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OutageEvent$capacityOffersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CapacityOfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   capacityRequests<T extends Prisma.OutageEvent$capacityRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OutageEvent$capacityRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CapacityRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1693,12 +1567,13 @@ export interface Prisma__OutageEventClient<T, Null = never, ExtArgs extends runt
  */
 export interface OutageEventFieldRefs {
   readonly id: Prisma.FieldRef<"OutageEvent", 'String'>
-  readonly zoneId: Prisma.FieldRef<"OutageEvent", 'String'>
   readonly operatorId: Prisma.FieldRef<"OutageEvent", 'String'>
   readonly scheduledStart: Prisma.FieldRef<"OutageEvent", 'DateTime'>
   readonly scheduledEnd: Prisma.FieldRef<"OutageEvent", 'DateTime'>
   readonly status: Prisma.FieldRef<"OutageEvent", 'OutageEventStatus'>
-  readonly estimatedDurationMins: Prisma.FieldRef<"OutageEvent", 'Int'>
+  readonly totalCapacityKw: Prisma.FieldRef<"OutageEvent", 'Int'>
+  readonly survivalQuotaKw: Prisma.FieldRef<"OutageEvent", 'Int'>
+  readonly allocatedKw: Prisma.FieldRef<"OutageEvent", 'Int'>
   readonly notes: Prisma.FieldRef<"OutageEvent", 'String'>
   readonly actualStart: Prisma.FieldRef<"OutageEvent", 'DateTime'>
   readonly actualEnd: Prisma.FieldRef<"OutageEvent", 'DateTime'>

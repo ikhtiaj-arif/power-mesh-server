@@ -2,36 +2,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../lib/primsa";
 import config from "../config";
 
-export const seedZone = async () => {
-	try {
-		const existingZone = await prisma.serviceZone.findFirst({
-			where: { name: "DHAKA_SOUTH" },
-		});
-
-		if (existingZone) {
-			console.log("Zone DHAKA_SOUTH Already Exists!");
-			return existingZone;
-		}
-
-		const zone = await prisma.serviceZone.create({
-			data: {
-				name: "DHAKA_SOUTH",
-				region: "Dhaka",
-				gridOperator: "DPDC",
-				latitude: 23.7273,
-				longitude: 90.7365,
-			},
-		});
-
-		console.log("Zone Created:", zone.name);
-		return zone;
-	} catch (error) {
-		console.log("Error Seeding Zone:", error);
-		throw error;
-	}
-};
-
-export const seedAdmin = async (zoneId: string) => {
+export const seedAdmin = async () => {
 	try {
 		const email = config.seed_admin_email;
 		const password = config.seed_admin_password;
@@ -66,7 +37,6 @@ export const seedAdmin = async (zoneId: string) => {
 				emailVerified: true,
 				operator: {
 					create: {
-						zoneId,
 						roleLevel: "admin",
 						isAdmin: true,
 					},
@@ -82,7 +52,7 @@ export const seedAdmin = async (zoneId: string) => {
 	}
 };
 
-export const seedProvider = async (zoneId: string) => {
+export const seedProvider = async () => {
 	try {
 		const email = config.seed_provider_email;
 		const password = config.seed_provider_password;
@@ -116,12 +86,11 @@ export const seedProvider = async (zoneId: string) => {
 				role: "PROVIDER",
 				provider: {
 					create: {
-						zoneId,
 						companyName: "Solar Power Ltd",
 						licenseNumber: "LIC123456",
 						resourceType: "SOLAR_BESS",
 						capacityKw: 500,
-						address: "Dhaka South Zone",
+						address: "Dhaka South",
 						contactPerson: `${firstName} ${lastName}`,
 						contactPhone: "+8801700000001",
 						verified: true,
@@ -139,7 +108,7 @@ export const seedProvider = async (zoneId: string) => {
 	}
 };
 
-export const seedConsumer = async (zoneId: string) => {
+export const seedConsumer = async () => {
 	try {
 		const email = config.seed_consumer_email;
 		const password = config.seed_consumer_password;
@@ -173,7 +142,6 @@ export const seedConsumer = async (zoneId: string) => {
 				role: "CONSUMER",
 				consumer: {
 					create: {
-						zoneId,
 						organizationName: "Test Hospital",
 						criticalLoadKw: 150,
 						address: "Dhaka South",
@@ -196,14 +164,9 @@ export const runSeeds = async () => {
 	try {
 		console.log("Starting database seeds...");
 
-		const zone = await seedZone();
-		if (!zone) {
-			throw new Error("Failed to seed zone");
-		}
-
-		await seedAdmin(zone.id);
-		await seedProvider(zone.id);
-		await seedConsumer(zone.id);
+		await seedAdmin();
+		await seedProvider();
+		await seedConsumer();
 
 		console.log("All seeds completed successfully!");
 	} catch (error) {

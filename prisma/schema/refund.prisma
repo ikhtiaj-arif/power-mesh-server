@@ -1,23 +1,22 @@
 model Refund {
-  id              String        @id @default(cuid())
-  paymentId       String
-  reservationId   String
-  amount          Decimal       @db.Decimal(14, 2)
-  reason          String // "grid_stayed_on" | "provider_no_show" | "partial_delivery" | "dispute_resolution"
-  gatewayRefundId String?       @unique
-  status          PaymentStatus @default(INITIATED)
-  initiatedAt     DateTime      @default(now())
-  completedAt     DateTime?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  deletedAt       DateTime?
+  id                    String       @id @default(uuid())
+  paymentId             String
+  reservationId         String
+  amount                Decimal      @db.Decimal(14, 2)
+  reason                String
+  gatewayRefundId       String?      @unique
+//   status                RefundStatus @default(INITIATED)
+  initiatedAt           DateTime     @default(now())
+  completedAt           DateTime?
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+  deletedAt             DateTime?
 
-  // Relations
-  payment     Payment     @relation(fields: [paymentId], references: [id], onDelete: Restrict)
-  reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Restrict)
+  payment               Payment      @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+  reservation           Reservation  @relation(fields: [reservationId], references: [id], onDelete: Restrict)
 
-  @@index([status])
-  @@index([reason])
+//   @@index([paymentId, status])
+//   @@index([reservationId, status])
   @@index([createdAt])
   @@map("refunds")
 }

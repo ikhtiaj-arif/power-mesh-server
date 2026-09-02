@@ -1,22 +1,21 @@
 model Incident {
-  id            String       @id @default(cuid())
-  providerId    String
-  reservationId String?
-  incidentType  IncidentType
-  description   String
-  occurredAt    DateTime
-  status        String       @default("OPEN") // "OPEN" | "UNDER_REVIEW" | "RESOLVED" | "DISMISSED"
-  resolution    String?
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  deletedAt     DateTime?
+  id                    String         @id @default(uuid())
+  providerId            String
+  reservationId         String?
+  incidentType          IncidentType
+  description           String
+  occurredAt            DateTime
+  status                IncidentStatus @default(OPEN)
+  resolution            String?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  deletedAt             DateTime?
 
-  // Relations
-  provider    Provider     @relation(fields: [providerId], references: [id], onDelete: Restrict)
-  reservation Reservation? @relation(fields: [reservationId], references: [id], onDelete: SetNull)
+  provider              Provider       @relation(fields: [providerId], references: [id], onDelete: Restrict)
+  reservation           Reservation?   @relation(fields: [reservationId], references: [id], onDelete: SetNull)
 
   @@index([providerId, status])
   @@index([incidentType])
-  @@index([createdAt])
+  @@index([occurredAt])
   @@map("incidents")
 }

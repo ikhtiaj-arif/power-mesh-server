@@ -1,5 +1,5 @@
 model AuditLog {
-  id         String      @id @default(cuid())
+  id         String      @id @default(uuid())
   userId     String?
   entityType String // "user" | "provider" | "consumer" | "reservation" | etc.
   entityId   String

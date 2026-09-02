@@ -39,7 +39,6 @@ export type CapacityRequestSumAggregateOutputType = {
 export type CapacityRequestMinAggregateOutputType = {
   id: string | null
   consumerId: string | null
-  zoneId: string | null
   eventId: string | null
   requestedKw: number | null
   maxPricePerKwh: runtime.Decimal | null
@@ -54,7 +53,6 @@ export type CapacityRequestMinAggregateOutputType = {
 export type CapacityRequestMaxAggregateOutputType = {
   id: string | null
   consumerId: string | null
-  zoneId: string | null
   eventId: string | null
   requestedKw: number | null
   maxPricePerKwh: runtime.Decimal | null
@@ -69,7 +67,6 @@ export type CapacityRequestMaxAggregateOutputType = {
 export type CapacityRequestCountAggregateOutputType = {
   id: number
   consumerId: number
-  zoneId: number
   eventId: number
   requestedKw: number
   maxPricePerKwh: number
@@ -96,7 +93,6 @@ export type CapacityRequestSumAggregateInputType = {
 export type CapacityRequestMinAggregateInputType = {
   id?: true
   consumerId?: true
-  zoneId?: true
   eventId?: true
   requestedKw?: true
   maxPricePerKwh?: true
@@ -111,7 +107,6 @@ export type CapacityRequestMinAggregateInputType = {
 export type CapacityRequestMaxAggregateInputType = {
   id?: true
   consumerId?: true
-  zoneId?: true
   eventId?: true
   requestedKw?: true
   maxPricePerKwh?: true
@@ -126,7 +121,6 @@ export type CapacityRequestMaxAggregateInputType = {
 export type CapacityRequestCountAggregateInputType = {
   id?: true
   consumerId?: true
-  zoneId?: true
   eventId?: true
   requestedKw?: true
   maxPricePerKwh?: true
@@ -228,8 +222,7 @@ export type CapacityRequestGroupByArgs<ExtArgs extends runtime.Types.Extensions.
 export type CapacityRequestGroupByOutputType = {
   id: string
   consumerId: string
-  zoneId: string
-  eventId: string | null
+  eventId: string
   requestedKw: number
   maxPricePerKwh: runtime.Decimal
   priorityTier: $Enums.PriorityTier
@@ -266,8 +259,7 @@ export type CapacityRequestWhereInput = {
   NOT?: Prisma.CapacityRequestWhereInput | Prisma.CapacityRequestWhereInput[]
   id?: Prisma.StringFilter<"CapacityRequest"> | string
   consumerId?: Prisma.StringFilter<"CapacityRequest"> | string
-  zoneId?: Prisma.StringFilter<"CapacityRequest"> | string
-  eventId?: Prisma.StringNullableFilter<"CapacityRequest"> | string | null
+  eventId?: Prisma.StringFilter<"CapacityRequest"> | string
   requestedKw?: Prisma.IntFilter<"CapacityRequest"> | number
   maxPricePerKwh?: Prisma.DecimalFilter<"CapacityRequest"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   priorityTier?: Prisma.EnumPriorityTierFilter<"CapacityRequest"> | $Enums.PriorityTier
@@ -277,16 +269,14 @@ export type CapacityRequestWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"CapacityRequest"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"CapacityRequest"> | Date | string | null
   consumer?: Prisma.XOR<Prisma.ConsumerScalarRelationFilter, Prisma.ConsumerWhereInput>
-  zone?: Prisma.XOR<Prisma.ServiceZoneScalarRelationFilter, Prisma.ServiceZoneWhereInput>
-  event?: Prisma.XOR<Prisma.OutageEventNullableScalarRelationFilter, Prisma.OutageEventWhereInput> | null
+  event?: Prisma.XOR<Prisma.OutageEventScalarRelationFilter, Prisma.OutageEventWhereInput>
   reservations?: Prisma.ReservationListRelationFilter
 }
 
 export type CapacityRequestOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   consumerId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
-  eventId?: Prisma.SortOrderInput | Prisma.SortOrder
+  eventId?: Prisma.SortOrder
   requestedKw?: Prisma.SortOrder
   maxPricePerKwh?: Prisma.SortOrder
   priorityTier?: Prisma.SortOrder
@@ -296,7 +286,6 @@ export type CapacityRequestOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   consumer?: Prisma.ConsumerOrderByWithRelationInput
-  zone?: Prisma.ServiceZoneOrderByWithRelationInput
   event?: Prisma.OutageEventOrderByWithRelationInput
   reservations?: Prisma.ReservationOrderByRelationAggregateInput
 }
@@ -308,8 +297,7 @@ export type CapacityRequestWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.CapacityRequestWhereInput[]
   NOT?: Prisma.CapacityRequestWhereInput | Prisma.CapacityRequestWhereInput[]
   consumerId?: Prisma.StringFilter<"CapacityRequest"> | string
-  zoneId?: Prisma.StringFilter<"CapacityRequest"> | string
-  eventId?: Prisma.StringNullableFilter<"CapacityRequest"> | string | null
+  eventId?: Prisma.StringFilter<"CapacityRequest"> | string
   requestedKw?: Prisma.IntFilter<"CapacityRequest"> | number
   maxPricePerKwh?: Prisma.DecimalFilter<"CapacityRequest"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   priorityTier?: Prisma.EnumPriorityTierFilter<"CapacityRequest"> | $Enums.PriorityTier
@@ -319,16 +307,14 @@ export type CapacityRequestWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"CapacityRequest"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"CapacityRequest"> | Date | string | null
   consumer?: Prisma.XOR<Prisma.ConsumerScalarRelationFilter, Prisma.ConsumerWhereInput>
-  zone?: Prisma.XOR<Prisma.ServiceZoneScalarRelationFilter, Prisma.ServiceZoneWhereInput>
-  event?: Prisma.XOR<Prisma.OutageEventNullableScalarRelationFilter, Prisma.OutageEventWhereInput> | null
+  event?: Prisma.XOR<Prisma.OutageEventScalarRelationFilter, Prisma.OutageEventWhereInput>
   reservations?: Prisma.ReservationListRelationFilter
 }, "id" | "consumerId_eventId">
 
 export type CapacityRequestOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   consumerId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
-  eventId?: Prisma.SortOrderInput | Prisma.SortOrder
+  eventId?: Prisma.SortOrder
   requestedKw?: Prisma.SortOrder
   maxPricePerKwh?: Prisma.SortOrder
   priorityTier?: Prisma.SortOrder
@@ -350,8 +336,7 @@ export type CapacityRequestScalarWhereWithAggregatesInput = {
   NOT?: Prisma.CapacityRequestScalarWhereWithAggregatesInput | Prisma.CapacityRequestScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"CapacityRequest"> | string
   consumerId?: Prisma.StringWithAggregatesFilter<"CapacityRequest"> | string
-  zoneId?: Prisma.StringWithAggregatesFilter<"CapacityRequest"> | string
-  eventId?: Prisma.StringNullableWithAggregatesFilter<"CapacityRequest"> | string | null
+  eventId?: Prisma.StringWithAggregatesFilter<"CapacityRequest"> | string
   requestedKw?: Prisma.IntWithAggregatesFilter<"CapacityRequest"> | number
   maxPricePerKwh?: Prisma.DecimalWithAggregatesFilter<"CapacityRequest"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   priorityTier?: Prisma.EnumPriorityTierWithAggregatesFilter<"CapacityRequest"> | $Enums.PriorityTier
@@ -373,16 +358,14 @@ export type CapacityRequestCreateInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   consumer: Prisma.ConsumerCreateNestedOneWithoutCapacityRequestsInput
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutCapacityRequestsInput
-  event?: Prisma.OutageEventCreateNestedOneWithoutCapacityRequestsInput
+  event: Prisma.OutageEventCreateNestedOneWithoutCapacityRequestsInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutRequestInput
 }
 
 export type CapacityRequestUncheckedCreateInput = {
   id?: string
   consumerId: string
-  zoneId: string
-  eventId?: string | null
+  eventId: string
   requestedKw: number
   maxPricePerKwh: runtime.Decimal | runtime.DecimalJsLike | number | string
   priorityTier: $Enums.PriorityTier
@@ -405,16 +388,14 @@ export type CapacityRequestUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consumer?: Prisma.ConsumerUpdateOneRequiredWithoutCapacityRequestsNestedInput
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutCapacityRequestsNestedInput
-  event?: Prisma.OutageEventUpdateOneWithoutCapacityRequestsNestedInput
+  event?: Prisma.OutageEventUpdateOneRequiredWithoutCapacityRequestsNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutRequestNestedInput
 }
 
 export type CapacityRequestUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   consumerId?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
-  eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedKw?: Prisma.IntFieldUpdateOperationsInput | number
   maxPricePerKwh?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   priorityTier?: Prisma.EnumPriorityTierFieldUpdateOperationsInput | $Enums.PriorityTier
@@ -429,8 +410,7 @@ export type CapacityRequestUncheckedUpdateInput = {
 export type CapacityRequestCreateManyInput = {
   id?: string
   consumerId: string
-  zoneId: string
-  eventId?: string | null
+  eventId: string
   requestedKw: number
   maxPricePerKwh: runtime.Decimal | runtime.DecimalJsLike | number | string
   priorityTier: $Enums.PriorityTier
@@ -456,8 +436,7 @@ export type CapacityRequestUpdateManyMutationInput = {
 export type CapacityRequestUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   consumerId?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
-  eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedKw?: Prisma.IntFieldUpdateOperationsInput | number
   maxPricePerKwh?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   priorityTier?: Prisma.EnumPriorityTierFieldUpdateOperationsInput | $Enums.PriorityTier
@@ -476,7 +455,6 @@ export type CapacityRequestConsumerIdEventIdCompoundUniqueInput = {
 export type CapacityRequestCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   consumerId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   requestedKw?: Prisma.SortOrder
   maxPricePerKwh?: Prisma.SortOrder
@@ -496,7 +474,6 @@ export type CapacityRequestAvgOrderByAggregateInput = {
 export type CapacityRequestMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   consumerId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   requestedKw?: Prisma.SortOrder
   maxPricePerKwh?: Prisma.SortOrder
@@ -511,7 +488,6 @@ export type CapacityRequestMaxOrderByAggregateInput = {
 export type CapacityRequestMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   consumerId?: Prisma.SortOrder
-  zoneId?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   requestedKw?: Prisma.SortOrder
   maxPricePerKwh?: Prisma.SortOrder
@@ -649,48 +625,6 @@ export type CapacityRequestUpdateOneRequiredWithoutReservationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CapacityRequestUpdateToOneWithWhereWithoutReservationsInput, Prisma.CapacityRequestUpdateWithoutReservationsInput>, Prisma.CapacityRequestUncheckedUpdateWithoutReservationsInput>
 }
 
-export type CapacityRequestCreateNestedManyWithoutZoneInput = {
-  create?: Prisma.XOR<Prisma.CapacityRequestCreateWithoutZoneInput, Prisma.CapacityRequestUncheckedCreateWithoutZoneInput> | Prisma.CapacityRequestCreateWithoutZoneInput[] | Prisma.CapacityRequestUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.CapacityRequestCreateOrConnectWithoutZoneInput | Prisma.CapacityRequestCreateOrConnectWithoutZoneInput[]
-  createMany?: Prisma.CapacityRequestCreateManyZoneInputEnvelope
-  connect?: Prisma.CapacityRequestWhereUniqueInput | Prisma.CapacityRequestWhereUniqueInput[]
-}
-
-export type CapacityRequestUncheckedCreateNestedManyWithoutZoneInput = {
-  create?: Prisma.XOR<Prisma.CapacityRequestCreateWithoutZoneInput, Prisma.CapacityRequestUncheckedCreateWithoutZoneInput> | Prisma.CapacityRequestCreateWithoutZoneInput[] | Prisma.CapacityRequestUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.CapacityRequestCreateOrConnectWithoutZoneInput | Prisma.CapacityRequestCreateOrConnectWithoutZoneInput[]
-  createMany?: Prisma.CapacityRequestCreateManyZoneInputEnvelope
-  connect?: Prisma.CapacityRequestWhereUniqueInput | Prisma.CapacityRequestWhereUniqueInput[]
-}
-
-export type CapacityRequestUpdateManyWithoutZoneNestedInput = {
-  create?: Prisma.XOR<Prisma.CapacityRequestCreateWithoutZoneInput, Prisma.CapacityRequestUncheckedCreateWithoutZoneInput> | Prisma.CapacityRequestCreateWithoutZoneInput[] | Prisma.CapacityRequestUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.CapacityRequestCreateOrConnectWithoutZoneInput | Prisma.CapacityRequestCreateOrConnectWithoutZoneInput[]
-  upsert?: Prisma.CapacityRequestUpsertWithWhereUniqueWithoutZoneInput | Prisma.CapacityRequestUpsertWithWhereUniqueWithoutZoneInput[]
-  createMany?: Prisma.CapacityRequestCreateManyZoneInputEnvelope
-  set?: Prisma.CapacityRequestWhereUniqueInput | Prisma.CapacityRequestWhereUniqueInput[]
-  disconnect?: Prisma.CapacityRequestWhereUniqueInput | Prisma.CapacityRequestWhereUniqueInput[]
-  delete?: Prisma.CapacityRequestWhereUniqueInput | Prisma.CapacityRequestWhereUniqueInput[]
-  connect?: Prisma.CapacityRequestWhereUniqueInput | Prisma.CapacityRequestWhereUniqueInput[]
-  update?: Prisma.CapacityRequestUpdateWithWhereUniqueWithoutZoneInput | Prisma.CapacityRequestUpdateWithWhereUniqueWithoutZoneInput[]
-  updateMany?: Prisma.CapacityRequestUpdateManyWithWhereWithoutZoneInput | Prisma.CapacityRequestUpdateManyWithWhereWithoutZoneInput[]
-  deleteMany?: Prisma.CapacityRequestScalarWhereInput | Prisma.CapacityRequestScalarWhereInput[]
-}
-
-export type CapacityRequestUncheckedUpdateManyWithoutZoneNestedInput = {
-  create?: Prisma.XOR<Prisma.CapacityRequestCreateWithoutZoneInput, Prisma.CapacityRequestUncheckedCreateWithoutZoneInput> | Prisma.CapacityRequestCreateWithoutZoneInput[] | Prisma.CapacityRequestUncheckedCreateWithoutZoneInput[]
-  connectOrCreate?: Prisma.CapacityRequestCreateOrConnectWithoutZoneInput | Prisma.CapacityRequestCreateOrConnectWithoutZoneInput[]
-  upsert?: Prisma.CapacityRequestUpsertWithWhereUniqueWithoutZoneInput | Prisma.CapacityRequestUpsertWithWhereUniqueWithoutZoneInput[]
-  createMany?: Prisma.CapacityRequestCreateManyZoneInputEnvelope
-  set?: Prisma.CapacityRequestWhereUniqueInput | Prisma.CapacityRequestWhereUniqueInput[]
-  disconnect?: Prisma.CapacityRequestWhereUniqueInput | Prisma.CapacityRequestWhereUniqueInput[]
-  delete?: Prisma.CapacityRequestWhereUniqueInput | Prisma.CapacityRequestWhereUniqueInput[]
-  connect?: Prisma.CapacityRequestWhereUniqueInput | Prisma.CapacityRequestWhereUniqueInput[]
-  update?: Prisma.CapacityRequestUpdateWithWhereUniqueWithoutZoneInput | Prisma.CapacityRequestUpdateWithWhereUniqueWithoutZoneInput[]
-  updateMany?: Prisma.CapacityRequestUpdateManyWithWhereWithoutZoneInput | Prisma.CapacityRequestUpdateManyWithWhereWithoutZoneInput[]
-  deleteMany?: Prisma.CapacityRequestScalarWhereInput | Prisma.CapacityRequestScalarWhereInput[]
-}
-
 export type CapacityRequestCreateWithoutConsumerInput = {
   id?: string
   requestedKw: number
@@ -701,15 +635,13 @@ export type CapacityRequestCreateWithoutConsumerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutCapacityRequestsInput
-  event?: Prisma.OutageEventCreateNestedOneWithoutCapacityRequestsInput
+  event: Prisma.OutageEventCreateNestedOneWithoutCapacityRequestsInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutRequestInput
 }
 
 export type CapacityRequestUncheckedCreateWithoutConsumerInput = {
   id?: string
-  zoneId: string
-  eventId?: string | null
+  eventId: string
   requestedKw: number
   maxPricePerKwh: runtime.Decimal | runtime.DecimalJsLike | number | string
   priorityTier: $Enums.PriorityTier
@@ -753,8 +685,7 @@ export type CapacityRequestScalarWhereInput = {
   NOT?: Prisma.CapacityRequestScalarWhereInput | Prisma.CapacityRequestScalarWhereInput[]
   id?: Prisma.StringFilter<"CapacityRequest"> | string
   consumerId?: Prisma.StringFilter<"CapacityRequest"> | string
-  zoneId?: Prisma.StringFilter<"CapacityRequest"> | string
-  eventId?: Prisma.StringNullableFilter<"CapacityRequest"> | string | null
+  eventId?: Prisma.StringFilter<"CapacityRequest"> | string
   requestedKw?: Prisma.IntFilter<"CapacityRequest"> | number
   maxPricePerKwh?: Prisma.DecimalFilter<"CapacityRequest"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   priorityTier?: Prisma.EnumPriorityTierFilter<"CapacityRequest"> | $Enums.PriorityTier
@@ -776,14 +707,12 @@ export type CapacityRequestCreateWithoutEventInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   consumer: Prisma.ConsumerCreateNestedOneWithoutCapacityRequestsInput
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutCapacityRequestsInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutRequestInput
 }
 
 export type CapacityRequestUncheckedCreateWithoutEventInput = {
   id?: string
   consumerId: string
-  zoneId: string
   requestedKw: number
   maxPricePerKwh: runtime.Decimal | runtime.DecimalJsLike | number | string
   priorityTier: $Enums.PriorityTier
@@ -832,15 +761,13 @@ export type CapacityRequestCreateWithoutReservationsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   consumer: Prisma.ConsumerCreateNestedOneWithoutCapacityRequestsInput
-  zone: Prisma.ServiceZoneCreateNestedOneWithoutCapacityRequestsInput
-  event?: Prisma.OutageEventCreateNestedOneWithoutCapacityRequestsInput
+  event: Prisma.OutageEventCreateNestedOneWithoutCapacityRequestsInput
 }
 
 export type CapacityRequestUncheckedCreateWithoutReservationsInput = {
   id?: string
   consumerId: string
-  zoneId: string
-  eventId?: string | null
+  eventId: string
   requestedKw: number
   maxPricePerKwh: runtime.Decimal | runtime.DecimalJsLike | number | string
   priorityTier: $Enums.PriorityTier
@@ -878,15 +805,13 @@ export type CapacityRequestUpdateWithoutReservationsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consumer?: Prisma.ConsumerUpdateOneRequiredWithoutCapacityRequestsNestedInput
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutCapacityRequestsNestedInput
-  event?: Prisma.OutageEventUpdateOneWithoutCapacityRequestsNestedInput
+  event?: Prisma.OutageEventUpdateOneRequiredWithoutCapacityRequestsNestedInput
 }
 
 export type CapacityRequestUncheckedUpdateWithoutReservationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   consumerId?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
-  eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedKw?: Prisma.IntFieldUpdateOperationsInput | number
   maxPricePerKwh?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   priorityTier?: Prisma.EnumPriorityTierFieldUpdateOperationsInput | $Enums.PriorityTier
@@ -897,66 +822,9 @@ export type CapacityRequestUncheckedUpdateWithoutReservationsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
-export type CapacityRequestCreateWithoutZoneInput = {
-  id?: string
-  requestedKw: number
-  maxPricePerKwh: runtime.Decimal | runtime.DecimalJsLike | number | string
-  priorityTier: $Enums.PriorityTier
-  status?: $Enums.RequestStatus
-  rejectionReason?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  consumer: Prisma.ConsumerCreateNestedOneWithoutCapacityRequestsInput
-  event?: Prisma.OutageEventCreateNestedOneWithoutCapacityRequestsInput
-  reservations?: Prisma.ReservationCreateNestedManyWithoutRequestInput
-}
-
-export type CapacityRequestUncheckedCreateWithoutZoneInput = {
-  id?: string
-  consumerId: string
-  eventId?: string | null
-  requestedKw: number
-  maxPricePerKwh: runtime.Decimal | runtime.DecimalJsLike | number | string
-  priorityTier: $Enums.PriorityTier
-  status?: $Enums.RequestStatus
-  rejectionReason?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutRequestInput
-}
-
-export type CapacityRequestCreateOrConnectWithoutZoneInput = {
-  where: Prisma.CapacityRequestWhereUniqueInput
-  create: Prisma.XOR<Prisma.CapacityRequestCreateWithoutZoneInput, Prisma.CapacityRequestUncheckedCreateWithoutZoneInput>
-}
-
-export type CapacityRequestCreateManyZoneInputEnvelope = {
-  data: Prisma.CapacityRequestCreateManyZoneInput | Prisma.CapacityRequestCreateManyZoneInput[]
-  skipDuplicates?: boolean
-}
-
-export type CapacityRequestUpsertWithWhereUniqueWithoutZoneInput = {
-  where: Prisma.CapacityRequestWhereUniqueInput
-  update: Prisma.XOR<Prisma.CapacityRequestUpdateWithoutZoneInput, Prisma.CapacityRequestUncheckedUpdateWithoutZoneInput>
-  create: Prisma.XOR<Prisma.CapacityRequestCreateWithoutZoneInput, Prisma.CapacityRequestUncheckedCreateWithoutZoneInput>
-}
-
-export type CapacityRequestUpdateWithWhereUniqueWithoutZoneInput = {
-  where: Prisma.CapacityRequestWhereUniqueInput
-  data: Prisma.XOR<Prisma.CapacityRequestUpdateWithoutZoneInput, Prisma.CapacityRequestUncheckedUpdateWithoutZoneInput>
-}
-
-export type CapacityRequestUpdateManyWithWhereWithoutZoneInput = {
-  where: Prisma.CapacityRequestScalarWhereInput
-  data: Prisma.XOR<Prisma.CapacityRequestUpdateManyMutationInput, Prisma.CapacityRequestUncheckedUpdateManyWithoutZoneInput>
-}
-
 export type CapacityRequestCreateManyConsumerInput = {
   id?: string
-  zoneId: string
-  eventId?: string | null
+  eventId: string
   requestedKw: number
   maxPricePerKwh: runtime.Decimal | runtime.DecimalJsLike | number | string
   priorityTier: $Enums.PriorityTier
@@ -977,15 +845,13 @@ export type CapacityRequestUpdateWithoutConsumerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutCapacityRequestsNestedInput
-  event?: Prisma.OutageEventUpdateOneWithoutCapacityRequestsNestedInput
+  event?: Prisma.OutageEventUpdateOneRequiredWithoutCapacityRequestsNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutRequestNestedInput
 }
 
 export type CapacityRequestUncheckedUpdateWithoutConsumerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
-  eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedKw?: Prisma.IntFieldUpdateOperationsInput | number
   maxPricePerKwh?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   priorityTier?: Prisma.EnumPriorityTierFieldUpdateOperationsInput | $Enums.PriorityTier
@@ -999,8 +865,7 @@ export type CapacityRequestUncheckedUpdateWithoutConsumerInput = {
 
 export type CapacityRequestUncheckedUpdateManyWithoutConsumerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
-  eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedKw?: Prisma.IntFieldUpdateOperationsInput | number
   maxPricePerKwh?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   priorityTier?: Prisma.EnumPriorityTierFieldUpdateOperationsInput | $Enums.PriorityTier
@@ -1014,7 +879,6 @@ export type CapacityRequestUncheckedUpdateManyWithoutConsumerInput = {
 export type CapacityRequestCreateManyEventInput = {
   id?: string
   consumerId: string
-  zoneId: string
   requestedKw: number
   maxPricePerKwh: runtime.Decimal | runtime.DecimalJsLike | number | string
   priorityTier: $Enums.PriorityTier
@@ -1036,14 +900,12 @@ export type CapacityRequestUpdateWithoutEventInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   consumer?: Prisma.ConsumerUpdateOneRequiredWithoutCapacityRequestsNestedInput
-  zone?: Prisma.ServiceZoneUpdateOneRequiredWithoutCapacityRequestsNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutRequestNestedInput
 }
 
 export type CapacityRequestUncheckedUpdateWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   consumerId?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedKw?: Prisma.IntFieldUpdateOperationsInput | number
   maxPricePerKwh?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   priorityTier?: Prisma.EnumPriorityTierFieldUpdateOperationsInput | $Enums.PriorityTier
@@ -1058,65 +920,6 @@ export type CapacityRequestUncheckedUpdateWithoutEventInput = {
 export type CapacityRequestUncheckedUpdateManyWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   consumerId?: Prisma.StringFieldUpdateOperationsInput | string
-  zoneId?: Prisma.StringFieldUpdateOperationsInput | string
-  requestedKw?: Prisma.IntFieldUpdateOperationsInput | number
-  maxPricePerKwh?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  priorityTier?: Prisma.EnumPriorityTierFieldUpdateOperationsInput | $Enums.PriorityTier
-  status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
-  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
-
-export type CapacityRequestCreateManyZoneInput = {
-  id?: string
-  consumerId: string
-  eventId?: string | null
-  requestedKw: number
-  maxPricePerKwh: runtime.Decimal | runtime.DecimalJsLike | number | string
-  priorityTier: $Enums.PriorityTier
-  status?: $Enums.RequestStatus
-  rejectionReason?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-}
-
-export type CapacityRequestUpdateWithoutZoneInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  requestedKw?: Prisma.IntFieldUpdateOperationsInput | number
-  maxPricePerKwh?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  priorityTier?: Prisma.EnumPriorityTierFieldUpdateOperationsInput | $Enums.PriorityTier
-  status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
-  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  consumer?: Prisma.ConsumerUpdateOneRequiredWithoutCapacityRequestsNestedInput
-  event?: Prisma.OutageEventUpdateOneWithoutCapacityRequestsNestedInput
-  reservations?: Prisma.ReservationUpdateManyWithoutRequestNestedInput
-}
-
-export type CapacityRequestUncheckedUpdateWithoutZoneInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  consumerId?: Prisma.StringFieldUpdateOperationsInput | string
-  eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  requestedKw?: Prisma.IntFieldUpdateOperationsInput | number
-  maxPricePerKwh?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  priorityTier?: Prisma.EnumPriorityTierFieldUpdateOperationsInput | $Enums.PriorityTier
-  status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
-  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutRequestNestedInput
-}
-
-export type CapacityRequestUncheckedUpdateManyWithoutZoneInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  consumerId?: Prisma.StringFieldUpdateOperationsInput | string
-  eventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedKw?: Prisma.IntFieldUpdateOperationsInput | number
   maxPricePerKwh?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   priorityTier?: Prisma.EnumPriorityTierFieldUpdateOperationsInput | $Enums.PriorityTier
@@ -1161,7 +964,6 @@ export type CapacityRequestCountOutputTypeCountReservationsArgs<ExtArgs extends 
 export type CapacityRequestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   consumerId?: boolean
-  zoneId?: boolean
   eventId?: boolean
   requestedKw?: boolean
   maxPricePerKwh?: boolean
@@ -1172,8 +974,7 @@ export type CapacityRequestSelect<ExtArgs extends runtime.Types.Extensions.Inter
   updatedAt?: boolean
   deletedAt?: boolean
   consumer?: boolean | Prisma.ConsumerDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
-  event?: boolean | Prisma.CapacityRequest$eventArgs<ExtArgs>
+  event?: boolean | Prisma.OutageEventDefaultArgs<ExtArgs>
   reservations?: boolean | Prisma.CapacityRequest$reservationsArgs<ExtArgs>
   _count?: boolean | Prisma.CapacityRequestCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["capacityRequest"]>
@@ -1181,7 +982,6 @@ export type CapacityRequestSelect<ExtArgs extends runtime.Types.Extensions.Inter
 export type CapacityRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   consumerId?: boolean
-  zoneId?: boolean
   eventId?: boolean
   requestedKw?: boolean
   maxPricePerKwh?: boolean
@@ -1192,14 +992,12 @@ export type CapacityRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   updatedAt?: boolean
   deletedAt?: boolean
   consumer?: boolean | Prisma.ConsumerDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
-  event?: boolean | Prisma.CapacityRequest$eventArgs<ExtArgs>
+  event?: boolean | Prisma.OutageEventDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["capacityRequest"]>
 
 export type CapacityRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   consumerId?: boolean
-  zoneId?: boolean
   eventId?: boolean
   requestedKw?: boolean
   maxPricePerKwh?: boolean
@@ -1210,14 +1008,12 @@ export type CapacityRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   updatedAt?: boolean
   deletedAt?: boolean
   consumer?: boolean | Prisma.ConsumerDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
-  event?: boolean | Prisma.CapacityRequest$eventArgs<ExtArgs>
+  event?: boolean | Prisma.OutageEventDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["capacityRequest"]>
 
 export type CapacityRequestSelectScalar = {
   id?: boolean
   consumerId?: boolean
-  zoneId?: boolean
   eventId?: boolean
   requestedKw?: boolean
   maxPricePerKwh?: boolean
@@ -1229,38 +1025,33 @@ export type CapacityRequestSelectScalar = {
   deletedAt?: boolean
 }
 
-export type CapacityRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "consumerId" | "zoneId" | "eventId" | "requestedKw" | "maxPricePerKwh" | "priorityTier" | "status" | "rejectionReason" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["capacityRequest"]>
+export type CapacityRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "consumerId" | "eventId" | "requestedKw" | "maxPricePerKwh" | "priorityTier" | "status" | "rejectionReason" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["capacityRequest"]>
 export type CapacityRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   consumer?: boolean | Prisma.ConsumerDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
-  event?: boolean | Prisma.CapacityRequest$eventArgs<ExtArgs>
+  event?: boolean | Prisma.OutageEventDefaultArgs<ExtArgs>
   reservations?: boolean | Prisma.CapacityRequest$reservationsArgs<ExtArgs>
   _count?: boolean | Prisma.CapacityRequestCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CapacityRequestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   consumer?: boolean | Prisma.ConsumerDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
-  event?: boolean | Prisma.CapacityRequest$eventArgs<ExtArgs>
+  event?: boolean | Prisma.OutageEventDefaultArgs<ExtArgs>
 }
 export type CapacityRequestIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   consumer?: boolean | Prisma.ConsumerDefaultArgs<ExtArgs>
-  zone?: boolean | Prisma.ServiceZoneDefaultArgs<ExtArgs>
-  event?: boolean | Prisma.CapacityRequest$eventArgs<ExtArgs>
+  event?: boolean | Prisma.OutageEventDefaultArgs<ExtArgs>
 }
 
 export type $CapacityRequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CapacityRequest"
   objects: {
     consumer: Prisma.$ConsumerPayload<ExtArgs>
-    zone: Prisma.$ServiceZonePayload<ExtArgs>
-    event: Prisma.$OutageEventPayload<ExtArgs> | null
+    event: Prisma.$OutageEventPayload<ExtArgs>
     reservations: Prisma.$ReservationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     consumerId: string
-    zoneId: string
-    eventId: string | null
+    eventId: string
     requestedKw: number
     maxPricePerKwh: runtime.Decimal
     priorityTier: $Enums.PriorityTier
@@ -1664,8 +1455,7 @@ readonly fields: CapacityRequestFieldRefs;
 export interface Prisma__CapacityRequestClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   consumer<T extends Prisma.ConsumerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ConsumerDefaultArgs<ExtArgs>>): Prisma.Prisma__ConsumerClient<runtime.Types.Result.GetResult<Prisma.$ConsumerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  zone<T extends Prisma.ServiceZoneDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ServiceZoneDefaultArgs<ExtArgs>>): Prisma.Prisma__ServiceZoneClient<runtime.Types.Result.GetResult<Prisma.$ServiceZonePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  event<T extends Prisma.CapacityRequest$eventArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CapacityRequest$eventArgs<ExtArgs>>): Prisma.Prisma__OutageEventClient<runtime.Types.Result.GetResult<Prisma.$OutageEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  event<T extends Prisma.OutageEventDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OutageEventDefaultArgs<ExtArgs>>): Prisma.Prisma__OutageEventClient<runtime.Types.Result.GetResult<Prisma.$OutageEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   reservations<T extends Prisma.CapacityRequest$reservationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CapacityRequest$reservationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1698,7 +1488,6 @@ export interface Prisma__CapacityRequestClient<T, Null = never, ExtArgs extends 
 export interface CapacityRequestFieldRefs {
   readonly id: Prisma.FieldRef<"CapacityRequest", 'String'>
   readonly consumerId: Prisma.FieldRef<"CapacityRequest", 'String'>
-  readonly zoneId: Prisma.FieldRef<"CapacityRequest", 'String'>
   readonly eventId: Prisma.FieldRef<"CapacityRequest", 'String'>
   readonly requestedKw: Prisma.FieldRef<"CapacityRequest", 'Int'>
   readonly maxPricePerKwh: Prisma.FieldRef<"CapacityRequest", 'Decimal'>
@@ -2106,25 +1895,6 @@ export type CapacityRequestDeleteManyArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many CapacityRequests to delete.
    */
   limit?: number
-}
-
-/**
- * CapacityRequest.event
- */
-export type CapacityRequest$eventArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the OutageEvent
-   */
-  select?: Prisma.OutageEventSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the OutageEvent
-   */
-  omit?: Prisma.OutageEventOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.OutageEventInclude<ExtArgs> | null
-  where?: Prisma.OutageEventWhereInput
 }
 
 /**

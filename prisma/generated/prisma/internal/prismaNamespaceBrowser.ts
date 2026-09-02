@@ -64,7 +64,6 @@ export const ModelName = {
   Rating: 'Rating',
   Refund: 'Refund',
   Reservation: 'Reservation',
-  ServiceZone: 'ServiceZone',
   User: 'User'
 } as const
 
@@ -103,7 +102,6 @@ export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typ
 export const CapacityOfferScalarFieldEnum = {
   id: 'id',
   providerId: 'providerId',
-  zoneId: 'zoneId',
   eventId: 'eventId',
   capacityKw: 'capacityKw',
   pricePerKwh: 'pricePerKwh',
@@ -122,7 +120,6 @@ export type CapacityOfferScalarFieldEnum = (typeof CapacityOfferScalarFieldEnum)
 export const CapacityRequestScalarFieldEnum = {
   id: 'id',
   consumerId: 'consumerId',
-  zoneId: 'zoneId',
   eventId: 'eventId',
   requestedKw: 'requestedKw',
   maxPricePerKwh: 'maxPricePerKwh',
@@ -140,7 +137,6 @@ export type CapacityRequestScalarFieldEnum = (typeof CapacityRequestScalarFieldE
 export const ConsumerScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  zoneId: 'zoneId',
   organizationName: 'organizationName',
   criticalLoadKw: 'criticalLoadKw',
   address: 'address',
@@ -193,7 +189,6 @@ export type IncidentScalarFieldEnum = (typeof IncidentScalarFieldEnum)[keyof typ
 export const OperatorScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  zoneId: 'zoneId',
   roleLevel: 'roleLevel',
   isAdmin: 'isAdmin',
   createdAt: 'createdAt',
@@ -206,12 +201,13 @@ export type OperatorScalarFieldEnum = (typeof OperatorScalarFieldEnum)[keyof typ
 
 export const OutageEventScalarFieldEnum = {
   id: 'id',
-  zoneId: 'zoneId',
   operatorId: 'operatorId',
   scheduledStart: 'scheduledStart',
   scheduledEnd: 'scheduledEnd',
   status: 'status',
-  estimatedDurationMins: 'estimatedDurationMins',
+  totalCapacityKw: 'totalCapacityKw',
+  survivalQuotaKw: 'survivalQuotaKw',
+  allocatedKw: 'allocatedKw',
   notes: 'notes',
   actualStart: 'actualStart',
   actualEnd: 'actualEnd',
@@ -230,11 +226,9 @@ export const PaymentScalarFieldEnum = {
   gatewayStatus: 'gatewayStatus',
   amount: 'amount',
   currency: 'currency',
-  paymentMethod: 'paymentMethod',
   initiatedAt: 'initiatedAt',
   completedAt: 'completedAt',
   idempotencyKey: 'idempotencyKey',
-  webhookStatus: 'webhookStatus',
   webhookReceivedAt: 'webhookReceivedAt',
   webhookProcessedAt: 'webhookProcessedAt',
   createdAt: 'createdAt',
@@ -248,7 +242,6 @@ export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeo
 export const ProviderScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  zoneId: 'zoneId',
   companyName: 'companyName',
   licenseNumber: 'licenseNumber',
   resourceType: 'resourceType',
@@ -290,7 +283,6 @@ export const RefundScalarFieldEnum = {
   amount: 'amount',
   reason: 'reason',
   gatewayRefundId: 'gatewayRefundId',
-  status: 'status',
   initiatedAt: 'initiatedAt',
   completedAt: 'completedAt',
   createdAt: 'createdAt',
@@ -310,9 +302,9 @@ export const ReservationScalarFieldEnum = {
   allocatedKw: 'allocatedKw',
   unitPrice: 'unitPrice',
   totalAmount: 'totalAmount',
-  status: 'status',
   deliveryStart: 'deliveryStart',
   deliveryEnd: 'deliveryEnd',
+  status: 'status',
   paymentStatus: 'paymentStatus',
   idempotencyKey: 'idempotencyKey',
   providerCheckinAt: 'providerCheckinAt',
@@ -322,22 +314,6 @@ export const ReservationScalarFieldEnum = {
 } as const
 
 export type ReservationScalarFieldEnum = (typeof ReservationScalarFieldEnum)[keyof typeof ReservationScalarFieldEnum]
-
-
-export const ServiceZoneScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  region: 'region',
-  gridOperator: 'gridOperator',
-  latitude: 'latitude',
-  longitude: 'longitude',
-  coverageAreaSqKm: 'coverageAreaSqKm',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
-} as const
-
-export type ServiceZoneScalarFieldEnum = (typeof ServiceZoneScalarFieldEnum)[keyof typeof ServiceZoneScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -356,7 +332,8 @@ export const UserScalarFieldEnum = {
   isDeleted: 'isDeleted',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  status: 'status'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]

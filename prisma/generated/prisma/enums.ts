@@ -19,6 +19,15 @@ export const UserRole = {
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 
+export const UserStatus = {
+  ACTIVE: 'ACTIVE',
+  BLOCKED: 'BLOCKED',
+  DELETED: 'DELETED'
+} as const
+
+export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
+
+
 export const ResourceType = {
   GENERATOR: 'GENERATOR',
   SOLAR_BESS: 'SOLAR_BESS',
@@ -87,6 +96,16 @@ export const IncidentType = {
 } as const
 
 export type IncidentType = (typeof IncidentType)[keyof typeof IncidentType]
+
+
+export const IncidentStatus = {
+  OPEN: 'OPEN',
+  UNDER_REVIEW: 'UNDER_REVIEW',
+  RESOLVED: 'RESOLVED',
+  DISMISSED: 'DISMISSED'
+} as const
+
+export type IncidentStatus = (typeof IncidentStatus)[keyof typeof IncidentStatus]
 
 
 export const OfferStatus = {

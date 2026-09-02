@@ -1,0 +1,26 @@
+model OutageEvent {
+  id                    String            @id @default(cuid())
+  zoneId                String
+  operatorId            String
+  scheduledStart        DateTime
+  scheduledEnd          DateTime
+  status                OutageEventStatus @default(SCHEDULED)
+  estimatedDurationMins Int
+  notes                 String?
+  actualStart           DateTime?
+  actualEnd             DateTime?
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  deletedAt             DateTime?
+
+  // Relations
+  zone             ServiceZone       @relation(fields: [zoneId], references: [id], onDelete: Restrict)
+  operator         Operator          @relation(fields: [operatorId], references: [id], onDelete: Restrict)
+  capacityOffers   CapacityOffer[]
+  capacityRequests CapacityRequest[]
+
+  @@index([zoneId, status])
+  @@index([scheduledStart, scheduledEnd])
+  @@index([createdAt])
+  @@map("outage_events")
+}

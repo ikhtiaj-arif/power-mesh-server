@@ -1,0 +1,26 @@
+model CapacityRequest {
+  id              String        @id @default(cuid())
+  consumerId      String
+  zoneId          String
+  eventId         String? // NULL = standing request
+  requestedKw     Int
+  maxPricePerKwh  Decimal       @db.Decimal(10, 4)
+  priorityTier    PriorityTier
+  status          RequestStatus @default(PENDING)
+  rejectionReason String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
+
+  // Relations
+  consumer     Consumer      @relation(fields: [consumerId], references: [id], onDelete: Restrict)
+  zone         ServiceZone   @relation(fields: [zoneId], references: [id], onDelete: Restrict)
+  event        OutageEvent?  @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  reservations Reservation[]
+
+  @@unique([consumerId, eventId])
+  @@index([zoneId, status])
+  @@index([eventId, priorityTier])
+  @@index([createdAt])
+  @@map("capacity_requests")
+}

@@ -1,21 +1,31 @@
 model User {
-  id                 String       @id @default(uuid())
-  name               String
-  email              String
-  password           String?
-  googleId           String?      @unique
- 
-  emailVerified      Boolean      @default(false)
-  
-  imageUrl           String?      @default("")
-  image_public_id    String?      @default("")
-  needPasswordChange Boolean      @default(false)
-  isDeleted          Boolean      @default(false)
+  id        String   @id @default(uuid())
+  email     String
+  firstName String
+  lastName  String
+  password  String?
+  googleId  String?  @unique
+  role      UserRole
+
+  emailVerified      Boolean   @default(false)
+  isActive           Boolean   @default(true)
+  imageUrl           String?   @default("")
+  image_public_id    String?   @default("")
+  needPasswordChange Boolean   @default(false)
+  isDeleted          Boolean   @default(false)
   deletedAt          DateTime?
-  createdAt          DateTime     @default(now())
-  updatedAt          DateTime     @updatedAt
- 
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  // Relations
+  provider  Provider?
+  consumer  Consumer?
+  operator  Operator?
+  auditLogs AuditLog[]
 
   @@unique([email])
+  @@index([email])
+  @@index([createdAt])
+  @@index([deletedAt])
   @@map("users")
 }

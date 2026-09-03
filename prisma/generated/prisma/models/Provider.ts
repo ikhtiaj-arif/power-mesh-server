@@ -45,6 +45,8 @@ export type ProviderMinAggregateOutputType = {
   contactPerson: string | null
   contactPhone: string | null
   bankAccountNumber: string | null
+  status: $Enums.ProviderStatus | null
+  rejectionReason: string | null
   verified: boolean | null
   verifiedAt: Date | null
   verifiedBy: string | null
@@ -64,6 +66,8 @@ export type ProviderMaxAggregateOutputType = {
   contactPerson: string | null
   contactPhone: string | null
   bankAccountNumber: string | null
+  status: $Enums.ProviderStatus | null
+  rejectionReason: string | null
   verified: boolean | null
   verifiedAt: Date | null
   verifiedBy: string | null
@@ -83,6 +87,8 @@ export type ProviderCountAggregateOutputType = {
   contactPerson: number
   contactPhone: number
   bankAccountNumber: number
+  status: number
+  rejectionReason: number
   verified: number
   verifiedAt: number
   verifiedBy: number
@@ -112,6 +118,8 @@ export type ProviderMinAggregateInputType = {
   contactPerson?: true
   contactPhone?: true
   bankAccountNumber?: true
+  status?: true
+  rejectionReason?: true
   verified?: true
   verifiedAt?: true
   verifiedBy?: true
@@ -131,6 +139,8 @@ export type ProviderMaxAggregateInputType = {
   contactPerson?: true
   contactPhone?: true
   bankAccountNumber?: true
+  status?: true
+  rejectionReason?: true
   verified?: true
   verifiedAt?: true
   verifiedBy?: true
@@ -150,6 +160,8 @@ export type ProviderCountAggregateInputType = {
   contactPerson?: true
   contactPhone?: true
   bankAccountNumber?: true
+  status?: true
+  rejectionReason?: true
   verified?: true
   verifiedAt?: true
   verifiedBy?: true
@@ -256,6 +268,8 @@ export type ProviderGroupByOutputType = {
   contactPerson: string
   contactPhone: string
   bankAccountNumber: string | null
+  status: $Enums.ProviderStatus
+  rejectionReason: string | null
   verified: boolean
   verifiedAt: Date | null
   verifiedBy: string | null
@@ -298,6 +312,8 @@ export type ProviderWhereInput = {
   contactPerson?: Prisma.StringFilter<"Provider"> | string
   contactPhone?: Prisma.StringFilter<"Provider"> | string
   bankAccountNumber?: Prisma.StringNullableFilter<"Provider"> | string | null
+  status?: Prisma.EnumProviderStatusFilter<"Provider"> | $Enums.ProviderStatus
+  rejectionReason?: Prisma.StringNullableFilter<"Provider"> | string | null
   verified?: Prisma.BoolFilter<"Provider"> | boolean
   verifiedAt?: Prisma.DateTimeNullableFilter<"Provider"> | Date | string | null
   verifiedBy?: Prisma.StringNullableFilter<"Provider"> | string | null
@@ -322,6 +338,8 @@ export type ProviderOrderByWithRelationInput = {
   contactPerson?: Prisma.SortOrder
   contactPhone?: Prisma.SortOrder
   bankAccountNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrderInput | Prisma.SortOrder
   verified?: Prisma.SortOrder
   verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   verifiedBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -349,6 +367,8 @@ export type ProviderWhereUniqueInput = Prisma.AtLeast<{
   contactPerson?: Prisma.StringFilter<"Provider"> | string
   contactPhone?: Prisma.StringFilter<"Provider"> | string
   bankAccountNumber?: Prisma.StringNullableFilter<"Provider"> | string | null
+  status?: Prisma.EnumProviderStatusFilter<"Provider"> | $Enums.ProviderStatus
+  rejectionReason?: Prisma.StringNullableFilter<"Provider"> | string | null
   verified?: Prisma.BoolFilter<"Provider"> | boolean
   verifiedAt?: Prisma.DateTimeNullableFilter<"Provider"> | Date | string | null
   verifiedBy?: Prisma.StringNullableFilter<"Provider"> | string | null
@@ -373,6 +393,8 @@ export type ProviderOrderByWithAggregationInput = {
   contactPerson?: Prisma.SortOrder
   contactPhone?: Prisma.SortOrder
   bankAccountNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrderInput | Prisma.SortOrder
   verified?: Prisma.SortOrder
   verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   verifiedBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -400,6 +422,8 @@ export type ProviderScalarWhereWithAggregatesInput = {
   contactPerson?: Prisma.StringWithAggregatesFilter<"Provider"> | string
   contactPhone?: Prisma.StringWithAggregatesFilter<"Provider"> | string
   bankAccountNumber?: Prisma.StringNullableWithAggregatesFilter<"Provider"> | string | null
+  status?: Prisma.EnumProviderStatusWithAggregatesFilter<"Provider"> | $Enums.ProviderStatus
+  rejectionReason?: Prisma.StringNullableWithAggregatesFilter<"Provider"> | string | null
   verified?: Prisma.BoolWithAggregatesFilter<"Provider"> | boolean
   verifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Provider"> | Date | string | null
   verifiedBy?: Prisma.StringNullableWithAggregatesFilter<"Provider"> | string | null
@@ -418,6 +442,8 @@ export type ProviderCreateInput = {
   contactPerson: string
   contactPhone: string
   bankAccountNumber?: string | null
+  status?: $Enums.ProviderStatus
+  rejectionReason?: string | null
   verified?: boolean
   verifiedAt?: Date | string | null
   verifiedBy?: string | null
@@ -442,6 +468,8 @@ export type ProviderUncheckedCreateInput = {
   contactPerson: string
   contactPhone: string
   bankAccountNumber?: string | null
+  status?: $Enums.ProviderStatus
+  rejectionReason?: string | null
   verified?: boolean
   verifiedAt?: Date | string | null
   verifiedBy?: string | null
@@ -464,6 +492,8 @@ export type ProviderUpdateInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProviderStatusFieldUpdateOperationsInput | $Enums.ProviderStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -488,6 +518,8 @@ export type ProviderUncheckedUpdateInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProviderStatusFieldUpdateOperationsInput | $Enums.ProviderStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -511,6 +543,8 @@ export type ProviderCreateManyInput = {
   contactPerson: string
   contactPhone: string
   bankAccountNumber?: string | null
+  status?: $Enums.ProviderStatus
+  rejectionReason?: string | null
   verified?: boolean
   verifiedAt?: Date | string | null
   verifiedBy?: string | null
@@ -529,6 +563,8 @@ export type ProviderUpdateManyMutationInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProviderStatusFieldUpdateOperationsInput | $Enums.ProviderStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -548,6 +584,8 @@ export type ProviderUncheckedUpdateManyInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProviderStatusFieldUpdateOperationsInput | $Enums.ProviderStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -572,6 +610,8 @@ export type ProviderCountOrderByAggregateInput = {
   contactPerson?: Prisma.SortOrder
   contactPhone?: Prisma.SortOrder
   bankAccountNumber?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrder
   verified?: Prisma.SortOrder
   verifiedAt?: Prisma.SortOrder
   verifiedBy?: Prisma.SortOrder
@@ -595,6 +635,8 @@ export type ProviderMaxOrderByAggregateInput = {
   contactPerson?: Prisma.SortOrder
   contactPhone?: Prisma.SortOrder
   bankAccountNumber?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrder
   verified?: Prisma.SortOrder
   verifiedAt?: Prisma.SortOrder
   verifiedBy?: Prisma.SortOrder
@@ -614,6 +656,8 @@ export type ProviderMinOrderByAggregateInput = {
   contactPerson?: Prisma.SortOrder
   contactPhone?: Prisma.SortOrder
   bankAccountNumber?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrder
   verified?: Prisma.SortOrder
   verifiedAt?: Prisma.SortOrder
   verifiedBy?: Prisma.SortOrder
@@ -661,6 +705,10 @@ export type ProviderUpdateOneRequiredWithoutIncidentsNestedInput = {
 
 export type EnumResourceTypeFieldUpdateOperationsInput = {
   set?: $Enums.ResourceType
+}
+
+export type EnumProviderStatusFieldUpdateOperationsInput = {
+  set?: $Enums.ProviderStatus
 }
 
 export type ProviderCreateNestedOneWithoutRatingsInput = {
@@ -733,6 +781,8 @@ export type ProviderCreateWithoutCapacityOffersInput = {
   contactPerson: string
   contactPhone: string
   bankAccountNumber?: string | null
+  status?: $Enums.ProviderStatus
+  rejectionReason?: string | null
   verified?: boolean
   verifiedAt?: Date | string | null
   verifiedBy?: string | null
@@ -756,6 +806,8 @@ export type ProviderUncheckedCreateWithoutCapacityOffersInput = {
   contactPerson: string
   contactPhone: string
   bankAccountNumber?: string | null
+  status?: $Enums.ProviderStatus
+  rejectionReason?: string | null
   verified?: boolean
   verifiedAt?: Date | string | null
   verifiedBy?: string | null
@@ -793,6 +845,8 @@ export type ProviderUpdateWithoutCapacityOffersInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProviderStatusFieldUpdateOperationsInput | $Enums.ProviderStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -816,6 +870,8 @@ export type ProviderUncheckedUpdateWithoutCapacityOffersInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProviderStatusFieldUpdateOperationsInput | $Enums.ProviderStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -837,6 +893,8 @@ export type ProviderCreateWithoutIncidentsInput = {
   contactPerson: string
   contactPhone: string
   bankAccountNumber?: string | null
+  status?: $Enums.ProviderStatus
+  rejectionReason?: string | null
   verified?: boolean
   verifiedAt?: Date | string | null
   verifiedBy?: string | null
@@ -860,6 +918,8 @@ export type ProviderUncheckedCreateWithoutIncidentsInput = {
   contactPerson: string
   contactPhone: string
   bankAccountNumber?: string | null
+  status?: $Enums.ProviderStatus
+  rejectionReason?: string | null
   verified?: boolean
   verifiedAt?: Date | string | null
   verifiedBy?: string | null
@@ -897,6 +957,8 @@ export type ProviderUpdateWithoutIncidentsInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProviderStatusFieldUpdateOperationsInput | $Enums.ProviderStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -920,6 +982,8 @@ export type ProviderUncheckedUpdateWithoutIncidentsInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProviderStatusFieldUpdateOperationsInput | $Enums.ProviderStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -941,6 +1005,8 @@ export type ProviderCreateWithoutRatingsInput = {
   contactPerson: string
   contactPhone: string
   bankAccountNumber?: string | null
+  status?: $Enums.ProviderStatus
+  rejectionReason?: string | null
   verified?: boolean
   verifiedAt?: Date | string | null
   verifiedBy?: string | null
@@ -964,6 +1030,8 @@ export type ProviderUncheckedCreateWithoutRatingsInput = {
   contactPerson: string
   contactPhone: string
   bankAccountNumber?: string | null
+  status?: $Enums.ProviderStatus
+  rejectionReason?: string | null
   verified?: boolean
   verifiedAt?: Date | string | null
   verifiedBy?: string | null
@@ -1001,6 +1069,8 @@ export type ProviderUpdateWithoutRatingsInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProviderStatusFieldUpdateOperationsInput | $Enums.ProviderStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1024,6 +1094,8 @@ export type ProviderUncheckedUpdateWithoutRatingsInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProviderStatusFieldUpdateOperationsInput | $Enums.ProviderStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1045,6 +1117,8 @@ export type ProviderCreateWithoutReservationsInput = {
   contactPerson: string
   contactPhone: string
   bankAccountNumber?: string | null
+  status?: $Enums.ProviderStatus
+  rejectionReason?: string | null
   verified?: boolean
   verifiedAt?: Date | string | null
   verifiedBy?: string | null
@@ -1068,6 +1142,8 @@ export type ProviderUncheckedCreateWithoutReservationsInput = {
   contactPerson: string
   contactPhone: string
   bankAccountNumber?: string | null
+  status?: $Enums.ProviderStatus
+  rejectionReason?: string | null
   verified?: boolean
   verifiedAt?: Date | string | null
   verifiedBy?: string | null
@@ -1105,6 +1181,8 @@ export type ProviderUpdateWithoutReservationsInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProviderStatusFieldUpdateOperationsInput | $Enums.ProviderStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1128,6 +1206,8 @@ export type ProviderUncheckedUpdateWithoutReservationsInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProviderStatusFieldUpdateOperationsInput | $Enums.ProviderStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1149,6 +1229,8 @@ export type ProviderCreateWithoutUserInput = {
   contactPerson: string
   contactPhone: string
   bankAccountNumber?: string | null
+  status?: $Enums.ProviderStatus
+  rejectionReason?: string | null
   verified?: boolean
   verifiedAt?: Date | string | null
   verifiedBy?: string | null
@@ -1171,6 +1253,8 @@ export type ProviderUncheckedCreateWithoutUserInput = {
   contactPerson: string
   contactPhone: string
   bankAccountNumber?: string | null
+  status?: $Enums.ProviderStatus
+  rejectionReason?: string | null
   verified?: boolean
   verifiedAt?: Date | string | null
   verifiedBy?: string | null
@@ -1209,6 +1293,8 @@ export type ProviderUpdateWithoutUserInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProviderStatusFieldUpdateOperationsInput | $Enums.ProviderStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1231,6 +1317,8 @@ export type ProviderUncheckedUpdateWithoutUserInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   contactPhone?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProviderStatusFieldUpdateOperationsInput | $Enums.ProviderStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1312,6 +1400,8 @@ export type ProviderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   contactPerson?: boolean
   contactPhone?: boolean
   bankAccountNumber?: boolean
+  status?: boolean
+  rejectionReason?: boolean
   verified?: boolean
   verifiedAt?: boolean
   verifiedBy?: boolean
@@ -1337,6 +1427,8 @@ export type ProviderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   contactPerson?: boolean
   contactPhone?: boolean
   bankAccountNumber?: boolean
+  status?: boolean
+  rejectionReason?: boolean
   verified?: boolean
   verifiedAt?: boolean
   verifiedBy?: boolean
@@ -1357,6 +1449,8 @@ export type ProviderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   contactPerson?: boolean
   contactPhone?: boolean
   bankAccountNumber?: boolean
+  status?: boolean
+  rejectionReason?: boolean
   verified?: boolean
   verifiedAt?: boolean
   verifiedBy?: boolean
@@ -1377,6 +1471,8 @@ export type ProviderSelectScalar = {
   contactPerson?: boolean
   contactPhone?: boolean
   bankAccountNumber?: boolean
+  status?: boolean
+  rejectionReason?: boolean
   verified?: boolean
   verifiedAt?: boolean
   verifiedBy?: boolean
@@ -1385,7 +1481,7 @@ export type ProviderSelectScalar = {
   deletedAt?: boolean
 }
 
-export type ProviderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "companyName" | "licenseNumber" | "resourceType" | "capacityKw" | "address" | "contactPerson" | "contactPhone" | "bankAccountNumber" | "verified" | "verifiedAt" | "verifiedBy" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["provider"]>
+export type ProviderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "companyName" | "licenseNumber" | "resourceType" | "capacityKw" | "address" | "contactPerson" | "contactPhone" | "bankAccountNumber" | "status" | "rejectionReason" | "verified" | "verifiedAt" | "verifiedBy" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["provider"]>
 export type ProviderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   capacityOffers?: boolean | Prisma.Provider$capacityOffersArgs<ExtArgs>
@@ -1421,6 +1517,8 @@ export type $ProviderPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     contactPerson: string
     contactPhone: string
     bankAccountNumber: string | null
+    status: $Enums.ProviderStatus
+    rejectionReason: string | null
     verified: boolean
     verifiedAt: Date | null
     verifiedBy: string | null
@@ -1865,6 +1963,8 @@ export interface ProviderFieldRefs {
   readonly contactPerson: Prisma.FieldRef<"Provider", 'String'>
   readonly contactPhone: Prisma.FieldRef<"Provider", 'String'>
   readonly bankAccountNumber: Prisma.FieldRef<"Provider", 'String'>
+  readonly status: Prisma.FieldRef<"Provider", 'ProviderStatus'>
+  readonly rejectionReason: Prisma.FieldRef<"Provider", 'String'>
   readonly verified: Prisma.FieldRef<"Provider", 'Boolean'>
   readonly verifiedAt: Prisma.FieldRef<"Provider", 'DateTime'>
   readonly verifiedBy: Prisma.FieldRef<"Provider", 'String'>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Welcome Provider</title>
+    <style>
+      body { font-family: Arial, sans-serif; background: #f7f7f7; color: #333; }
+      .container { max-width: 500px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+      .status-box { background: #fef3d0; border: 1px solid #f5d580; border-radius: 6px; padding: 16px; margin: 20px 0; text-align: center; }
+      .status-box p { margin: 0; font-weight: bold; color: #8a5c00; }
+      .footer { margin-top: 30px; font-size: 12px; color: #888; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Welcome to PowerMesh, <%= name %>!</h2>
+      <p>Thanks for applying as a provider on PowerMesh. Your account has been created successfully.</p>
+      <div class="status-box">
+        <p>Your application is now pending admin approval.</p>
+      </div>
+      <p>You will receive another email once your application has been reviewed by our team. This process typically takes 1-2 business days.</p>
+      <p>If you have any questions, please contact our support team.</p>
+      <div class="footer">&copy; PowerMesh System. All rights reserved.</div>
+    </div>
+  </body>
+</html>

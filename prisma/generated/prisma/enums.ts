@@ -149,6 +149,16 @@ export const OutageEventStatus = {
 export type OutageEventStatus = (typeof OutageEventStatus)[keyof typeof OutageEventStatus]
 
 
+export const ProviderStatus = {
+  PENDING_EMAIL_VERIFICATION: 'PENDING_EMAIL_VERIFICATION',
+  PENDING_APPROVAL: 'PENDING_APPROVAL',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type ProviderStatus = (typeof ProviderStatus)[keyof typeof ProviderStatus]
+
+
 export const AuditAction = {
   CREATE: 'CREATE',
   UPDATE: 'UPDATE',

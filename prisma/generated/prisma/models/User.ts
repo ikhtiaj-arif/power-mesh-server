@@ -34,6 +34,8 @@ export type UserMinAggregateOutputType = {
   authProvider: $Enums.AuthProvider | null
   role: $Enums.UserRole | null
   emailVerified: boolean | null
+  emailVerifiedAt: Date | null
+  lastLoginAt: Date | null
   isActive: boolean | null
   imageUrl: string | null
   image_public_id: string | null
@@ -55,6 +57,8 @@ export type UserMaxAggregateOutputType = {
   authProvider: $Enums.AuthProvider | null
   role: $Enums.UserRole | null
   emailVerified: boolean | null
+  emailVerifiedAt: Date | null
+  lastLoginAt: Date | null
   isActive: boolean | null
   imageUrl: string | null
   image_public_id: string | null
@@ -76,6 +80,8 @@ export type UserCountAggregateOutputType = {
   authProvider: number
   role: number
   emailVerified: number
+  emailVerifiedAt: number
+  lastLoginAt: number
   isActive: number
   imageUrl: number
   image_public_id: number
@@ -99,6 +105,8 @@ export type UserMinAggregateInputType = {
   authProvider?: true
   role?: true
   emailVerified?: true
+  emailVerifiedAt?: true
+  lastLoginAt?: true
   isActive?: true
   imageUrl?: true
   image_public_id?: true
@@ -120,6 +128,8 @@ export type UserMaxAggregateInputType = {
   authProvider?: true
   role?: true
   emailVerified?: true
+  emailVerifiedAt?: true
+  lastLoginAt?: true
   isActive?: true
   imageUrl?: true
   image_public_id?: true
@@ -141,6 +151,8 @@ export type UserCountAggregateInputType = {
   authProvider?: true
   role?: true
   emailVerified?: true
+  emailVerifiedAt?: true
+  lastLoginAt?: true
   isActive?: true
   imageUrl?: true
   image_public_id?: true
@@ -235,6 +247,8 @@ export type UserGroupByOutputType = {
   authProvider: $Enums.AuthProvider
   role: $Enums.UserRole
   emailVerified: boolean
+  emailVerifiedAt: Date | null
+  lastLoginAt: Date | null
   isActive: boolean
   imageUrl: string | null
   image_public_id: string | null
@@ -277,6 +291,8 @@ export type UserWhereInput = {
   authProvider?: Prisma.EnumAuthProviderFilter<"User"> | $Enums.AuthProvider
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
+  emailVerifiedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   isActive?: Prisma.BoolFilter<"User"> | boolean
   imageUrl?: Prisma.StringNullableFilter<"User"> | string | null
   image_public_id?: Prisma.StringNullableFilter<"User"> | string | null
@@ -302,6 +318,8 @@ export type UserOrderByWithRelationInput = {
   authProvider?: Prisma.SortOrder
   role?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   image_public_id?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -330,6 +348,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   authProvider?: Prisma.EnumAuthProviderFilter<"User"> | $Enums.AuthProvider
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
+  emailVerifiedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   isActive?: Prisma.BoolFilter<"User"> | boolean
   imageUrl?: Prisma.StringNullableFilter<"User"> | string | null
   image_public_id?: Prisma.StringNullableFilter<"User"> | string | null
@@ -355,6 +375,8 @@ export type UserOrderByWithAggregationInput = {
   authProvider?: Prisma.SortOrder
   role?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   image_public_id?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -382,6 +404,8 @@ export type UserScalarWhereWithAggregatesInput = {
   authProvider?: Prisma.EnumAuthProviderWithAggregatesFilter<"User"> | $Enums.AuthProvider
   role?: Prisma.EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
   emailVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  emailVerifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  lastLoginAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   image_public_id?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -403,6 +427,8 @@ export type UserCreateInput = {
   authProvider?: $Enums.AuthProvider
   role?: $Enums.UserRole
   emailVerified?: boolean
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
   isActive?: boolean
   imageUrl?: string | null
   image_public_id?: string | null
@@ -428,6 +454,8 @@ export type UserUncheckedCreateInput = {
   authProvider?: $Enums.AuthProvider
   role?: $Enums.UserRole
   emailVerified?: boolean
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
   isActive?: boolean
   imageUrl?: string | null
   image_public_id?: string | null
@@ -453,6 +481,8 @@ export type UserUpdateInput = {
   authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -478,6 +508,8 @@ export type UserUncheckedUpdateInput = {
   authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -503,6 +535,8 @@ export type UserCreateManyInput = {
   authProvider?: $Enums.AuthProvider
   role?: $Enums.UserRole
   emailVerified?: boolean
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
   isActive?: boolean
   imageUrl?: string | null
   image_public_id?: string | null
@@ -524,6 +558,8 @@ export type UserUpdateManyMutationInput = {
   authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -545,6 +581,8 @@ export type UserUncheckedUpdateManyInput = {
   authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -576,6 +614,8 @@ export type UserCountOrderByAggregateInput = {
   authProvider?: Prisma.SortOrder
   role?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrder
+  lastLoginAt?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   image_public_id?: Prisma.SortOrder
@@ -597,6 +637,8 @@ export type UserMaxOrderByAggregateInput = {
   authProvider?: Prisma.SortOrder
   role?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrder
+  lastLoginAt?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   image_public_id?: Prisma.SortOrder
@@ -618,6 +660,8 @@ export type UserMinOrderByAggregateInput = {
   authProvider?: Prisma.SortOrder
   role?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrder
+  lastLoginAt?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   image_public_id?: Prisma.SortOrder
@@ -709,6 +753,8 @@ export type UserCreateWithoutAuditLogsInput = {
   authProvider?: $Enums.AuthProvider
   role?: $Enums.UserRole
   emailVerified?: boolean
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
   isActive?: boolean
   imageUrl?: string | null
   image_public_id?: string | null
@@ -733,6 +779,8 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   authProvider?: $Enums.AuthProvider
   role?: $Enums.UserRole
   emailVerified?: boolean
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
   isActive?: boolean
   imageUrl?: string | null
   image_public_id?: string | null
@@ -773,6 +821,8 @@ export type UserUpdateWithoutAuditLogsInput = {
   authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -797,6 +847,8 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -821,6 +873,8 @@ export type UserCreateWithoutConsumerInput = {
   authProvider?: $Enums.AuthProvider
   role?: $Enums.UserRole
   emailVerified?: boolean
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
   isActive?: boolean
   imageUrl?: string | null
   image_public_id?: string | null
@@ -845,6 +899,8 @@ export type UserUncheckedCreateWithoutConsumerInput = {
   authProvider?: $Enums.AuthProvider
   role?: $Enums.UserRole
   emailVerified?: boolean
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
   isActive?: boolean
   imageUrl?: string | null
   image_public_id?: string | null
@@ -885,6 +941,8 @@ export type UserUpdateWithoutConsumerInput = {
   authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -909,6 +967,8 @@ export type UserUncheckedUpdateWithoutConsumerInput = {
   authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -933,6 +993,8 @@ export type UserCreateWithoutOperatorInput = {
   authProvider?: $Enums.AuthProvider
   role?: $Enums.UserRole
   emailVerified?: boolean
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
   isActive?: boolean
   imageUrl?: string | null
   image_public_id?: string | null
@@ -957,6 +1019,8 @@ export type UserUncheckedCreateWithoutOperatorInput = {
   authProvider?: $Enums.AuthProvider
   role?: $Enums.UserRole
   emailVerified?: boolean
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
   isActive?: boolean
   imageUrl?: string | null
   image_public_id?: string | null
@@ -997,6 +1061,8 @@ export type UserUpdateWithoutOperatorInput = {
   authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1021,6 +1087,8 @@ export type UserUncheckedUpdateWithoutOperatorInput = {
   authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1045,6 +1113,8 @@ export type UserCreateWithoutProviderInput = {
   authProvider?: $Enums.AuthProvider
   role?: $Enums.UserRole
   emailVerified?: boolean
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
   isActive?: boolean
   imageUrl?: string | null
   image_public_id?: string | null
@@ -1069,6 +1139,8 @@ export type UserUncheckedCreateWithoutProviderInput = {
   authProvider?: $Enums.AuthProvider
   role?: $Enums.UserRole
   emailVerified?: boolean
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
   isActive?: boolean
   imageUrl?: string | null
   image_public_id?: string | null
@@ -1109,6 +1181,8 @@ export type UserUpdateWithoutProviderInput = {
   authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1133,6 +1207,8 @@ export type UserUncheckedUpdateWithoutProviderInput = {
   authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1188,6 +1264,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   authProvider?: boolean
   role?: boolean
   emailVerified?: boolean
+  emailVerifiedAt?: boolean
+  lastLoginAt?: boolean
   isActive?: boolean
   imageUrl?: boolean
   image_public_id?: boolean
@@ -1214,6 +1292,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   authProvider?: boolean
   role?: boolean
   emailVerified?: boolean
+  emailVerifiedAt?: boolean
+  lastLoginAt?: boolean
   isActive?: boolean
   imageUrl?: boolean
   image_public_id?: boolean
@@ -1235,6 +1315,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   authProvider?: boolean
   role?: boolean
   emailVerified?: boolean
+  emailVerifiedAt?: boolean
+  lastLoginAt?: boolean
   isActive?: boolean
   imageUrl?: boolean
   image_public_id?: boolean
@@ -1256,6 +1338,8 @@ export type UserSelectScalar = {
   authProvider?: boolean
   role?: boolean
   emailVerified?: boolean
+  emailVerifiedAt?: boolean
+  lastLoginAt?: boolean
   isActive?: boolean
   imageUrl?: boolean
   image_public_id?: boolean
@@ -1267,7 +1351,7 @@ export type UserSelectScalar = {
   status?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "firstName" | "lastName" | "password" | "googleId" | "authProvider" | "role" | "emailVerified" | "isActive" | "imageUrl" | "image_public_id" | "needPasswordChange" | "isDeleted" | "deletedAt" | "createdAt" | "updatedAt" | "status", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "firstName" | "lastName" | "password" | "googleId" | "authProvider" | "role" | "emailVerified" | "emailVerifiedAt" | "lastLoginAt" | "isActive" | "imageUrl" | "image_public_id" | "needPasswordChange" | "isDeleted" | "deletedAt" | "createdAt" | "updatedAt" | "status", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   provider?: boolean | Prisma.User$providerArgs<ExtArgs>
   consumer?: boolean | Prisma.User$consumerArgs<ExtArgs>
@@ -1296,6 +1380,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     authProvider: $Enums.AuthProvider
     role: $Enums.UserRole
     emailVerified: boolean
+    emailVerifiedAt: Date | null
+    lastLoginAt: Date | null
     isActive: boolean
     imageUrl: string | null
     image_public_id: string | null
@@ -1741,6 +1827,8 @@ export interface UserFieldRefs {
   readonly authProvider: Prisma.FieldRef<"User", 'AuthProvider'>
   readonly role: Prisma.FieldRef<"User", 'UserRole'>
   readonly emailVerified: Prisma.FieldRef<"User", 'Boolean'>
+  readonly emailVerifiedAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly lastLoginAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
   readonly imageUrl: Prisma.FieldRef<"User", 'String'>
   readonly image_public_id: Prisma.FieldRef<"User", 'String'>

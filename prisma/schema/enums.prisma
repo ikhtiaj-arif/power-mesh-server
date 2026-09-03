@@ -99,6 +99,13 @@ enum OutageEventStatus {
     CANCELLED
 }
 
+enum ProviderStatus {
+    PENDING_EMAIL_VERIFICATION
+    PENDING_APPROVAL
+    APPROVED
+    REJECTED
+}
+
 enum AuditAction {
     CREATE
     UPDATE

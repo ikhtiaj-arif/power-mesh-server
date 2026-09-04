@@ -2,7 +2,7 @@
   "info": {
     "name": "PowerMesh Server",
     "_postman_id": "power-mesh-server-collection",
-    "description": "Postman collection for the PowerMesh Server. All implemented routes under /api/v1/auth, /api/v1/provider, and /api/v1/offer.",
+    "description": "Postman collection for the PowerMesh Server. All implemented routes under /api/v1/auth, /api/v1/provider, /api/v1/offer, and /api/v1/event.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -584,6 +584,248 @@
                 {
                   "key": "id",
                   "value": "OFFER_UUID"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Event",
+      "item": [
+        {
+          "name": "Create Event",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"scheduledStart\": \"2026-09-15T06:00:00.000Z\",\n  \"scheduledEnd\": \"2026-09-15T14:00:00.000Z\",\n  \"totalCapacityKw\": 1000,\n  \"survivalQuotaKw\": 200,\n  \"notes\": \"Scheduled maintenance outage\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Requires OPERATOR role. Creates event with status SCHEDULED.",
+            "url": {
+              "raw": "{{baseUrl}}/event/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["event", "create"]
+            }
+          }
+        },
+        {
+          "name": "All Events",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires ADMIN or OPERATOR role. Supports ?page=1&limit=10&sortBy=createdAt&sortOrder=desc&searchTerm=&status=SCHEDULED&startDate=&endDate=&minCapacity=&maxCapacity=",
+            "url": {
+              "raw": "{{baseUrl}}/event/all?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["event", "all"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "My Events",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires OPERATOR role. Returns only events created by the logged-in operator. Supports ?page=1&limit=10&sortBy=createdAt&sortOrder=desc&status=&startDate=&endDate=",
+            "url": {
+              "raw": "{{baseUrl}}/event/my-events?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["event", "my-events"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Available Events",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires CONSUMER or PROVIDER role. Returns upcoming SCHEDULED/CONFIRMED events. Supports ?page=1&limit=10&startDate=&endDate=",
+            "url": {
+              "raw": "{{baseUrl}}/event/available?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["event", "available"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Event By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires ADMIN, OPERATOR, CONSUMER, or PROVIDER role.",
+            "url": {
+              "raw": "{{baseUrl}}/event/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["event", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "EVENT_UUID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Event",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"totalCapacityKw\": 1200,\n  \"survivalQuotaKw\": 250,\n  \"notes\": \"Updated maintenance outage\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Requires OPERATOR role, owner only. Only SCHEDULED events can be updated.",
+            "url": {
+              "raw": "{{baseUrl}}/event/update/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["event", "update", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "EVENT_UUID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Event Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"CONFIRMED\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Requires OPERATOR role, owner only. Valid transitions: SCHEDULED>CONFIRMED/CANCELLED, CONFIRMED>IN_PROGRESS/CANCELLED, IN_PROGRESS>COMPLETED.",
+            "url": {
+              "raw": "{{baseUrl}}/event/status/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["event", "status", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "EVENT_UUID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Soft Delete Event",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires OPERATOR role, owner only. Cannot delete with active offers/requests.",
+            "url": {
+              "raw": "{{baseUrl}}/event/soft-delete/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["event", "soft-delete", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "EVENT_UUID"
                 }
               ]
             }

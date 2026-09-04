@@ -2,7 +2,7 @@
   "info": {
     "name": "PowerMesh Server",
     "_postman_id": "power-mesh-server-collection",
-    "description": "Postman collection for the PowerMesh Server. All implemented routes under /api/v1/auth and /api/v1/provider.",
+    "description": "Postman collection for the PowerMesh Server. All implemented routes under /api/v1/auth, /api/v1/provider, and /api/v1/offer.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -373,6 +373,217 @@
                 {
                   "key": "id",
                   "value": "PROVIDER_UUID"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Offer",
+      "item": [
+        {
+          "name": "Create Offer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"eventId\": \"<EVENT_UUID>\",\n  \"capacityKw\": 200,\n  \"pricePerKwh\": 0.15,\n  \"deliveryStart\": \"2026-09-10T08:00:00.000Z\",\n  \"deliveryEnd\": \"2026-09-10T16:00:00.000Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Requires PROVIDER role. Provider must be APPROVED.",
+            "url": {
+              "raw": "{{baseUrl}}/offer/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["offer", "create"]
+            }
+          }
+        },
+        {
+          "name": "All Offers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires ADMIN or OPERATOR role. Supports ?page=1&limit=10&sortBy=createdAt&sortOrder=desc&searchTerm=&status=AVAILABLE&eventId=&providerId=&minCapacity=&maxCapacity=",
+            "url": {
+              "raw": "{{baseUrl}}/offer/all?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["offer", "all"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "My Offers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires PROVIDER role. Supports ?page=1&limit=10&sortBy=createdAt&sortOrder=desc&searchTerm=&status=AVAILABLE&eventId=",
+            "url": {
+              "raw": "{{baseUrl}}/offer/my-offers?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["offer", "my-offers"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Offer By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires ADMIN, OPERATOR, or PROVIDER role.",
+            "url": {
+              "raw": "{{baseUrl}}/offer/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["offer", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "OFFER_UUID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Offers By Event",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires ADMIN, OPERATOR, or CONSUMER role. Supports ?page=1&limit=10&sortBy=createdAt&sortOrder=desc&status=AVAILABLE",
+            "url": {
+              "raw": "{{baseUrl}}/offer/event/:eventId?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["offer", "event", ":eventId"],
+              "variable": [
+                {
+                  "key": "eventId",
+                  "value": "EVENT_UUID"
+                }
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Offer",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"capacityKw\": 250,\n  \"pricePerKwh\": 0.18\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Requires PROVIDER role. Must be the owner. Only AVAILABLE or PARTIALLY_AVAILABLE offers can be updated.",
+            "url": {
+              "raw": "{{baseUrl}}/offer/update/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["offer", "update", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "OFFER_UUID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Soft Delete Offer",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires PROVIDER role. Must be the owner. Cannot delete with active reservations.",
+            "url": {
+              "raw": "{{baseUrl}}/offer/soft-delete/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["offer", "soft-delete", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "OFFER_UUID"
                 }
               ]
             }

@@ -11,6 +11,7 @@ import config from "./app/config";
 import httpStatus from "http-status";
 import { AuthRoutes } from "./modules/auth/auth.routes";
 import { ProviderRoutes } from "./modules/provider/provider.routes";
+import { OfferRoutes } from "./modules/offer/offer.routes";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
 import { notFound } from "./app/middleware/notFound";
  
@@ -33,6 +34,7 @@ app.use(cookieParser());
  
 app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/provider", ProviderRoutes);
+app.use("/api/v1/offer", OfferRoutes);
 
 
 app.get("/test", async (req: Request, res: Response) => {

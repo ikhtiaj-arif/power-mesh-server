@@ -899,27 +899,80 @@
   <!-- SECTION 10 -->
   <section class="section">
     <div class="section-number">Section 10</div>
-    <h2>API surface — 11 endpoints (implemented)</h2>
+    <h2>API surface — 36 endpoints</h2>
 
-    <p>All endpoints follow the format <code>/api/v1/...</code>. All responses use the standard structure: <code>{ success, statusCode, message, data, meta? }</code> for success and <code>{ success, statusCode, message, errors }</code> for errors. Protected routes require <code>Authorization: Bearer &lt;token&gt;</code> or <code>accessToken</code> cookie. Role-based middleware enforces access at the route level.</p>
+    <p>All endpoints follow the format <code>/api/v1/...</code>. All responses use the standard structure: <code>{ success, statusCode, message, data, meta? }</code> for success and <code>{ success, statusCode, message, errors }</code> for errors. Protected routes require <code>Authorization: Bearer &lt;token&gt;</code> or <code>accessToken</code> cookie. Role-based middleware enforces access at the route level. <span class="tag-in">Implemented</span> marked endpoints are fully built; the rest are slated for implementation.</p>
 
     <div class="api-group">
       <div class="api-group-label">Authentication — <code>/api/v1/auth</code></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/register</span><span class="api-note">Register as consumer. Sends OTP to email. Body: { firstName, lastName, email, password, consumer? }</span></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/verify-email</span><span class="api-note">Verify consumer email with OTP. Creates account + returns JWT. Body: { email, otp }</span></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/login</span><span class="api-note">Login with email + password. Returns access + refresh tokens. Body: { email, password }</span></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/google-login</span><span class="api-note">Google OAuth2 login. Returns access + refresh tokens. Body: { idToken }</span></div>
-      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/auth/me</span><span class="api-note">Get authenticated user profile. Auth required: CONSUMER, PROVIDER, OPERATOR, ADMIN.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/register</span><span class="api-note"><span class="tag-in">Implemented</span> Register as consumer. Sends OTP to email. Body: { firstName, lastName, email, password, consumer? }</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/verify-email</span><span class="api-note"><span class="tag-in">Implemented</span> Verify consumer email with OTP. Creates account + returns JWT. Body: { email, otp }</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/login</span><span class="api-note"><span class="tag-in">Implemented</span> Login with email + password. Returns access + refresh tokens. Body: { email, password }</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/refresh-token</span><span class="api-note">Rotates refresh token.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/logout</span><span class="api-note">Invalidates refresh token.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/google-login</span><span class="api-note"><span class="tag-in">Implemented</span> Google OAuth2 login. Returns access + refresh tokens. Body: { idToken }</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/auth/me</span><span class="api-note"><span class="tag-in">Implemented</span> Get authenticated user profile. Auth required: CONSUMER, PROVIDER, OPERATOR, ADMIN.</span></div>
     </div>
 
     <div class="api-group">
       <div class="api-group-label">Provider application — <code>/api/v1/provider</code></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/provider/apply-as-provider</span><span class="api-note">Apply as provider. Sends OTP to email. Data cached in Redis (5 min). Body: { firstName, lastName, email, password, provider: { companyName, licenseNumber, resourceType, capacityKw, address, contactPerson, contactPhone, bankAccountNumber? } }</span></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/provider/verify-email</span><span class="api-note">Verify provider email with OTP. Creates User + Provider (PENDING_APPROVAL). Returns JWT. Body: { email, otp }</span></div>
-      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/provider/approve-provider</span><span class="api-note">Approve provider application. Auth: ADMIN, OPERATOR. Body: { providerId }</span></div>
-      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/provider/reject-provider</span><span class="api-note">Reject provider with reason. Auth: ADMIN, OPERATOR. Body: { providerId, rejectionReason }</span></div>
-      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/provider/all-providers</span><span class="api-note">List all providers. Auth: ADMIN, OPERATOR. Query: ?page=1&limit=10&status=PENDING_APPROVAL</span></div>
-      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/provider/:id</span><span class="api-note">Get single provider detail. Auth: ADMIN, OPERATOR.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/provider/apply-as-provider</span><span class="api-note"><span class="tag-in">Implemented</span> Apply as provider. Sends OTP to email. Data cached in Redis (5 min). Body: { firstName, lastName, email, password, provider: { companyName, licenseNumber, resourceType, capacityKw, address, contactPerson, contactPhone, bankAccountNumber? } }</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/provider/verify-email</span><span class="api-note"><span class="tag-in">Implemented</span> Verify provider email with OTP. Creates User + Provider (PENDING_APPROVAL). Returns JWT. Body: { email, otp }</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/provider/approve-provider</span><span class="api-note"><span class="tag-in">Implemented</span> Approve provider application. Auth: ADMIN, OPERATOR. Body: { providerId }</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/provider/reject-provider</span><span class="api-note"><span class="tag-in">Implemented</span> Reject provider with reason. Auth: ADMIN, OPERATOR. Body: { providerId, rejectionReason }</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/provider/all-providers</span><span class="api-note"><span class="tag-in">Implemented</span> List all providers. Auth: ADMIN, OPERATOR. Query: ?page=1&limit=10&status=PENDING_APPROVAL</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/provider/:id</span><span class="api-note"><span class="tag-in">Implemented</span> Get single provider detail. Auth: ADMIN, OPERATOR.</span></div>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-label">User / profile — <code>/api/v1/users</code></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/users/me</span><span class="api-note">Returns authenticated user's profile.</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/users/me</span><span class="api-note">Update profile fields.</span></div>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-label">Capacity offers — Provider role <code>/api/v1/offers</code></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/offers</span><span class="api-note">Create standing or event-specific offer. Checks time conflicts. Provider must be APPROVED.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/offers/mine</span><span class="api-note">List own offers. Filter by type, status, date range. Auth: PROVIDER.</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/offers/:id</span><span class="api-note">Modify or withdraw an offer (if not yet allocated).</span></div>
+      <div class="api-row"><span class="method delete">DELETE</span><span class="api-path">/api/v1/offers/:id</span><span class="api-note">Soft delete — sets deletedAt. Cannot delete if allocated.</span></div>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-label">Outage events — Consumer + Operator <code>/api/v1/events</code></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/events</span><span class="api-note">List open events. Pagination + filter by status/date.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/events/:id</span><span class="api-note">Event detail with matched offer summary.</span></div>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-label">Capacity requests — Consumer role <code>/api/v1/requests</code></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/requests</span><span class="api-note">Submit request for an event. Validates physical compatibility.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/requests/mine</span><span class="api-note">Consumer's request history. Filter by status.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/requests/:id/cancel</span><span class="api-note">Cancel request. Refund policy applied by status at cancellation time.</span></div>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-label">Reservations — Provider + Consumer <code>/api/v1/reservations</code></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/reservations/:id/delivery-report</span><span class="api-note">Provider submits actual kW delivered, start/end times.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/reservations/:id/confirm-delivery</span><span class="api-note">Consumer confirms or disputes delivery report.</span></div>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-label">Payments — <code>/api/v1/payments</code></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/payments/initiate</span><span class="api-note">Creates payment session for a confirmed reservation. Returns gateway URL.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/payments/webhook</span><span class="api-note">Gateway callback. Uses idempotency key. Updates reservation status.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/payments/:id</span><span class="api-note">Payment status and transaction detail.</span></div>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-label">Operator — Admin operations <code>/api/v1/admin</code></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/admin/events</span><span class="api-note">Create outage event for a time window. Auth: OPERATOR, ADMIN.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/admin/events/:id/allocate</span><span class="api-note">Trigger allocation run. Returns plan for operator review.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/admin/events/:id/approve-allocation</span><span class="api-note">Operator approves plan — reservations become binding.</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/admin/reservations/:id/status</span><span class="api-note">Override reservation status (dispute resolution, failure handling).</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/admin/users</span><span class="api-note">List users. Filter by role, status. Pagination.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/admin/dashboard-stats</span><span class="api-note">Platform summary: active events, total capacity, revenue, incident counts.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/admin/audit-logs</span><span class="api-note">Full audit log. Filter by actor, action type, entity, date range.</span></div>
     </div>
 
     <div class="callout info">
@@ -928,8 +981,8 @@
     </div>
 
     <div class="callout success">
-      <strong>Total: 11 implemented endpoints</strong>
-      Covers authentication (5) and provider application (6). All backed by real database operations — Prisma + PostgreSQL + Redis for OTP caching.
+      <strong>Total: 36 endpoints documented — 11 implemented, 25 planned</strong>
+      Implemented: authentication (5) + provider application (6). Planned: user/profile (2), offers (4), events (2), requests (3), reservations/delivery (2), payments (3), and operator admin (7). All backed by real database operations — Prisma + PostgreSQL + Redis for OTP caching.
     </div>
   </section>
 

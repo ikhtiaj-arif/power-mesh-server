@@ -311,7 +311,7 @@ const getAllProviders = async (query: IGetAllProvidersQuery) => {
           omit: { password: true },
         },
       },
-      skip,
+      // skip,
       take: limit,
       orderBy: { createdAt: "desc" },
     }),

@@ -1,0 +1,384 @@
+{
+  "info": {
+    "name": "PowerMesh Server",
+    "_postman_id": "power-mesh-server-collection",
+    "description": "Postman collection for the PowerMesh Server. All implemented routes under /api/v1/auth and /api/v1/provider.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api/v1"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "General",
+      "item": [
+        {
+          "name": "Root - Welcome",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/",
+              "host": ["http://localhost:5000"],
+              "path": ["/"]
+            }
+          }
+        },
+        {
+          "name": "Test",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/test",
+              "host": ["http://localhost:5000"],
+              "path": ["/test"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register Consumer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"Strong@123\",\n  \"consumer\": {\n    \"contactPhone\": \"+1234567890\",\n    \"organizationName\": \"GreenGrid Corp\",\n    \"criticalLoadKw\": 150,\n    \"address\": \"123 Solar St, Austin TX\",\n    \"contactPerson\": \"John Doe\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"Strong@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "const json = pm.response.json();",
+                    "if (json.data && json.data.accessToken) {",
+                    "    pm.collectionVariables.set('accessToken', json.data.accessToken);",
+                    "}"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "Verify Email (Consumer)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"otp\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/verify-email",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "verify-email"]
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "const json = pm.response.json();",
+                    "if (json.data && json.data.accessToken) {",
+                    "    pm.collectionVariables.set('accessToken', json.data.accessToken);",
+                    "}"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "Google Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idToken\": \"<GOOGLE_ID_TOKEN>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/google-login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "google-login"]
+            }
+          }
+        },
+        {
+          "name": "Get Me (Profile)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Provider",
+      "item": [
+        {
+          "name": "Apply As Provider",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Smith\",\n  \"email\": \"jane.smith@example.com\",\n  \"password\": \"Provider@123\",\n  \"provider\": {\n    \"companyName\": \"VoltGen Energy\",\n    \"licenseNumber\": \"PG-33528\",\n    \"resourceType\": \"GENERATOR\",\n    \"capacityKw\": 500,\n    \"address\": \"456 Grid Rd, Houston TX\",\n    \"contactPerson\": \"Jane Smith\",\n    \"contactPhone\": \"+1987654321\",\n    \"bankAccountNumber\": \"9876543210\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/provider/apply-as-provider",
+              "host": ["{{baseUrl}}"],
+              "path": ["provider", "apply-as-provider"]
+            }
+          }
+        },
+        {
+          "name": "Verify Provider Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"jane.smith@example.com\",\n  \"otp\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/provider/verify-email",
+              "host": ["{{baseUrl}}"],
+              "path": ["provider", "verify-email"]
+            }
+          }
+        },
+        {
+          "name": "Approve Provider",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"providerId\": \"<PROVIDER_UUID>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Requires ADMIN or OPERATOR role.",
+            "url": {
+              "raw": "{{baseUrl}}/provider/approve-provider",
+              "host": ["{{baseUrl}}"],
+              "path": ["provider", "approve-provider"]
+            }
+          }
+        },
+        {
+          "name": "Reject Provider",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"providerId\": \"<PROVIDER_UUID>\",\n  \"rejectionReason\": \"Insufficient capacity for service area\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Requires ADMIN or OPERATOR role.",
+            "url": {
+              "raw": "{{baseUrl}}/provider/reject-provider",
+              "host": ["{{baseUrl}}"],
+              "path": ["provider", "reject-provider"]
+            }
+          }
+        },
+        {
+          "name": "All Providers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires ADMIN or OPERATOR role. Supports ?page=1&limit=10&status=APPROVED",
+            "url": {
+              "raw": "{{baseUrl}}/provider/all-providers?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["provider", "all-providers"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Provider By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires ADMIN or OPERATOR role. Replace the id path parameter.",
+            "url": {
+              "raw": "{{baseUrl}}/provider/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["provider", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "PROVIDER_UUID"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

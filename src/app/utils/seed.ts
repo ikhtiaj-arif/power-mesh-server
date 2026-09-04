@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "../lib/primsa";
 import config from "../config";
+import { UserRole } from "../../../prisma/generated/prisma/enums";
 
 export const seedAdmin = async () => {
 	try {
@@ -33,7 +34,7 @@ export const seedAdmin = async () => {
 				firstName,
 				lastName,
 				password: hashedPassword,
-				role: "OPERATOR",
+				role: UserRole.ADMIN,
 				emailVerified: true,
 				operator: {
 					create: {

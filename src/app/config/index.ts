@@ -33,7 +33,7 @@ export default {
 
   // Seed configs
   seed_admin_email: process.env.SEED_ADMIN_EMAIL,
-  seed_admin_password: process.env.SEED_ADMIN_PASSWORD,
+  seed_admin_password: process.env.SEED_ADMIN_PASSWORD!,
   seed_admin_first_name: process.env.SEED_ADMIN_FIRST_NAME,
   seed_admin_last_name: process.env.SEED_ADMIN_LAST_NAME,
   seed_provider_email: process.env.SEED_PROVIDER_EMAIL,

@@ -13,6 +13,9 @@ import { AuthRoutes } from "./modules/auth/auth.routes";
 import { ProviderRoutes } from "./modules/provider/provider.routes";
 import { OfferRoutes } from "./modules/offer/offer.routes";
 import { EventRoutes } from "./modules/event/event.routes";
+import { CapacityRequestRoutes } from "./modules/capacity-request/capacity-request.routes";
+import { ReservationRoutes } from "./modules/reservation/reservation.routes";
+import { AdminRoutes } from "./modules/admin/admin.routes";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
 import { notFound } from "./app/middleware/notFound";
  
@@ -37,6 +40,9 @@ app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/provider", ProviderRoutes);
 app.use("/api/v1/offer", OfferRoutes);
 app.use("/api/v1/event", EventRoutes);
+app.use("/api/v1/request", CapacityRequestRoutes);
+app.use("/api/v1/reservation", ReservationRoutes);
+app.use("/api/v1/admin", AdminRoutes);
 
 
 app.get("/test", async (req: Request, res: Response) => {

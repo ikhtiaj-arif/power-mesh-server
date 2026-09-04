@@ -2,7 +2,7 @@
   "info": {
     "name": "PowerMesh Server",
     "_postman_id": "power-mesh-server-collection",
-    "description": "Postman collection for the PowerMesh Server. All implemented routes under /api/v1/auth, /api/v1/provider, /api/v1/offer, and /api/v1/event.",
+    "description": "Postman collection for the PowerMesh Server. All implemented routes under /api/v1/auth, /api/v1/provider, /api/v1/offer, /api/v1/event, /api/v1/request, /api/v1/reservation, and /api/v1/admin.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -826,6 +826,579 @@
                 {
                   "key": "id",
                   "value": "EVENT_UUID"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Request",
+      "item": [
+        {
+          "name": "Create Capacity Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"eventId\": \"<EVENT_UUID>\",\n  \"requestedKw\": 100,\n  \"maxPricePerKwh\": 0.2,\n  \"priorityTier\": \"HIGH\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Requires CONSUMER role. One active request per consumer per event.",
+            "url": {
+              "raw": "{{baseUrl}}/request/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["request", "create"]
+            }
+          }
+        },
+        {
+          "name": "All Requests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires ADMIN or OPERATOR role. Supports ?page=1&limit=10&sortBy=createdAt&sortOrder=desc&searchTerm=&status=&priorityTier=&eventId=&consumerId=",
+            "url": {
+              "raw": "{{baseUrl}}/request/all?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["request", "all"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "My Requests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires CONSUMER role. Supports ?page=1&limit=10&status=&priorityTier=",
+            "url": {
+              "raw": "{{baseUrl}}/request/my-requests?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["request", "my-requests"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Requests By Event",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires ADMIN, OPERATOR, or CONSUMER role. Supports ?page=1&limit=10&status=",
+            "url": {
+              "raw": "{{baseUrl}}/request/event/:eventId?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["request", "event", ":eventId"],
+              "variable": [
+                {
+                  "key": "eventId",
+                  "value": "EVENT_UUID"
+                }
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Request By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires ADMIN, OPERATOR, or CONSUMER (owner) role.",
+            "url": {
+              "raw": "{{baseUrl}}/request/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["request", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "REQUEST_UUID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Request",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"requestedKw\": 150,\n  \"maxPricePerKwh\": 0.18\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Requires CONSUMER role, owner only. Only PENDING requests can be updated.",
+            "url": {
+              "raw": "{{baseUrl}}/request/update/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["request", "update", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "REQUEST_UUID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cancel Request",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires CONSUMER role, owner only. Only PENDING requests can be cancelled.",
+            "url": {
+              "raw": "{{baseUrl}}/request/cancel/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["request", "cancel", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "REQUEST_UUID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Soft Delete Request",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires CONSUMER role, owner only. Only PENDING requests can be deleted.",
+            "url": {
+              "raw": "{{baseUrl}}/request/soft-delete/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["request", "soft-delete", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "REQUEST_UUID"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservation",
+      "item": [
+        {
+          "name": "Create Reservation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"offerId\": \"<OFFER_UUID>\",\n  \"requestId\": \"<REQUEST_UUID>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Requires CONSUMER role (owner of the request). Offer and request must belong to the same event.",
+            "url": {
+              "raw": "{{baseUrl}}/reservation/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["reservation", "create"]
+            }
+          }
+        },
+        {
+          "name": "All Reservations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires ADMIN or OPERATOR role. Supports ?page=1&limit=10&sortBy=createdAt&sortOrder=desc&searchTerm=&status=&paymentStatus=&eventId=",
+            "url": {
+              "raw": "{{baseUrl}}/reservation/all?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["reservation", "all"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "My Reservations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires CONSUMER role. Supports ?page=1&limit=10&status=",
+            "url": {
+              "raw": "{{baseUrl}}/reservation/my-reservations?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["reservation", "my-reservations"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Provider Reservations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires PROVIDER, ADMIN, or OPERATOR role. Supports ?page=1&limit=10&status=",
+            "url": {
+              "raw": "{{baseUrl}}/reservation/provider/:providerId?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["reservation", "provider", ":providerId"],
+              "variable": [
+                {
+                  "key": "providerId",
+                  "value": "PROVIDER_UUID"
+                }
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Reservation By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires ADMIN, OPERATOR, CONSUMER (owner), or PROVIDER role.",
+            "url": {
+              "raw": "{{baseUrl}}/reservation/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["reservation", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "RESERVATION_UUID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cancel Reservation",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires CONSUMER role (owner). Releases offer capacity and cancels the request.",
+            "url": {
+              "raw": "{{baseUrl}}/reservation/cancel/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["reservation", "cancel", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "RESERVATION_UUID"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Overview",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires ADMIN role. Returns aggregated dashboard counts.",
+            "url": {
+              "raw": "{{baseUrl}}/admin/overview",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "overview"]
+            }
+          }
+        },
+        {
+          "name": "All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires ADMIN role. Supports ?page=1&limit=10&searchTerm=&role=&status=",
+            "url": {
+              "raw": "{{baseUrl}}/admin/users?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires ADMIN role.",
+            "url": {
+              "raw": "{{baseUrl}}/admin/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "USER_UUID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Block User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isBlocked\": true,\n  \"reason\": \"Violation of terms\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Requires ADMIN role. Set isBlocked:false to unblock.",
+            "url": {
+              "raw": "{{baseUrl}}/admin/users/:id/block",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users", ":id", "block"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "USER_UUID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Soft Delete User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires ADMIN role. Cannot delete admin users.",
+            "url": {
+              "raw": "{{baseUrl}}/admin/users/:id/soft-delete",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users", ":id", "soft-delete"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "USER_UUID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Audit Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "description": "Requires ADMIN role. Supports ?page=1&limit=10&action=&entityType=&entityId=&userId=",
+            "url": {
+              "raw": "{{baseUrl}}/admin/audit-logs?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "audit-logs"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
                 }
               ]
             }

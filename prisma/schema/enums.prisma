@@ -60,6 +60,19 @@ enum PaymentStatus {
     REFUNDED
 }
 
+enum PaymentMethod {
+    CASH_OUT
+    SEND_MONEY
+    UNKNOWN
+}
+
+enum WebhookStatus {
+    PENDING
+    RECEIVED
+    PROCESSED
+    FAILED
+}
+
 enum IncidentType {
     NO_SHOW
     PARTIAL_DELIVERY

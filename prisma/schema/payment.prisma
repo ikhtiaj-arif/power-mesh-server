@@ -5,11 +5,12 @@ model Payment {
   gatewayStatus         PaymentStatus  @default(INITIATED)
   amount                Decimal        @db.Decimal(14, 2)
   currency              String         @default("BDT")
-//   paymentMethod         PaymentMethod
+  paymentMethod         PaymentMethod  @default(UNKNOWN)
+  merchantInvoiceNumber String         @unique
   initiatedAt           DateTime       @default(now())
   completedAt           DateTime?
   idempotencyKey        String         @unique
-//   webhookStatus         WebhookStatus  @default(PENDING)
+  webhookStatus         WebhookStatus  @default(PENDING)
   webhookReceivedAt     DateTime?
   webhookProcessedAt    DateTime?
   createdAt             DateTime       @default(now())
@@ -20,7 +21,7 @@ model Payment {
   refunds               Refund[]
 
   @@index([gatewayStatus])
-//   @@index([webhookStatus])
+  @@index([webhookStatus])
   @@index([createdAt])
   @@map("payments")
 }

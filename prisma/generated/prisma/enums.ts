@@ -95,6 +95,25 @@ export const PaymentStatus = {
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
 
 
+export const PaymentMethod = {
+  CASH_OUT: 'CASH_OUT',
+  SEND_MONEY: 'SEND_MONEY',
+  UNKNOWN: 'UNKNOWN'
+} as const
+
+export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
+
+
+export const WebhookStatus = {
+  PENDING: 'PENDING',
+  RECEIVED: 'RECEIVED',
+  PROCESSED: 'PROCESSED',
+  FAILED: 'FAILED'
+} as const
+
+export type WebhookStatus = (typeof WebhookStatus)[keyof typeof WebhookStatus]
+
+
 export const IncidentType = {
   NO_SHOW: 'NO_SHOW',
   PARTIAL_DELIVERY: 'PARTIAL_DELIVERY',

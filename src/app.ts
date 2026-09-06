@@ -1,5 +1,7 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import express, {
 	type Application,
 	type Request,
@@ -32,6 +34,24 @@ app.use(
 	}),
 );
 
+// Security headers
+app.use(helmet());
+
+// Global rate limiter: 200 requests per 15 minutes per IP
+app.use(
+	rateLimit({
+		windowMs: 15 * 60 * 1000,
+		max: 200,
+		standardHeaders: true,
+		legacyHeaders: false,
+		message: {
+			success: false,
+			message: "Too many requests, please try again later",
+			errors: ["Rate limit exceeded"],
+		},
+	}),
+);
+
 // Enable URL-encoded form data parsing
 app.use(express.urlencoded({ extended: true }));
 
@@ -39,13 +59,26 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
  
-app.use("/api/v1/auth", AuthRoutes);
-app.use("/api/v1/provider", ProviderRoutes);
+// Stricter rate limiter for auth/payment routes: 30 requests per 15 minutes
+const authPaymentLimiter = rateLimit({
+	windowMs: 15 * 60 * 1000,
+	max: 30,
+	standardHeaders: true,
+	legacyHeaders: false,
+	message: {
+		success: false,
+		message: "Too many authentication/payment attempts, please try again later",
+		errors: ["Rate limit exceeded for this endpoint"],
+	},
+});
+
+app.use("/api/v1/auth", authPaymentLimiter, AuthRoutes);
+app.use("/api/v1/provider", authPaymentLimiter, ProviderRoutes);
 app.use("/api/v1/offer", OfferRoutes);
 app.use("/api/v1/event", EventRoutes);
 app.use("/api/v1/request", CapacityRequestRoutes);
 app.use("/api/v1/reservation", ReservationRoutes);
-app.use("/api/v1/payments", PaymentRoutes);
+app.use("/api/v1/payments", authPaymentLimiter, PaymentRoutes);
 app.use("/api/v1/admin", AdminRoutes);
 app.use("/api/v1/users", UserRoutes);
 app.use("/api/v1/delivery", DeliveryRoutes);

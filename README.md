@@ -70,10 +70,105 @@ npm run dev          # recommended for running locally
 | Role | Email | Password |
 |------|-------|----------|
 | **Admin** | `admin@powermesh.com` | `Admin@123` |
+| **Operator** | `operator@powermesh.com` | `Operator@123` |
 | **Provider** | `provider@powermesh.com` | `Provider@123` |
 | **Consumer** | `consumer@powermesh.com` | `Consumer@123` |
 
 Use these to log in via `POST /api/v1/auth/login` and obtain a Bearer token for protected routes.
+
+---
+
+## 🧪 Full Testing Flow (step-by-step)
+
+A complete end-to-end walkthrough — event → offer → request → allocation → payment → delivery. All IDs come from the previous step's response. Replace `{{eventId}}`, `{{offerId}}`, etc. accordingly.
+
+> **Login first and copy the `accessToken`** from `data.accessToken` — every authenticated call below needs `Authorization: Bearer <token>`.
+
+### 1. Log in as each role
+`POST /api/v1/auth/login` with:
+```json
+{ "email": "operator@powermesh.com", "password": "Operator@123" }
+```
+```json
+{ "email": "provider@powermesh.com", "password": "Provider@123" }
+```
+```json
+{ "email": "consumer@powermesh.com", "password": "Consumer@123" }
+```
+
+### 2. Operator creates an outage event
+`POST /api/v1/event/create` — **Operator** token
+```json
+{
+  "scheduledStart": "2026-09-08T09:00:00Z",
+  "scheduledEnd": "2026-09-08T17:00:00Z",
+  "totalCapacityKw": 500,
+  "survivalQuotaKw": 200,
+  "notes": "Test outage event"
+}
+```
+Capture `data.id` → `{{eventId}}`.
+
+### 3. Provider posts a capacity offer for that event
+`POST /api/v1/offer/create` — **Provider** token
+```json
+{
+  "eventId": "{{eventId}}",
+  "capacityKw": 300,
+  "pricePerKwh": 25,
+  "deliveryStart": "2026-09-08T09:00:00Z",
+  "deliveryEnd": "2026-09-08T17:00:00Z"
+}
+```
+Capture `data.id` → `{{offerId}}`.
+
+### 4. Consumer creates a capacity request for that event
+`POST /api/v1/request/create` — **Consumer** token
+```json
+{
+  "eventId": "{{eventId}}",
+  "requestedKw": 100,
+  "maxPricePerKwh": 30,
+  "priorityTier": "CRITICAL"
+}
+```
+Capture `data.id` → `{{requestId}}`.
+
+### 5. Operator previews the allocation plan
+`POST /api/v1/admin/events/{{eventId}}/allocate` — **Operator** token
+> Returns the proposed plan (matched requests, skipped requests, allocated kW) without persisting anything.
+
+### 6. Operator approves the allocation → reservations created
+`POST /api/v1/admin/events/{{eventId}}/approve-allocation` — **Operator** token
+> Creates `ALLOCATED` reservations and locks offer/request capacity. Capture `data.reservations[0].id` (or check via `GET /api/v1/reservation/all`) → `{{reservationId}}`.
+
+### 7. Consumer pays for the reservation (bKash sandbox)
+`POST /api/v1/payments/initiate` — **Consumer** token
+```json
+{ "reservationId": "{{reservationId}}" }
+```
+Then open the returned `bkashURL` (sandbox), complete the payment, and bKash redirects to `GET /api/v1/payments/callback` which finalizes the transaction.
+> Check `GET /api/v1/payments/my-payments` for `status: COMPLETED`.
+
+### 8. Provider checks in and reports delivery
+`POST /api/v1/delivery/{{reservationId}}/provider-check-in` — **Provider** token
+
+`POST /api/v1/delivery/{{reservationId}}/provider-report` — **Provider** token
+```json
+{ "actualDeliveredKw": 100 }
+```
+
+### 9. Consumer confirms (or disputes) delivery
+`POST /api/v1/delivery/{{reservationId}}/consumer-confirm` — **Consumer** token
+> No body required. If the provider reported full capacity the delivery is marked confirmed; if the reported amount was less, a partial refund + incident is created automatically.
+
+If something went wrong, file a dispute instead:
+`POST /api/v1/delivery/{{reservationId}}/consumer-dispute` — **Consumer** token
+```json
+{ "disputeReason": "Provider delivered less than requested." }
+```
+
+**Optional checks along the way:** `GET /api/v1/event/all`, `GET /api/v1/offer/my-offers`, `GET /api/v1/request/my-requests`, `GET /api/v1/reservation/my-reservations`, `GET /api/v1/admin/dashboard-stats` (Admin).
 
 ---
 
@@ -155,3 +250,4 @@ PowerMesh-mvp.html
 ---
 
 **Assignment:** PowerMesh MVP — Bangladesh Load-Shedding Marketplace
+

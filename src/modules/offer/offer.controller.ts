@@ -12,6 +12,7 @@ const createOffer = catchAsync(async (req: Request, res: Response) => {
   if (!user) {
     throw new AppError(httpStatus.BAD_REQUEST, "User information is missing");
   }
+  
 
   const result = await OfferServices.createOffer(req.body, user.userId);
 

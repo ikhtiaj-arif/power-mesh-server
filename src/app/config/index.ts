@@ -51,4 +51,8 @@ export default {
   seed_consumer_password: process.env.SEED_CONSUMER_PASSWORD,
   seed_consumer_first_name: process.env.SEED_CONSUMER_FIRST_NAME,
   seed_consumer_last_name: process.env.SEED_CONSUMER_LAST_NAME,
+  seed_operator_email: process.env.SEED_OPERATOR_EMAIL,
+  seed_operator_password: process.env.SEED_OPERATOR_PASSWORD,
+  seed_operator_first_name: process.env.SEED_OPERATOR_FIRST_NAME,
+  seed_operator_last_name: process.env.SEED_OPERATOR_LAST_NAME,
 };

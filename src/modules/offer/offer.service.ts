@@ -22,10 +22,10 @@ import type {
 
 const createOffer = async (
   payload: ICreateOfferPayload,
-  providerId: string,
+  userId: string,
 ) => {
   const provider = await prisma.provider.findUnique({
-    where: { id: providerId },
+    where: { userId: userId },
   });
 
   if (!provider) {
@@ -56,7 +56,7 @@ const createOffer = async (
 
   const existingOffer = await prisma.capacityOffer.findFirst({
     where: {
-      providerId,
+      providerId: provider.id,
       eventId: payload.eventId,
       deliveryStart: new Date(payload.deliveryStart),
       deliveryEnd: new Date(payload.deliveryEnd),
@@ -73,7 +73,7 @@ const createOffer = async (
 
   const offer = await prisma.capacityOffer.create({
     data: {
-      providerId,
+     providerId: provider.id,
       eventId: payload.eventId,
       capacityKw: payload.capacityKw,
       pricePerKwh: payload.pricePerKwh,
@@ -207,7 +207,7 @@ const getAllOffers = async (query: IGetAllOffersQuery) => {
 
 const getMyOffers = async (
   query: IGetMyOffersQuery,
-  providerId: string,
+  userId: string,
 ) => {
   const limit = query.limit ? Number(query.limit) : 10;
   const page = query.page ? Number(query.page) : 1;
@@ -217,7 +217,14 @@ const getMyOffers = async (
 
   const andConditions: CapacityOfferWhereInput[] = [];
 
-  andConditions.push({ providerId });
+  const provider = await prisma.provider.findUnique({
+    where: { userId: userId },
+  });
+   if (!provider) {
+    throw new AppError(httpStatus.NOT_FOUND, "Provider profile not found");
+  }
+
+  andConditions.push({ providerId: provider.id });
 
   if (query.searchTerm) {
     andConditions.push({

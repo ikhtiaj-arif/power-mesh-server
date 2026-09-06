@@ -13,14 +13,22 @@ router.post(
   AuthController.registerConsumer,
 );
 
-router.post("/login" , AuthController.loginUser);
+router.post(
+  "/login",
+  validateRequest(UserValidation.LoginZodSchema),
+  AuthController.loginUser,
+);
 
 router.post(
-	"/verify-email",
+  "/verify-email",
 	validateRequest(UserValidation.ConsumerVerifyEmailZodSchema),
 	AuthController.verifyConsumerEmail,
 );   
-router.post("/google-login", AuthController.googleLogin);
+router.post(
+  "/google-login",
+  validateRequest(UserValidation.GoogleLoginZodSchema),
+  AuthController.googleLogin,
+);
 router.post(
 	"/refresh-token",
 	validateRequest(UserValidation.RefreshTokenZodSchema),

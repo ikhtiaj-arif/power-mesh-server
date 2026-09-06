@@ -60,6 +60,19 @@ enum PaymentStatus {
     REFUNDED
 }
 
+enum PaymentMethod {
+    CASH_OUT
+    SEND_MONEY
+    UNKNOWN
+}
+
+enum WebhookStatus {
+    PENDING
+    RECEIVED
+    PROCESSED
+    FAILED
+}
+
 enum IncidentType {
     NO_SHOW
     PARTIAL_DELIVERY
@@ -97,6 +110,13 @@ enum OutageEventStatus {
     IN_PROGRESS
     COMPLETED
     CANCELLED
+}
+
+enum ProviderStatus {
+    PENDING_EMAIL_VERIFICATION
+    PENDING_APPROVAL
+    APPROVED
+    REJECTED
 }
 
 enum AuditAction {

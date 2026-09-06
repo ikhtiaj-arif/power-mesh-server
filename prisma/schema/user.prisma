@@ -9,6 +9,8 @@ model User {
   role         UserRole     @default(CONSUMER)
 
   emailVerified      Boolean    @default(false)
+  emailVerifiedAt    DateTime?
+  lastLoginAt        DateTime?
   isActive           Boolean    @default(true)
   imageUrl           String?    @default("")
   image_public_id    String?    @default("")

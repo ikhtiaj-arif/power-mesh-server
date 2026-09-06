@@ -1648,9 +1648,16 @@ export const PaymentScalarFieldEnum = {
   gatewayStatus: 'gatewayStatus',
   amount: 'amount',
   currency: 'currency',
+  paymentMethod: 'paymentMethod',
+  merchantInvoiceNumber: 'merchantInvoiceNumber',
+  payerReference: 'payerReference',
+  bkashTrxId: 'bkashTrxId',
+  paidAt: 'paidAt',
+  gatewayResponse: 'gatewayResponse',
   initiatedAt: 'initiatedAt',
   completedAt: 'completedAt',
   idempotencyKey: 'idempotencyKey',
+  webhookStatus: 'webhookStatus',
   webhookReceivedAt: 'webhookReceivedAt',
   webhookProcessedAt: 'webhookProcessedAt',
   createdAt: 'createdAt',
@@ -1672,6 +1679,8 @@ export const ProviderScalarFieldEnum = {
   contactPerson: 'contactPerson',
   contactPhone: 'contactPhone',
   bankAccountNumber: 'bankAccountNumber',
+  status: 'status',
+  rejectionReason: 'rejectionReason',
   verified: 'verified',
   verifiedAt: 'verifiedAt',
   verifiedBy: 'verifiedBy',
@@ -1748,6 +1757,8 @@ export const UserScalarFieldEnum = {
   authProvider: 'authProvider',
   role: 'role',
   emailVerified: 'emailVerified',
+  emailVerifiedAt: 'emailVerifiedAt',
+  lastLoginAt: 'lastLoginAt',
   isActive: 'isActive',
   imageUrl: 'imageUrl',
   image_public_id: 'image_public_id',
@@ -2013,6 +2024,34 @@ export type ListEnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
+ * Reference to a field of type 'PaymentMethod'
+ */
+export type EnumPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentMethod'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentMethod[]'
+ */
+export type ListEnumPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentMethod[]'>
+    
+
+
+/**
+ * Reference to a field of type 'WebhookStatus'
+ */
+export type EnumWebhookStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WebhookStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'WebhookStatus[]'
+ */
+export type ListEnumWebhookStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WebhookStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'ResourceType'
  */
 export type EnumResourceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ResourceType'>
@@ -2023,6 +2062,20 @@ export type EnumResourceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
  * Reference to a field of type 'ResourceType[]'
  */
 export type ListEnumResourceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ResourceType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ProviderStatus'
+ */
+export type EnumProviderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProviderStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ProviderStatus[]'
+ */
+export type ListEnumProviderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProviderStatus[]'>
     
 
 

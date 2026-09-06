@@ -9,6 +9,8 @@ model Provider {
   contactPerson         String
   contactPhone          String
   bankAccountNumber     String?
+  status                ProviderStatus @default(PENDING_EMAIL_VERIFICATION)
+  rejectionReason       String?
   verified              Boolean      @default(false)
   verifiedAt            DateTime?
   verifiedBy            String?

@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "../lib/primsa";
 import config from "../config";
+import { UserRole } from "../../../prisma/generated/prisma/enums";
 
 export const seedAdmin = async () => {
 	try {
@@ -33,7 +34,7 @@ export const seedAdmin = async () => {
 				firstName,
 				lastName,
 				password: hashedPassword,
-				role: "OPERATOR",
+				role: UserRole.ADMIN,
 				emailVerified: true,
 				operator: {
 					create: {
@@ -160,11 +161,62 @@ export const seedConsumer = async () => {
 	}
 };
 
+export const seedOperator = async () => {
+	try {
+		const email = config.seed_operator_email;
+		const password = config.seed_operator_password;
+		const firstName = config.seed_operator_first_name;
+		const lastName = config.seed_operator_last_name;
+
+		if (!email || !password || !firstName || !lastName) {
+			throw new Error("Operator Seed Config Missing In Env File!");
+		}
+
+		const existingUser = await prisma.user.findUnique({
+			where: { email },
+		});
+
+		if (existingUser) {
+			console.log("Operator User Already Exists:", email);
+			return existingUser;
+		}
+
+		const hashedPassword = await bcrypt.hash(
+			password,
+			Number(config.bcrypt_salt_rounds),
+		);
+
+		const operatorUser = await prisma.user.create({
+			data: {
+				email,
+				firstName,
+				lastName,
+				password: hashedPassword,
+				role: UserRole.OPERATOR,
+				emailVerified: true,
+				operator: {
+					create: {
+						roleLevel: "operator",
+						isAdmin: false,
+					},
+				},
+			},
+		});
+
+		console.log("Operator User Created:", operatorUser.email);
+		return operatorUser;
+	} catch (error) {
+		console.log("Error Seeding Operator:", error);
+		throw error;
+	}
+};
+
 export const runSeeds = async () => {
 	try {
 		console.log("Starting database seeds...");
 
 		await seedAdmin();
+		await seedOperator();
 		await seedProvider();
 		await seedConsumer();
 

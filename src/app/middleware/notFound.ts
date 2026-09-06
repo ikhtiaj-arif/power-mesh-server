@@ -3,8 +3,8 @@ import httpStatus from "http-status";
 
 export const notFound = (req: Request, res: Response) => {
 	res.status(httpStatus.NOT_FOUND).json({
-		message: "Route not found",
-		path: req.originalUrl,
-		date: new Date(),
+		success: false,
+		message: `Route not found: ${req.method} ${req.originalUrl}`,
+		errors: ["The requested endpoint does not exist"],
 	});
 };

@@ -47,8 +47,18 @@ const LoginZodSchema = z.object({
     .regex(/[^A-Za-z0-9]/, "Password must contain atleast 1 Special Character"),
 });
 
+const RefreshTokenZodSchema = z.object({
+  refreshToken: z.string().optional(),
+});
+
+const GoogleLoginZodSchema = z.object({
+  idToken: z.string().min(1, "Google ID token is required"),
+});
+
 export const UserValidation = {
   ConsumerRegistrationZodSchema,
   LoginZodSchema,
   ConsumerVerifyEmailZodSchema,
+  RefreshTokenZodSchema,
+  GoogleLoginZodSchema,
 };

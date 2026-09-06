@@ -32,6 +32,9 @@ const generateMerchantInvoiceNumber = (reservationId: string): string => {
 const resolveConsumer = async (userId: string) => {
   const consumer = await prisma.consumer.findUnique({
     where: { userId },
+    include: {
+      user: { select: { email: true } },
+    },
   });
 
   if (!consumer) {
@@ -46,6 +49,7 @@ const initiatePayment = async (
   userId: string,
 ) => {
   const consumer = await resolveConsumer(userId);
+  
 
   const reservation = await prisma.reservation.findUnique({
     where: { id: payload.reservationId },
@@ -55,6 +59,7 @@ const initiatePayment = async (
   if (!reservation || reservation.deletedAt) {
     throw new AppError(httpStatus.NOT_FOUND, "Reservation not found");
   }
+
 
   if (reservation.consumerId !== consumer.id) {
     throw new AppError(
@@ -100,7 +105,8 @@ const initiatePayment = async (
 
   const amount = Number(reservation.totalAmount);
   const merchantInvoiceNumber = generateMerchantInvoiceNumber(reservation.id);
-  const payerReference = consumer.contactPhone || consumer.id;
+  const payerReference =
+    consumer.user?.email || consumer.contactPhone || consumer.id;
 
   let payment;
   let bkashURL: string;
@@ -165,7 +171,11 @@ const initiatePayment = async (
 
     payment = await prisma.payment.update({
       where: { id: prepared.id },
-      data: { gatewayId: bkashPayment.paymentID },
+      data: {
+        gatewayId: bkashPayment.paymentID,
+        payerReference,
+        gatewayResponse: bkashPayment as unknown as Prisma.InputJsonValue,
+      },
     });
 
     bkashURL = bkashPayment.bkashURL;
@@ -194,152 +204,144 @@ const initiatePayment = async (
 };
 
 const handleBkashCallback = async (query: IBkashCallbackQuery) => {
-  const paymentID = query.paymentID;
+  const transactionResult = await prisma.$transaction(
+    async (tx) => {
+      const paymentID = query.paymentID;
+      const status = query.status;
 
-  if (!paymentID) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Missing payment ID in callback");
-  }
+      if (!paymentID) {
+        throw new AppError(
+          httpStatus.BAD_REQUEST,
+          "Payment ID missing in callback",
+        );
+      }
 
-  const payment = await prisma.payment.findUnique({
-    where: { gatewayId: paymentID },
-    include: {
-      reservation: {
-        include: { offer: true },
-      },
+      if (!status) {
+        throw new AppError(
+          httpStatus.BAD_REQUEST,
+          "Payment status missing in callback",
+        );
+      }
+
+      let executedPaymentResult;
+      try {
+        executedPaymentResult = await bkash.executePayment(paymentID);
+      } catch (error) {
+        const err = error as { message?: string };
+        throw new AppError(
+          httpStatus.BAD_GATEWAY,
+          `Failed to execute bKash payment: ${err.message || "unknown error"}`,
+        );
+      }
+
+      if (status === "success") {
+        const payment = await tx.payment.findUnique({
+          where: { gatewayId: paymentID },
+          include: {
+            reservation: {
+              include: { offer: true },
+            },
+          },
+        });
+
+        if (!payment) {
+          throw new AppError(
+            httpStatus.NOT_FOUND,
+            "Payment record not found",
+          );
+        }
+
+        const paymentMethod =
+          executedPaymentResult.transactionType === "Cash Out"
+            ? PaymentMethod.CASH_OUT
+            : PaymentMethod.SEND_MONEY;
+
+        const consumer = await tx.consumer.findUnique({
+          where: { id: payment.reservation.consumerId },
+          select: { userId: true },
+        });
+
+        const updatedPayment = await tx.payment.update({
+          where: { id: payment.id },
+          data: {
+            gatewayStatus: PaymentStatus.COMPLETED,
+            paymentMethod,
+            bkashTrxId: executedPaymentResult.trxID ?? null,
+            paidAt: new Date(),
+            completedAt: new Date(),
+            gatewayResponse:
+              executedPaymentResult as unknown as Prisma.InputJsonValue,
+            webhookStatus: WebhookStatus.PROCESSED,
+            webhookReceivedAt: payment.webhookReceivedAt ?? new Date(),
+            webhookProcessedAt: new Date(),
+          },
+        });
+
+        await tx.reservation.update({
+          where: { id: payment.reservationId },
+          data: {
+            status: ReservationStatus.PAYMENT_COMPLETED,
+            paymentStatus: PaymentStatus.COMPLETED,
+          },
+        });
+
+        await tx.auditLog.create({
+          data: {
+            userId: consumer?.userId ?? null,
+            entityType: "payment",
+            entityId: payment.id,
+            action: AuditAction.PAY,
+            newValues: {
+              gatewayId: paymentID,
+              trxID: executedPaymentResult.trxID ?? null,
+              amount: executedPaymentResult.amount ?? payment.amount,
+            },
+            ipAddress: null,
+            userAgent: null,
+          },
+        });
+
+        return {
+          status: PaymentStatus.COMPLETED,
+          payment: updatedPayment,
+          redirectUrl: `${config.frontend_url}/my-payments?status=success`,
+        };
+      }
+
+      const failed = await tx.payment.findUnique({
+        where: { gatewayId: paymentID },
+      });
+
+      if (failed) {
+        await tx.payment.update({
+          where: { id: failed.id },
+          data: {
+            gatewayStatus: PaymentStatus.FAILED,
+            gatewayResponse:
+              executedPaymentResult as unknown as Prisma.InputJsonValue,
+            webhookStatus: WebhookStatus.RECEIVED,
+            webhookProcessedAt: new Date(),
+          },
+        });
+
+        await tx.reservation.update({
+          where: { id: failed.reservationId },
+          data: {
+            status: ReservationStatus.ALLOCATED,
+            paymentStatus: PaymentStatus.FAILED,
+          },
+        });
+      }
+
+      return {
+        status: PaymentStatus.FAILED,
+        redirectUrl: `${config.frontend_url}/my-payments?status=${status}`,
+      };
     },
-  });
+    { maxWait: 5000, timeout: 20000 },
+  );
 
-  if (!payment) {
-    throw new AppError(httpStatus.NOT_FOUND, "Payment record not found");
-  }
-
-  if (
-    payment.gatewayStatus === PaymentStatus.COMPLETED ||
-    payment.gatewayStatus === PaymentStatus.REFUNDED
-  ) {
-    return { status: payment.gatewayStatus, alreadyProcessed: true };
-  }
-
-  if (query.status !== "success") {
-    const failed = await prisma.$transaction(async (tx) => {
-      await tx.payment.update({
-        where: { id: payment.id },
-        data: {
-          gatewayStatus: PaymentStatus.FAILED,
-          webhookStatus: WebhookStatus.RECEIVED,
-          webhookProcessedAt: new Date(),
-        },
-      });
-
-      await tx.reservation.update({
-        where: { id: payment.reservationId },
-        data: {
-          status: ReservationStatus.ALLOCATED,
-          paymentStatus: PaymentStatus.FAILED,
-        },
-      });
-
-      return tx.payment.findUnique({ where: { id: payment.id } });
-    });
-
-    return { status: PaymentStatus.FAILED, payment: failed };
-  }
-
-  let executed;
-  try {
-    executed = await bkash.executePayment(paymentID);
-  } catch (error) {
-    const err = error as { message?: string };
-    await prisma.payment.update({
-      where: { id: payment.id },
-      data: {
-        gatewayStatus: PaymentStatus.FAILED,
-        webhookStatus: WebhookStatus.FAILED,
-        webhookProcessedAt: new Date(),
-      },
-    });
-    throw new AppError(
-      httpStatus.BAD_GATEWAY,
-      `Failed to execute bKash payment: ${err.message || "unknown error"}`,
-    );
-  }
-
-  if (executed.transactionStatus !== "Completed") {
-    const failed = await prisma.$transaction(async (tx) => {
-      await tx.payment.update({
-        where: { id: payment.id },
-        data: {
-          gatewayStatus: PaymentStatus.FAILED,
-          webhookStatus: WebhookStatus.RECEIVED,
-          webhookProcessedAt: new Date(),
-        },
-      });
-
-      await tx.reservation.update({
-        where: { id: payment.reservationId },
-        data: {
-          status: ReservationStatus.ALLOCATED,
-          paymentStatus: PaymentStatus.FAILED,
-        },
-      });
-
-      return tx.payment.findUnique({ where: { id: payment.id } });
-    });
-
-    return { status: PaymentStatus.FAILED, payment: failed };
-  }
-
-  const paymentMethod =
-    executed.transactionType === "Cash Out"
-      ? PaymentMethod.CASH_OUT
-      : PaymentMethod.SEND_MONEY;
-
-  const consumer = await prisma.consumer.findUnique({
-    where: { id: payment.reservation.consumerId },
-    select: { userId: true },
-  });
-
-  const completed = await prisma.$transaction(async (tx) => {
-    const updatedPayment = await tx.payment.update({
-      where: { id: payment.id },
-      data: {
-        gatewayStatus: PaymentStatus.COMPLETED,
-        paymentMethod,
-        completedAt: new Date(),
-        webhookStatus: WebhookStatus.PROCESSED,
-        webhookReceivedAt: payment.webhookReceivedAt ?? new Date(),
-        webhookProcessedAt: new Date(),
-      },
-    });
-
-    await tx.reservation.update({
-      where: { id: payment.reservationId },
-      data: {
-        status: ReservationStatus.PAYMENT_COMPLETED,
-        paymentStatus: PaymentStatus.COMPLETED,
-      },
-    });
-
-    await tx.auditLog.create({
-      data: {
-        userId: consumer?.userId ?? null,
-        entityType: "payment",
-        entityId: payment.id,
-        action: AuditAction.PAY,
-        newValues: {
-          gatewayId: paymentID,
-          trxID: executed.trxID ?? null,
-          amount: executed.amount ?? payment.amount,
-        },
-        ipAddress: null,
-        userAgent: null,
-      },
-    });
-
-    return updatedPayment;
-  });
-
-  return { status: PaymentStatus.COMPLETED, payment: completed };
+  return transactionResult;
 };
 
 const getPaymentById = async (

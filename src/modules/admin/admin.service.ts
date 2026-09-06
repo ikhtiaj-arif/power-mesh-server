@@ -1,6 +1,7 @@
 import httpStatus from "http-status";
 import crypto from "crypto";
 import { prisma } from "../../app/lib/primsa";
+import { bkash } from "../../app/lib/bkash";
 import { AppError } from "../../utils/appError";
 import {
   AuditAction,
@@ -758,21 +759,50 @@ const updateReservationStatus = async (
 
     if (isFailureStatus) {
       if (reservation.payment !== null) {
+        const paymentInfo = reservation.payment;
+        const refundReason =
+          newStatus === ReservationStatus.REFUNDED
+            ? "Full refund after failed delivery"
+            : "Refund after delivery failure";
+
+        let gatewayRefundId: string | undefined;
+        let bkashRefundResult: Awaited<
+          ReturnType<typeof bkash.refundPayment>
+        > | null = null;
+
+        if (paymentInfo.gatewayId && paymentInfo.bkashTrxId) {
+          try {
+            bkashRefundResult = await bkash.refundPayment({
+              paymentID: paymentInfo.gatewayId,
+              trxID: paymentInfo.bkashTrxId,
+              amount: reservation.totalAmount.toString(),
+              sku: "PowerMesh delivery refund",
+              reason: refundReason,
+            });
+            gatewayRefundId = bkashRefundResult.refundTrxID;
+          } catch (error) {
+            console.error("bKash refund failed:", error);
+          }
+        }
+
         await tx.refund.create({
           data: {
             paymentId: reservation.payment.id,
             reservationId: reservation.id,
             amount: reservation.totalAmount,
-            reason:
-              newStatus === ReservationStatus.REFUNDED
-                ? "Full refund after failed delivery"
-                : "Refund after delivery failure",
+            reason: refundReason,
+            ...(gatewayRefundId ? { gatewayRefundId } : {}),
           },
         });
 
         await tx.payment.update({
           where: { id: reservation.payment.id },
-          data: { gatewayStatus: PaymentStatus.REFUNDED },
+          data: {
+            gatewayStatus: PaymentStatus.REFUNDED,
+            ...(bkashRefundResult
+              ? { gatewayResponse: bkashRefundResult as Prisma.InputJsonValue }
+              : {}),
+          },
         });
       }
 

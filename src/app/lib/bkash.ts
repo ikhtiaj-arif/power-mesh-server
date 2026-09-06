@@ -2,10 +2,12 @@ import axios, { type AxiosInstance } from "axios";
 import config from "../config";
 import { redisClient } from "./redis";
 
-const BKASH_TOKEN_KEY = "bkash:id_token";
-const BKASH_TOKEN_EXPIRY_SECONDS = 3000;
+const ID_TOKEN_KEY = "bkash:id_token";
+const REFRESH_TOKEN_KEY = "bkash:refresh_token";
 
-let cachedToken: string | null = null;
+const ID_TOKEN_TTL_SECONDS = 60 * 60;
+const REFRESH_TOKEN_TTL_SECONDS = 60 * 60 * 24 * 28;
+const REFRESH_BEFORE_SECONDS = 10 * 60;
 
 const createClient = (): AxiosInstance => {
   return axios.create({
@@ -19,46 +21,62 @@ const createClient = (): AxiosInstance => {
 
 const grantToken = async () => {
   const client = createClient();
-  const response = await client.post("/tokenized/checkout/token/grant", {
-    app_key: config.bkash_app_key,
-    app_secret: config.bkash_app_secret,
-    username: config.bkash_username,
-    password: config.bkash_password,
-  });
+  const response = await client.post(
+    "/tokenized/checkout/token/grant",
+    {
+      app_key: config.bkash_app_key,
+      app_secret: config.bkash_app_secret,
+    },
+    {
+      headers: {
+        username: config.bkash_username,
+        password: config.bkash_password,
+      },
+    },
+  );
 
   const data = response.data as {
     id_token?: string;
     refresh_token?: string;
   };
 
-  if (!data.id_token) {
+  if (!data.id_token || !data.refresh_token) {
     throw new Error("bKash token grant failed");
   }
 
-  cachedToken = data.id_token;
-  try {
-    await redisClient.set(
-      BKASH_TOKEN_KEY,
-      data.id_token,
-      {
-        EX: BKASH_TOKEN_EXPIRY_SECONDS,
-      },
-    );
-  } catch (error) {
-    // Redis may not be available; fall back to in-memory cache.
-    void error;
-  }
+  await redisClient.set(ID_TOKEN_KEY, data.id_token, {
+    expiration: {
+      type: "EX",
+      value: ID_TOKEN_TTL_SECONDS,
+    },
+  });
+
+  await redisClient.set(REFRESH_TOKEN_KEY, data.refresh_token, {
+    expiration: {
+      type: "EX",
+      value: REFRESH_TOKEN_TTL_SECONDS,
+    },
+  });
 
   return data;
 };
 
 const refreshToken = async (refreshToken: string) => {
   const client = createClient();
-  const response = await client.post("/tokenized/checkout/token/refresh", {
-    app_key: config.bkash_app_key,
-    app_secret: config.bkash_app_secret,
-    refresh_token: refreshToken,
-  });
+  const response = await client.post(
+    "/tokenized/checkout/token/refresh",
+    {
+      app_key: config.bkash_app_key,
+      app_secret: config.bkash_app_secret,
+      refresh_token: refreshToken,
+    },
+    {
+      headers: {
+        username: config.bkash_username,
+        password: config.bkash_password,
+      },
+    },
+  );
 
   const data = response.data as {
     id_token?: string;
@@ -68,35 +86,34 @@ const refreshToken = async (refreshToken: string) => {
     throw new Error("bKash token refresh failed");
   }
 
-  cachedToken = data.id_token;
-  try {
-    await redisClient.set(
-      BKASH_TOKEN_KEY,
-      data.id_token,
-      {
-        EX: BKASH_TOKEN_EXPIRY_SECONDS,
-      },
-    );
-  } catch (error) {
-    void error;
-  }
+  await redisClient.set(ID_TOKEN_KEY, data.id_token, {
+    expiration: {
+      type: "EX",
+      value: ID_TOKEN_TTL_SECONDS,
+    },
+  });
 
   return data;
 };
 
 export const getAccessToken = async (): Promise<string> => {
-  if (cachedToken) {
-    return cachedToken;
+  const idToken = await redisClient.get(ID_TOKEN_KEY);
+  const idTokenTTL = await redisClient.ttl(ID_TOKEN_KEY);
+
+  const redisRefreshToken = await redisClient.get(REFRESH_TOKEN_KEY);
+  const refreshTokenTTL = await redisClient.ttl(REFRESH_TOKEN_KEY);
+
+  if (
+    (idTokenTTL <= REFRESH_BEFORE_SECONDS || !idToken) &&
+    redisRefreshToken &&
+    refreshTokenTTL > REFRESH_BEFORE_SECONDS
+  ) {
+    const refreshed = await refreshToken(redisRefreshToken);
+    return refreshed.id_token!;
   }
 
-  try {
-    const redisToken = await redisClient.get(BKASH_TOKEN_KEY);
-    if (redisToken) {
-      cachedToken = redisToken;
-      return redisToken;
-    }
-  } catch (error) {
-    void error;
+  if (idTokenTTL > REFRESH_BEFORE_SECONDS) {
+    return idToken!;
   }
 
   const token = await grantToken();
@@ -181,11 +198,42 @@ const queryPayment = async (paymentID: string) => {
   return response.data;
 };
 
+interface IRefundPaymentInput {
+  paymentID: string;
+  trxID: string;
+  amount: string | number;
+  sku?: string;
+  reason: string;
+}
+
+const refundPayment = async (input: IRefundPaymentInput) => {
+  const accessToken = await getAccessToken();
+  const client = createClient();
+  client.defaults.headers.Authorization = accessToken;
+  client.defaults.headers["X-APP-Key"] = config.bkash_app_key;
+
+  const response = await client.post("/tokenized/checkout/payment/refund", {
+    paymentID: input.paymentID,
+    trxID: input.trxID,
+    amount: input.amount,
+    sku: input.sku ?? "PowerMesh refund",
+    reason: input.reason,
+  });
+
+  return response.data as {
+    refundTrxID?: string;
+    refundStatus?: string;
+    completedTime?: string;
+    amount?: string;
+  };
+};
+
 export const bkash = {
+  getAccessToken,
   grantToken,
   refreshToken,
-  getAccessToken,
   createPayment,
   executePayment,
   queryPayment,
+  refundPayment,
 };

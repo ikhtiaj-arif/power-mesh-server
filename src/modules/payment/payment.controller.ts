@@ -27,12 +27,7 @@ const handleBkashCallback = catchAsync(async (req: Request, res: Response) => {
   const query = req.query as never;
   const result = await PaymentServices.handleBkashCallback(query);
 
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Payment callback processed",
-    data: result,
-  });
+  res.redirect(result.redirectUrl);
 });
 
 const getPaymentById = catchAsync(async (req: Request, res: Response) => {

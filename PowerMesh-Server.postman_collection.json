@@ -13,6 +13,14 @@
     {
       "key": "accessToken",
       "value": ""
+    },
+    {
+      "key": "bkashPaymentId",
+      "value": ""
+    },
+    {
+      "key": "bkashUrl",
+      "value": ""
     }
   ],
   "auth": {
@@ -1367,12 +1375,29 @@
                 }
               }
             },
-            "description": "Requires CONSUMER role. Creates a payment record and returns the bKash checkout URL. Reservation must be in PAYMENT_PENDING status.",
+            "description": "Requires CONSUMER role. Creates the payment record (gatewayStatus: PROCESSING), persists the bKash create response, and returns data.bkashURL + data.paymentID. Reservation must be ALLOCATED or PAYMENT_PENDING. Open data.bkashURL in your browser and complete the sandbox payment.",
             "url": {
               "raw": "{{baseUrl}}/payments/initiate",
               "host": ["{{baseUrl}}"],
               "path": ["payments", "initiate"]
-            }
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "const json = pm.response.json();",
+                    "if (json.data && json.data.paymentID) {",
+                    "    pm.collectionVariables.set('bkashPaymentId', json.data.paymentID);",
+                    "}",
+                    "if (json.data && json.data.bkashURL) {",
+                    "    pm.collectionVariables.set('bkashUrl', json.data.bkashURL);",
+                    "}"
+                  ]
+                }
+              }
+            ]
           }
         },
         {
@@ -1380,23 +1405,19 @@
           "request": {
             "method": "GET",
             "header": [],
-            "description": "bKash redirect callback. Querystring: paymentID, status (success|cancel|failure), merchantInvoiceNumber.",
+            "description": "bKash redirect callback (no auth). Executes the payment with bKash, then redirects the browser to the frontend: FRONTEND_URL/my-payments?status=success|failure|cancel. On success the payment is marked COMPLETED and the reservation becomes PAYMENT_COMPLETED; on failure/cancel the reservation is released back to ALLOCATED. Only paymentID + status are required; merchantInvoiceNumber is optional.",
             "url": {
-              "raw": "{{baseUrl}}/payments/callback?paymentID=<PAYMENT_ID>&status=success&merchantInvoiceNumber=<INVOICE_NUMBER>",
+              "raw": "{{baseUrl}}/payments/callback?paymentID={{bkashPaymentId}}&status=success",
               "host": ["{{baseUrl}}"],
               "path": ["payments", "callback"],
               "query": [
                 {
                   "key": "paymentID",
-                  "value": "<PAYMENT_ID>"
+                  "value": "{{bkashPaymentId}}"
                 },
                 {
                   "key": "status",
                   "value": "success"
-                },
-                {
-                  "key": "merchantInvoiceNumber",
-                  "value": "<INVOICE_NUMBER>"
                 }
               ]
             }
@@ -1886,7 +1907,7 @@
                 }
               }
             },
-            "description": "Requires ADMIN or OPERATOR role. FAILED/REFUNDED create a refund + incident and release offer capacity; DELIVERY_CONFIRMED resolves pending/disputed deliveries.",
+            "description": "Requires ADMIN or OPERATOR role. FAILED/REFUNDED create a refund + incident, call the bKash refund gateway (storing gatewayRefundId + gateway response), and release offer capacity; DELIVERY_CONFIRMED resolves pending/disputed deliveries.",
             "url": {
               "raw": "{{baseUrl}}/admin/reservations/:id/status",
               "host": ["{{baseUrl}}"],

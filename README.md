@@ -147,8 +147,14 @@ Capture `data.id` → `{{requestId}}`.
 ```json
 { "reservationId": "{{reservationId}}" }
 ```
-Then open the returned `bkashURL` (sandbox), complete the payment, and bKash redirects to `GET /api/v1/payments/callback` which finalizes the transaction.
-> Check `GET /api/v1/payments/my-payments` for `status: COMPLETED`.
+The response returns `data.bkashURL`, `data.paymentID`, and the payment record (`gatewayStatus: PROCESSING`).
+
+1. Open `data.bkashURL` in your browser (bKash sandbox).
+2. Complete the payment — bKash redirects the browser to the backend callback:
+   `GET http://localhost:5000/api/v1/payments/callback?paymentID=...&status=success`
+3. The callback executes the payment with bKash (`/tokenized/checkout/execute`), marks the payment `COMPLETED`, sets the reservation to `PAYMENT_COMPLETED`, and **redirects** you to the frontend: `http://localhost:3000/my-payments?status=success`.
+   > On `failure`/`cancel` the reservation is released back to `ALLOCATED` and you are redirected to `/my-payments?status=failure|cancel` instead.
+4. Verify: `GET /api/v1/payments/my-payments` shows `gatewayStatus: COMPLETED` (and `GET /api/v1/reservation/my-reservations` shows `status: PAYMENT_COMPLETED`).
 
 ### 8. Provider checks in and reports delivery
 `POST /api/v1/delivery/{{reservationId}}/provider-check-in` — **Provider** token

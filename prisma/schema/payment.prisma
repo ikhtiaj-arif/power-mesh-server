@@ -7,6 +7,10 @@ model Payment {
   currency              String         @default("BDT")
   paymentMethod         PaymentMethod  @default(UNKNOWN)
   merchantInvoiceNumber String         @unique
+  payerReference        String?
+  bkashTrxId            String?
+  paidAt                DateTime?
+  gatewayResponse       Json?
   initiatedAt           DateTime       @default(now())
   completedAt           DateTime?
   idempotencyKey        String         @unique

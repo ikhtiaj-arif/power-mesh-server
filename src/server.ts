@@ -3,7 +3,7 @@ import config from "./app/config";
 import { transporter } from "./app/lib/nodemailer";
 import { prisma } from "./app/lib/primsa";
 import { redisClient } from "./app/lib/redis";
-import { runSeeds } from "./app/utils/seed";
+import { runSeeds } from "./utils/seed";
 
 const PORT = config.port;
 

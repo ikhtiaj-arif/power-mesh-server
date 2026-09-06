@@ -20,7 +20,7 @@ router.get("/my-events", auth(UserRole.OPERATOR), EventController.getMyEvents);
 
 router.get(
   "/available",
-  auth(UserRole.CONSUMER, UserRole.PROVIDER,UserRole.ADMIN, UserRole.OPERATOR),
+  auth(UserRole.CONSUMER, UserRole.PROVIDER, UserRole.ADMIN, UserRole.OPERATOR),
   EventController.getAvailableEvents,
 );
 

@@ -43,6 +43,7 @@ PowerMesh is a backend REST API for a load-shedding / power-management marketpla
 | Caching / State | Redis (OTP caching, pending registration, bKash token cache) |
 | Email | Nodemailer + EJS templates (OTP emails) |
 | Security | helmet, CORS, express-rate-limit |
+| Linting / Formatting | Biome (via `lint`, `format`, `check` npm scripts) |
 | Docs | Postman collection + `PowerMesh-mvp.html` spec + `API_TEST_FLOW.md` |
 
 ---

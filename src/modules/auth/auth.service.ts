@@ -242,7 +242,7 @@ const loginUser = async (payload: ILoginUserPayload) => {
 const refreshToken = async (token: string) => {
   const verifiedRefreshToken = jwtUtils.verifyToken(token, config.jwt_refresh_secret);
 
-  if (!verifiedRefreshToken.success || !verifiedRefreshToken.data) {
+  if (!verifiedRefreshToken.success) {
     throw new AppError(
       httpStatus.UNAUTHORIZED,
       config.node_env === "development" ? verifiedRefreshToken.error : "Invalid refresh token",

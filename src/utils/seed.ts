@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
-import { UserRole } from "../../../prisma/generated/prisma/enums";
-import config from "../config";
-import { prisma } from "../lib/primsa";
+import { UserRole } from "../../prisma/generated/prisma/enums";
+import config from "../app/config";
+import { prisma } from "../app/lib/primsa";
 
 export const seedAdmin = async () => {
   try {

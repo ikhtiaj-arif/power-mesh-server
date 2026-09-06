@@ -1,12 +1,26 @@
 # PowerMesh — Load Shedding & Power Management Backend
 
-**Node.js + Express 5 + TypeScript + PostgreSQL + Prisma + Redis + bKash**
+**Node.js · Express 5 · TypeScript · PostgreSQL · Prisma 7 · Redis · bKash**
 
-PowerMesh is a backend-only REST API for a load-shedding / power-management marketplace. It connects **consumers** (who need backup power during outages) with **providers** (who supply mobile/battery capacity) and **operators/admins** (who schedule outage events and run the allocation engine). No frontend is required — everything is demonstrated via the included Postman collection.
+PowerMesh is a backend REST API for a load-shedding / power-management marketplace. It connects **consumers** (who need backup power during outages) with **providers** (who supply mobile/battery capacity) and **operators/admins** (who schedule outage events and run the allocation engine). The project ships with a complete API test-flow guide and a Postman collection.
 
 ---
 
-## 🧩 Roles
+## Table of Contents
+
+- [Roles](#roles)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [Demo Credentials](#demo-credentials)
+- [API Overview](#api-overview)
+- [Business Logic](#business-logic)
+- [Project Structure](#project-structure)
+- [Documentation](#documentation)
+
+---
+
+## Roles
 
 | Role | Permissions (enforced via role middleware) |
 |------|--------------------------------------------|
@@ -17,55 +31,83 @@ PowerMesh is a backend-only REST API for a load-shedding / power-management mark
 
 ---
 
-## ⚙️ Tech Stack
+## Tech Stack
 
-- **Runtime/Framework:** Node.js, TypeScript, Express.js (ESM)
-- **Database/ORM:** PostgreSQL + Prisma 7 (relations, `@@index`, `@@unique`, `$transaction`)
-- **Validation:** Zod (body validation on all mutating endpoints)
-- **Auth:** Email/Password (bcrypt) + Google OAuth2 (GCP), JWT access + refresh tokens in httpOnly cookies
-- **Payments:** bKash Tokenized Checkout (grant/refresh/create/execute/query, callback + idempotency keys)
-- **Caching/State:** Redis (OTP caching, pending registration, bKash token cache)
-- **Email:** Nodemailer + EJS templates (OTP emails)
-- **Security:** helmet, CORS, express-rate-limit
-- **Docs:** Postman collection (`PowerMesh-Server.postman_collection.json`) + `PowerMesh-mvp.html` spec
+| Layer | Technology |
+|-------|------------|
+| Runtime / Framework | Node.js 20+, TypeScript, Express 5 (ESM) |
+| Database / ORM | PostgreSQL + Prisma 7 (relations, `@@index`, `@@unique`, `$transaction`) |
+| Validation | Zod (body validation on all mutating endpoints) |
+| Auth | Email/Password (bcrypt) + Google OAuth2 (GCP), JWT access + refresh tokens in httpOnly cookies |
+| Payments | bKash Tokenized Checkout (grant/refresh/create/execute/query, callback + idempotency keys) |
+| Caching / State | Redis (OTP caching, pending registration, bKash token cache) |
+| Email | Nodemailer + EJS templates (OTP emails) |
+| Security | helmet, CORS, express-rate-limit |
+| Docs | Postman collection + `PowerMesh-mvp.html` spec + `API_TEST_FLOW.md` |
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
+
 - Node.js 20+
-- PostgreSQL, Redis, and credentials for bKash (sandbox), Google OAuth2 (GCP), SMTP
+- PostgreSQL
+- Redis
+- Credentials for: bKash (sandbox), Google OAuth2 (GCP), SMTP
 
 ### Setup
+
 ```bash
-# 1. Copy env template and fill in real values
+# 1. Copy the env template and fill in real values
 cp .env.example .env
 
 # 2. Install dependencies
 npm install
 
-# 3. Create database schema
+# 3. Create the database schema
 npx prisma migrate dev
 
 # 4. Generate the Prisma client
 npx prisma generate
 
-# 5. Run in development (tsx watch)
+# 5. Run in development (tsx watch, auto-seeds demo users)
 npm run dev
 ```
 
-In `NODE_ENV=development`, the server auto-seeds one user per role so you can evaluate immediately.
+When `NODE_ENV=development`, the server auto-seeds one user per role so you can evaluate immediately.
 
-### Build (type-check only validation)
+### Build (production)
+
 ```bash
-npm run build        # prisma generate + tsc -> emits to dist/
-npm run dev          # recommended for running locally
+npm run build   # prisma generate + tsc -> emits to dist/
+npm run dev     # recommended for local development
+npm start       # node dist/src/server.js (after build)
 ```
 
 ---
 
-## 🔑 Demo Credentials (auto-seeded in development)
+## Environment Variables
+
+All configuration is driven by environment variables. See `.env.example` for the full template. Key groups:
+
+| Group | Variables |
+|-------|-----------|
+| Server | `NODE_ENV`, `PORT`, `FRONTEND_URL` |
+| Database | `DATABASE_URL` |
+| Auth | `BCRYPT_SALT_ROUNDS`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, `JWT_ACCESS_EXPIRES_IN`, `JWT_REFRESH_EXPIRES_IN` |
+| Google OAuth2 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` |
+| bKash | `BKASH_BASE_URL`, `BKASH_USERNAME`, `BKASH_PASSWORD`, `BKASH_APP_KEY`, `BKASH_APP_SECRET`, `BKASH_CALLBACK_URL` |
+| Redis | `REDIS_USER`, `REDIS_PASSWORD`, `REDIS_HOST`, `REDIS_PORT` |
+| SMTP | `SMTP_USER`, `EMAIL_SENDER`, `SMTP_PASSWORD` |
+| Cloudinary (optional) | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` |
+| Demo seed (dev only) | `SEED_ADMIN_*`, `SEED_PROVIDER_*`, `SEED_CONSUMER_*`, `SEED_OPERATOR_*` |
+
+---
+
+## Demo Credentials
+
+Auto-seeded in development. Use these to log in via `POST /api/v1/auth/login` and obtain a Bearer token for protected routes.
 
 | Role | Email | Password |
 |------|-------|----------|
@@ -74,111 +116,11 @@ npm run dev          # recommended for running locally
 | **Provider** | `provider@powermesh.com` | `Provider@123` |
 | **Consumer** | `consumer@powermesh.com` | `Consumer@123` |
 
-Use these to log in via `POST /api/v1/auth/login` and obtain a Bearer token for protected routes.
-
 ---
 
-## 🧪 Full Testing Flow (step-by-step)
+## API Overview
 
-A complete end-to-end walkthrough — event → offer → request → allocation → payment → delivery. All IDs come from the previous step's response. Replace `{{eventId}}`, `{{offerId}}`, etc. accordingly.
-
-> **Login first and copy the `accessToken`** from `data.accessToken` — every authenticated call below needs `Authorization: Bearer <token>`.
-
-### 1. Log in as each role
-`POST /api/v1/auth/login` with:
-```json
-{ "email": "operator@powermesh.com", "password": "Operator@123" }
-```
-```json
-{ "email": "provider@powermesh.com", "password": "Provider@123" }
-```
-```json
-{ "email": "consumer@powermesh.com", "password": "Consumer@123" }
-```
-
-### 2. Operator creates an outage event
-`POST /api/v1/event/create` — **Operator** token
-```json
-{
-  "scheduledStart": "2026-09-08T09:00:00Z",
-  "scheduledEnd": "2026-09-08T17:00:00Z",
-  "totalCapacityKw": 500,
-  "survivalQuotaKw": 200,
-  "notes": "Test outage event"
-}
-```
-Capture `data.id` → `{{eventId}}`.
-
-### 3. Provider posts a capacity offer for that event
-`POST /api/v1/offer/create` — **Provider** token
-```json
-{
-  "eventId": "{{eventId}}",
-  "capacityKw": 300,
-  "pricePerKwh": 25,
-  "deliveryStart": "2026-09-08T09:00:00Z",
-  "deliveryEnd": "2026-09-08T17:00:00Z"
-}
-```
-Capture `data.id` → `{{offerId}}`.
-
-### 4. Consumer creates a capacity request for that event
-`POST /api/v1/request/create` — **Consumer** token
-```json
-{
-  "eventId": "{{eventId}}",
-  "requestedKw": 100,
-  "maxPricePerKwh": 30,
-  "priorityTier": "CRITICAL"
-}
-```
-Capture `data.id` → `{{requestId}}`.
-
-### 5. Operator previews the allocation plan
-`POST /api/v1/admin/events/{{eventId}}/allocate` — **Operator** token
-> Returns the proposed plan (matched requests, skipped requests, allocated kW) without persisting anything.
-
-### 6. Operator approves the allocation → reservations created
-`POST /api/v1/admin/events/{{eventId}}/approve-allocation` — **Operator** token
-> Creates `ALLOCATED` reservations and locks offer/request capacity. Capture `data.reservations[0].id` (or check via `GET /api/v1/reservation/all`) → `{{reservationId}}`.
-
-### 7. Consumer pays for the reservation (bKash sandbox)
-`POST /api/v1/payments/initiate` — **Consumer** token
-```json
-{ "reservationId": "{{reservationId}}" }
-```
-The response returns `data.bkashURL`, `data.paymentID`, and the payment record (`gatewayStatus: PROCESSING`).
-
-1. Open `data.bkashURL` in your browser (bKash sandbox).
-2. Complete the payment — bKash redirects the browser to the backend callback:
-   `GET http://localhost:5000/api/v1/payments/callback?paymentID=...&status=success`
-3. The callback executes the payment with bKash (`/tokenized/checkout/execute`), marks the payment `COMPLETED`, sets the reservation to `PAYMENT_COMPLETED`, and **redirects** you to the frontend: `http://localhost:3000/my-payments?status=success`.
-   > On `failure`/`cancel` the reservation is released back to `ALLOCATED` and you are redirected to `/my-payments?status=failure|cancel` instead.
-4. Verify: `GET /api/v1/payments/my-payments` shows `gatewayStatus: COMPLETED` (and `GET /api/v1/reservation/my-reservations` shows `status: PAYMENT_COMPLETED`).
-
-### 8. Provider checks in and reports delivery
-`POST /api/v1/delivery/{{reservationId}}/provider-check-in` — **Provider** token
-
-`POST /api/v1/delivery/{{reservationId}}/provider-report` — **Provider** token
-```json
-{ "actualDeliveredKw": 100 }
-```
-
-### 9. Consumer confirms (or disputes) delivery
-`POST /api/v1/delivery/{{reservationId}}/consumer-confirm` — **Consumer** token
-> No body required. If the provider reported full capacity the delivery is marked confirmed; if the reported amount was less, a partial refund + incident is created automatically.
-
-If something went wrong, file a dispute instead:
-`POST /api/v1/delivery/{{reservationId}}/consumer-dispute` — **Consumer** token
-```json
-{ "disputeReason": "Provider delivered less than requested." }
-```
-
-**Optional checks along the way:** `GET /api/v1/event/all`, `GET /api/v1/offer/my-offers`, `GET /api/v1/request/my-requests`, `GET /api/v1/reservation/my-reservations`, `GET /api/v1/admin/dashboard-stats` (Admin).
-
----
-
-## 📌 API Surface (64 endpoints, all under `/api/v1`)
+All endpoints live under `/api/v1`. Full request/response examples are available in the Postman collection, `PowerMesh-mvp.html`, and a step-by-step walkthrough of every endpoint in [`API_TEST_FLOW.md`](./API_TEST_FLOW.md).
 
 | Group | Base path | Endpoints |
 |-------|-----------|-----------|
@@ -193,9 +135,10 @@ If something went wrong, file a dispute instead:
 | Delivery | `/api/v1/delivery` | :reservationId, provider-check-in, provider-report, consumer-confirm, consumer-dispute (5) |
 | Admin | `/api/v1/admin` | overview, dashboard-stats, users, users/:id, block, soft-delete, audit-logs, allocate, approve-allocation, reservations/:id/status (10) |
 
-> Full request/response examples are in the Postman collection and `PowerMesh-mvp.html`.
-
 ### Response format
+
+All endpoints return a consistent JSON envelope.
+
 ```jsonc
 // Success
 { "success": true, "message": "Operation successful", "data": {}, "meta": {} }
@@ -206,7 +149,7 @@ If something went wrong, file a dispute instead:
 
 ---
 
-## ⚡ Business Logic Highlights
+## Business Logic
 
 - **5-tier priority allocation engine** (`CRITICAL > HIGH > MEDIUM > LOW > FLEXIBLE`), greedy by price/start time, runs transactionally and writes an audit log.
 - **bKash payment flow** with real gateway callbacks, idempotency keys, and `gatewayStatus` + `webhookStatus` tracking to prevent double-charges.
@@ -216,7 +159,7 @@ If something went wrong, file a dispute instead:
 
 ---
 
-## 🗂 Project Structure
+## Project Structure
 
 ```
 src/
@@ -233,27 +176,17 @@ src/
 prisma/
   schema/                # Prisma schema (models + enums)
   migrations/            # Migrations
-PowerMesh-Server.postman_collection.json
-PowerMesh-mvp.html
+PowerMesh-Server.postman_collection.json   # Complete Postman collection
+PowerMesh-mvp.html                         # Business model & MVP specification
+API_TEST_FLOW.md                           # Step-by-step walkthrough of all API endpoints
 ```
 
 ---
 
-## 📦 Submission Checklist
+## Documentation
 
-- [x] 20+ meaningful commits (`feat:`, `fix:`, `docs:`)
-- [x] 64 real, database-backed endpoints, versioned `/api/v1`
-- [x] Consistent success/error JSON responses
-- [x] Zod validation on all mutating endpoints
-- [x] Email/Password + Google Social login, 3+ roles with RBAC
-- [x] Demo admin credentials (see above)
-- [x] Real bKash payment integration with status tracking
-- [x] PostgreSQL + Prisma: relationships, constraints, indexing, transactions
-- [x] Pagination, filtering, sorting, and search on list endpoints
-- [x] Soft deletes + audit logs
-- [x] Redis caching, rate limiting, helmet security headers
-
----
-
-**Assignment:** PowerMesh MVP — Bangladesh Load-Shedding Marketplace
-
+| Document | Description |
+|----------|-------------|
+| [`API_TEST_FLOW.md`](./API_TEST_FLOW.md) | Complete test flow: log in as each role and walk through all 64 endpoints with sample request/response bodies. |
+| `PowerMesh-mvp.html` | Business model, MVP scope, API surface, tech stack, and roadmap. |
+| `PowerMesh-Server.postman_collection.json` | Ready-to-import Postman collection with environment variables. |

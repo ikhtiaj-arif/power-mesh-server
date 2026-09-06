@@ -763,32 +763,32 @@
     <div style="background: var(--surface); border: 0.5px solid var(--border); border-radius: 10px; padding: 1.25rem; margin: 1rem 0;">
       <div class="priority-row" style="font-family: var(--font-ui); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); padding-top: 0;">
         <div style="width: 24px;"></div>
-        <div class="priority-label">Consumer criticality tier</div>
+        <div class="priority-label">Consumer criticality tier (PriorityTier enum)</div>
         <div class="priority-examples">Examples</div>
       </div>
       <div class="priority-row">
         <div class="priority-num">1</div>
-        <div class="priority-label">Life-critical</div>
+        <div class="priority-label">CRITICAL</div>
         <div class="priority-examples">Hospitals, ICUs, dialysis centers, emergency services</div>
       </div>
       <div class="priority-row">
         <div class="priority-num">2</div>
-        <div class="priority-label">Critical infrastructure</div>
+        <div class="priority-label">HIGH</div>
         <div class="priority-examples">Telecom base stations, water treatment, cold chain facilities</div>
       </div>
       <div class="priority-row">
         <div class="priority-num">3</div>
-        <div class="priority-label">Industrial — essential</div>
+        <div class="priority-label">MEDIUM</div>
         <div class="priority-examples">Pharmaceutical manufacturing, food processing</div>
       </div>
       <div class="priority-row">
         <div class="priority-num">4</div>
-        <div class="priority-label">Industrial — general</div>
+        <div class="priority-label">LOW</div>
         <div class="priority-examples">Garments factories, general manufacturing, data centers</div>
       </div>
       <div class="priority-row">
         <div class="priority-num">5</div>
-        <div class="priority-label">Commercial</div>
+        <div class="priority-label">FLEXIBLE</div>
         <div class="priority-examples">Office buildings, shopping centers, apartment complexes</div>
       </div>
     </div>
@@ -902,6 +902,11 @@
     <h2>API surface — 64 endpoints</h2>
 
     <p>All endpoints follow the format <code>/api/v1/...</code>. All responses use the standard structure: <code>{ success, statusCode, message, data, meta? }</code> for success and <code>{ success, statusCode, message, errors }</code> for errors. Protected routes require <code>Authorization: Bearer &lt;token&gt;</code> or an <code>accessToken</code> cookie. Role-based middleware enforces access at the route level. All MVP endpoints are implemented.</p>
+
+    <div class="callout info">
+      <strong>Step-by-step testing guide</strong>
+      A complete, copy-paste ready walkthrough of every endpoint (login as each role → event → offer → request → allocation → payment → delivery → admin) is documented in <code>API_TEST_FLOW.md</code> and in the Postman collection.
+    </div>
 
     <div class="api-group">
       <div class="api-group-label">Authentication — <code>/api/v1/auth</code></div>

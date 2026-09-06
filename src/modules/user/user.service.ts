@@ -1,5 +1,6 @@
 import httpStatus from "http-status";
 import type { Prisma } from "../../../prisma/generated/prisma/client";
+import { deleteFromCloudinary, uploadToCloudinary } from "../../app/lib/cloudinary";
 import { prisma } from "../../app/lib/primsa";
 import type { RequestUser } from "../../app/middleware/checkAuth";
 import { AppError } from "../../utils/appError";
@@ -113,7 +114,57 @@ const updateMe = async (payload: IUpdateMePayload, user: RequestUser) => {
   return updated;
 };
 
+const uploadProfilePicture = async (file: Express.Multer.File, user: RequestUser) => {
+  if (!file) {
+    throw new AppError(httpStatus.BAD_REQUEST, "No image file provided");
+  }
+
+  const existing = await prisma.user.findUnique({
+    where: { id: user.userId, deletedAt: null },
+    select: {
+      id: true,
+      imageUrl: true,
+      image_public_id: true,
+    },
+  });
+
+  if (!existing) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  const uploaded = await uploadToCloudinary(file.buffer, "power-mesh/profile-pictures");
+
+  if (existing.image_public_id) {
+    try {
+      await deleteFromCloudinary(existing.image_public_id);
+    } catch (error) {
+      console.warn(
+        "Failed to delete previous profile picture from Cloudinary:",
+        existing.image_public_id,
+        error,
+      );
+    }
+  }
+
+  const updated = await prisma.user.update({
+    where: { id: user.userId },
+    data: {
+      imageUrl: uploaded.url,
+      image_public_id: uploaded.public_id,
+    },
+    omit: { password: true },
+    include: {
+      consumer: true,
+      provider: true,
+      operator: true,
+    },
+  });
+
+  return updated;
+};
+
 export const UserServices = {
   getMe,
   updateMe,
+  uploadProfilePicture,
 };

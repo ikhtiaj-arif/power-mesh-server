@@ -126,7 +126,7 @@ All endpoints live under `/api/v1`. Full request/response examples are available
 | Group | Base path | Endpoints |
 |-------|-----------|-----------|
 | Authentication | `/api/v1/auth` | register, verify-email, login, google-login, refresh-token, logout, me (7) |
-| User profile | `/api/v1/users` | me (GET/PATCH) (2) |
+| User profile | `/api/v1/users` | me (GET/PATCH), me/profile-picture (upload) (3) |
 | Provider | `/api/v1/provider` | apply-as-provider, verify-email, approve-provider, reject-provider, all-providers, :id (6) |
 | Offers | `/api/v1/offer` | create, all, my-offers, event/:id, :id, update, soft-delete (7) |
 | Events | `/api/v1/event` | create, all, my-events, available, :id, update, status, soft-delete (8) |

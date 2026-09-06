@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
+import multer from "multer";
 import { Prisma } from "../../../prisma/generated/prisma/client";
 import { AppError } from "../../utils/appError";
 import config from "../config";
@@ -52,6 +53,10 @@ export const globalErrorHandler = async (
   } else if (err instanceof AppError) {
     statusCode = err.statusCode;
     message = err.message;
+  } else if (err instanceof multer.MulterError) {
+    statusCode = httpStatus.BAD_REQUEST;
+    message = "File upload error";
+    errors.push(err.message);
   } else if (err instanceof Error) {
     message = err.message || "Internal Server Error";
   }

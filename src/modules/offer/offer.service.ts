@@ -6,10 +6,8 @@ import {
   ProviderStatus,
   ReservationStatus,
 } from "../../../prisma/generated/prisma/enums";
-import type {
-  CapacityOfferWhereInput,
-  Prisma,
-} from "../../../prisma/generated/prisma";
+import { Prisma } from "../../../prisma/generated/prisma/client";
+import type { CapacityOfferWhereInput } from "../../../prisma/generated/prisma/models";
 import type {
   ICreateOfferPayload,
   IGetAllOffersQuery,
@@ -111,14 +109,6 @@ const getAllOffers = async (query: IGetAllOffersQuery) => {
       OR: [
         {
           event: {
-            status: {
-              contains: query.searchTerm,
-              mode: "insensitive",
-            },
-          },
-        },
-        {
-          event: {
             notes: {
               contains: query.searchTerm,
               mode: "insensitive",
@@ -179,9 +169,8 @@ const getAllOffers = async (query: IGetAllOffersQuery) => {
 
   andConditions.push({ deletedAt: null });
 
-  const where: Prisma.CapacityOfferWhereInput = {
-    AND: andConditions.length > 0 ? andConditions : undefined,
-  };
+  const where: Prisma.CapacityOfferWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
 
   const [allOffers, totalOfferCount] = await Promise.all([
     prisma.capacityOffer.findMany({
@@ -235,14 +224,6 @@ const getMyOffers = async (
       OR: [
         {
           event: {
-            status: {
-              contains: query.searchTerm,
-              mode: "insensitive",
-            },
-          },
-        },
-        {
-          event: {
             notes: {
               contains: query.searchTerm,
               mode: "insensitive",
@@ -267,9 +248,8 @@ const getMyOffers = async (
 
   andConditions.push({ deletedAt: null });
 
-  const where: Prisma.CapacityOfferWhereInput = {
-    AND: andConditions.length > 0 ? andConditions : undefined,
-  };
+  const where: Prisma.CapacityOfferWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
 
   const [myOffers, totalOfferCount] = await Promise.all([
     prisma.capacityOffer.findMany({
@@ -474,9 +454,8 @@ const getOffersByEvent = async (
     andConditions.push({ status: query.status });
   }
 
-  const where: Prisma.CapacityOfferWhereInput = {
-    AND: andConditions.length > 0 ? andConditions : undefined,
-  };
+  const where: Prisma.CapacityOfferWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
 
   const [offers, totalOfferCount] = await Promise.all([
     prisma.capacityOffer.findMany({

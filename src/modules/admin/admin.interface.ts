@@ -1,5 +1,7 @@
 import type {
   AuditAction,
+  PaymentStatus,
+  ReservationStatus,
   UserRole,
   UserStatus,
 } from "../../../prisma/generated/prisma/enums";
@@ -40,4 +42,18 @@ export interface IGetAuditLogsQuery {
   entityType?: string;
   entityId?: string;
   userId?: string;
+}
+
+export interface IGetEventParams {
+  id: string;
+}
+
+export interface IGetReservationParams {
+  id: string;
+}
+
+export interface IUpdateReservationStatusPayload {
+  status: ReservationStatus;
+  paymentStatus?: PaymentStatus;
+  resolution?: string;
 }

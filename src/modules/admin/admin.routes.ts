@@ -44,4 +44,29 @@ router.get(
   AdminController.getAuditLogs,
 );
 
+router.get(
+  "/dashboard-stats",
+  auth(UserRole.ADMIN),
+  AdminController.getDashboardStats,
+);
+
+router.post(
+  "/events/:id/allocate",
+  auth(UserRole.ADMIN, UserRole.OPERATOR),
+  AdminController.runAllocation,
+);
+
+router.post(
+  "/events/:id/approve-allocation",
+  auth(UserRole.ADMIN, UserRole.OPERATOR),
+  AdminController.approveAllocation,
+);
+
+router.patch(
+  "/reservations/:id/status",
+  auth(UserRole.ADMIN, UserRole.OPERATOR),
+  validateRequest(AdminValidation.UpdateReservationStatusZodSchema),
+  AdminController.updateReservationStatus,
+);
+
 export const AdminRoutes = router;

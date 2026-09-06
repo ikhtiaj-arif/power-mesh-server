@@ -13,10 +13,8 @@ import {
   UserRole,
   WebhookStatus,
 } from "../../../prisma/generated/prisma/enums";
-import type {
-  Prisma,
-  PaymentWhereInput,
-} from "../../../prisma/generated/prisma";
+import { Prisma } from "../../../prisma/generated/prisma/client";
+import type { PaymentWhereInput } from "../../../prisma/generated/prisma/models";
 import type {
   IBkashCallbackQuery,
   IGetAllPaymentsQuery,
@@ -411,9 +409,8 @@ const getMyPayments = async (
     andConditions.push({ gatewayStatus: query.gatewayStatus });
   }
 
-  const where: Prisma.PaymentWhereInput = {
-    AND: andConditions.length > 0 ? andConditions : undefined,
-  };
+  const where: Prisma.PaymentWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
 
   const [payments, total] = await Promise.all([
     prisma.payment.findMany({
@@ -487,9 +484,8 @@ const getAllPayments = async (query: IGetAllPaymentsQuery) => {
     });
   }
 
-  const where: Prisma.PaymentWhereInput = {
-    AND: andConditions.length > 0 ? andConditions : undefined,
-  };
+  const where: Prisma.PaymentWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
 
   const [payments, total] = await Promise.all([
     prisma.payment.findMany({

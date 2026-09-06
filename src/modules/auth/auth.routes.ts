@@ -21,6 +21,12 @@ router.post(
 	AuthController.verifyConsumerEmail,
 );   
 router.post("/google-login", AuthController.googleLogin);
+router.post(
+	"/refresh-token",
+	validateRequest(UserValidation.RefreshTokenZodSchema),
+	AuthController.refreshToken,
+);
+router.post("/logout", AuthController.logout);
 router.get(
 	"/me",
 	auth(UserRole.ADMIN, UserRole.CONSUMER, UserRole.PROVIDER, UserRole.OPERATOR),

@@ -453,12 +453,12 @@
 <div class="page">
 
   <header class="doc-header">
-    <div class="doc-eyebrow">Internal specification · MVP v1.2 — Implementation in progress</div>
+    <div class="doc-eyebrow">Internal specification · MVP v1.2 — all routes implemented</div>
     <h1 class="doc-title">PowerMesh — <span>Business Model</span><br>& MVP Specification</h1>
     <p class="doc-subtitle">A coordination marketplace for temporary energy capacity during planned and unplanned load shedding. This document defines the business model, MVP scope, API surface, and tech stack for an enterprise-grade, scalable backend assignment.</p>
     <div class="doc-meta">
       <span>📍 Target market: Bangladesh (industrial zones)</span>
-      <span>🏗 Scope: MVP v1.2 — Auth + Provider module implemented</span>
+      <span>🏗 Scope: MVP v1.2 — all MVP modules implemented (64 endpoints)</span>
       <span>📅 Deadline: September 07, 2026</span>
     </div>
   </header>
@@ -721,7 +721,7 @@
         <div class="step-num">6</div>
         <div class="step-body">
           <div class="step-title">Reservation confirmed — consumer pays via payment gateway</div>
-          <div class="step-desc">Allocated consumers receive a confirmed reservation and a payment window (e.g. 60 minutes). Consumer initiates payment via the standard gateway flow (bKash / SSLCommerz / Stripe). The system uses idempotency keys to prevent double-charges on retries. On payment success callback, the reservation moves to <strong>Confirmed</strong>. On failure or timeout, the reservation is cancelled and the capacity is released to the next eligible consumer.</div>
+          <div class="step-desc">Allocated consumers receive a confirmed reservation and a payment window (e.g. 60 minutes). Consumer initiates payment via the standard bKash gateway flow. The system uses idempotency keys to prevent double-charges on retries. On payment success callback, the reservation moves to <strong>Confirmed</strong>. On failure or timeout, the reservation is cancelled and the capacity is released to the next eligible consumer.</div>
           <span class="step-tag system">System</span>
           <span class="step-tag consumer">Consumer pays</span>
           <span class="step-tag provider">Provider notified</span>
@@ -899,19 +899,25 @@
   <!-- SECTION 10 -->
   <section class="section">
     <div class="section-number">Section 10</div>
-    <h2>API surface — 36 endpoints</h2>
+    <h2>API surface — 64 endpoints</h2>
 
-    <p>All endpoints follow the format <code>/api/v1/...</code>. All responses use the standard structure: <code>{ success, statusCode, message, data, meta? }</code> for success and <code>{ success, statusCode, message, errors }</code> for errors. Protected routes require <code>Authorization: Bearer &lt;token&gt;</code> or <code>accessToken</code> cookie. Role-based middleware enforces access at the route level. <span class="tag-in">Implemented</span> marked endpoints are fully built; the rest are slated for implementation.</p>
+    <p>All endpoints follow the format <code>/api/v1/...</code>. All responses use the standard structure: <code>{ success, statusCode, message, data, meta? }</code> for success and <code>{ success, statusCode, message, errors }</code> for errors. Protected routes require <code>Authorization: Bearer &lt;token&gt;</code> or an <code>accessToken</code> cookie. Role-based middleware enforces access at the route level. All MVP endpoints are implemented.</p>
 
     <div class="api-group">
       <div class="api-group-label">Authentication — <code>/api/v1/auth</code></div>
       <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/register</span><span class="api-note"><span class="tag-in">Implemented</span> Register as consumer. Sends OTP to email. Body: { firstName, lastName, email, password, consumer? }</span></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/verify-email</span><span class="api-note"><span class="tag-in">Implemented</span> Verify consumer email with OTP. Creates account + returns JWT. Body: { email, otp }</span></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/login</span><span class="api-note"><span class="tag-in">Implemented</span> Login with email + password. Returns access + refresh tokens. Body: { email, password }</span></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/refresh-token</span><span class="api-note">Rotates refresh token.</span></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/logout</span><span class="api-note">Invalidates refresh token.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/verify-email</span><span class="api-note"><span class="tag-in">Implemented</span> Verify consumer email with OTP. Creates account + returns JWTs. Body: { email, otp }</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/login</span><span class="api-note"><span class="tag-in">Implemented</span> Login with email + password. Sets httpOnly access/refresh cookies and returns tokens. Body: { email, password }</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/refresh-token</span><span class="api-note"><span class="tag-in">Implemented</span> Rotates refresh token. Reads the refreshToken cookie or body: { refreshToken? }</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/logout</span><span class="api-note"><span class="tag-in">Implemented</span> Clears the access/refresh token cookies.</span></div>
       <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/auth/google-login</span><span class="api-note"><span class="tag-in">Implemented</span> Google OAuth2 login. Returns access + refresh tokens. Body: { idToken }</span></div>
-      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/auth/me</span><span class="api-note"><span class="tag-in">Implemented</span> Get authenticated user profile. Auth required: CONSUMER, PROVIDER, OPERATOR, ADMIN.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/auth/me</span><span class="api-note"><span class="tag-in">Implemented</span> Get authenticated user profile. Auth: CONSUMER, PROVIDER, OPERATOR, ADMIN.</span></div>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-label">User profile — <code>/api/v1/users</code></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/users/me</span><span class="api-note"><span class="tag-in">Implemented</span> Get current user with consumer/provider/operator profile. Auth: any role.</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/users/me</span><span class="api-note"><span class="tag-in">Implemented</span> Update user + nested consumer/provider profile fields. Body: { firstName?, lastName?, imageUrl?, consumer?, provider? }</span></div>
     </div>
 
     <div class="api-group">
@@ -925,54 +931,80 @@
     </div>
 
     <div class="api-group">
-      <div class="api-group-label">User / profile — <code>/api/v1/users</code></div>
-      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/users/me</span><span class="api-note">Returns authenticated user's profile.</span></div>
-      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/users/me</span><span class="api-note">Update profile fields.</span></div>
+      <div class="api-group-label">Capacity offers — <code>/api/v1/offer</code></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/offer/create</span><span class="api-note"><span class="tag-in">Implemented</span> Create an offer for an event. Auth: PROVIDER (APPROVED). Body: { eventId, capacityKw, pricePerKwh, deliveryStart, deliveryEnd }</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/offer/all</span><span class="api-note"><span class="tag-in">Implemented</span> All offers with filters. Auth: ADMIN, OPERATOR. Query: ?page=&limit=&status=&eventId=&providerId=&searchTerm=&minCapacity=&maxCapacity=</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/offer/my-offers</span><span class="api-note"><span class="tag-in">Implemented</span> Own offers. Auth: PROVIDER. Query: ?status=&eventId=&searchTerm=</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/offer/:id</span><span class="api-note"><span class="tag-in">Implemented</span> Offer detail. Auth: ADMIN, OPERATOR, PROVIDER.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/offer/event/:eventId</span><span class="api-note"><span class="tag-in">Implemented</span> Offers for an event. Auth: ADMIN, OPERATOR, CONSUMER. Query: ?status=&page=&limit=</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/offer/update/:id</span><span class="api-note"><span class="tag-in">Implemented</span> Update own offer. Auth: PROVIDER. Only AVAILABLE / PARTIALLY_AVAILABLE offers.</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/offer/soft-delete/:id</span><span class="api-note"><span class="tag-in">Implemented</span> Soft delete own offer. Auth: PROVIDER. Blocked with active reservations.</span></div>
     </div>
 
     <div class="api-group">
-      <div class="api-group-label">Capacity offers — Provider role <code>/api/v1/offers</code></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/offers</span><span class="api-note">Create standing or event-specific offer. Checks time conflicts. Provider must be APPROVED.</span></div>
-      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/offers/mine</span><span class="api-note">List own offers. Filter by type, status, date range. Auth: PROVIDER.</span></div>
-      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/offers/:id</span><span class="api-note">Modify or withdraw an offer (if not yet allocated).</span></div>
-      <div class="api-row"><span class="method delete">DELETE</span><span class="api-path">/api/v1/offers/:id</span><span class="api-note">Soft delete — sets deletedAt. Cannot delete if allocated.</span></div>
+      <div class="api-group-label">Outage events — <code>/api/v1/event</code></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/event/create</span><span class="api-note"><span class="tag-in">Implemented</span> Create outage event (SCHEDULED). Auth: OPERATOR. Body: { scheduledStart, scheduledEnd, totalCapacityKw, survivalQuotaKw, notes? }</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/event/all</span><span class="api-note"><span class="tag-in">Implemented</span> All events with filters. Auth: ADMIN, OPERATOR. Query: ?status=&startDate=&endDate=&minCapacity=&maxCapacity=&searchTerm=</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/event/my-events</span><span class="api-note"><span class="tag-in">Implemented</span> Events created by the logged-in operator. Auth: OPERATOR.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/event/available</span><span class="api-note"><span class="tag-in">Implemented</span> Upcoming SCHEDULED/CONFIRMED events. Auth: CONSUMER, PROVIDER.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/event/:id</span><span class="api-note"><span class="tag-in">Implemented</span> Event detail. Auth: ADMIN, OPERATOR, CONSUMER, PROVIDER.</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/event/update/:id</span><span class="api-note"><span class="tag-in">Implemented</span> Update own event. Auth: OPERATOR. Only SCHEDULED events.</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/event/status/:id</span><span class="api-note"><span class="tag-in">Implemented</span> Transition event status. Auth: OPERATOR. Body: { status }</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/event/soft-delete/:id</span><span class="api-note"><span class="tag-in">Implemented</span> Soft delete own event. Auth: OPERATOR. Blocked with active offers/requests.</span></div>
     </div>
 
     <div class="api-group">
-      <div class="api-group-label">Outage events — Consumer + Operator <code>/api/v1/events</code></div>
-      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/events</span><span class="api-note">List open events. Pagination + filter by status/date.</span></div>
-      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/events/:id</span><span class="api-note">Event detail with matched offer summary.</span></div>
+      <div class="api-group-label">Capacity requests — <code>/api/v1/request</code></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/request/create</span><span class="api-note"><span class="tag-in">Implemented</span> Submit request for an event. Auth: CONSUMER. Body: { eventId, requestedKw, maxPricePerKwh, priorityTier }</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/request/all</span><span class="api-note"><span class="tag-in">Implemented</span> All requests with filters. Auth: ADMIN, OPERATOR. Query: ?status=&priorityTier=&eventId=&consumerId=&searchTerm=</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/request/my-requests</span><span class="api-note"><span class="tag-in">Implemented</span> Own requests. Auth: CONSUMER. Query: ?status=&priorityTier=</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/request/event/:eventId</span><span class="api-note"><span class="tag-in">Implemented</span> Requests for an event. Auth: ADMIN, OPERATOR, CONSUMER. Query: ?status=</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/request/:id</span><span class="api-note"><span class="tag-in">Implemented</span> Request detail. Auth: ADMIN, OPERATOR, CONSUMER (owner).</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/request/update/:id</span><span class="api-note"><span class="tag-in">Implemented</span> Update own request. Auth: CONSUMER. Only PENDING requests.</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/request/cancel/:id</span><span class="api-note"><span class="tag-in">Implemented</span> Cancel own request. Auth: CONSUMER. Only PENDING requests.</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/request/soft-delete/:id</span><span class="api-note"><span class="tag-in">Implemented</span> Soft delete own request. Auth: CONSUMER. Only PENDING requests.</span></div>
     </div>
 
     <div class="api-group">
-      <div class="api-group-label">Capacity requests — Consumer role <code>/api/v1/requests</code></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/requests</span><span class="api-note">Submit request for an event. Validates physical compatibility.</span></div>
-      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/requests/mine</span><span class="api-note">Consumer's request history. Filter by status.</span></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/requests/:id/cancel</span><span class="api-note">Cancel request. Refund policy applied by status at cancellation time.</span></div>
-    </div>
-
-    <div class="api-group">
-      <div class="api-group-label">Reservations — Provider + Consumer <code>/api/v1/reservations</code></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/reservations/:id/delivery-report</span><span class="api-note">Provider submits actual kW delivered, start/end times.</span></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/reservations/:id/confirm-delivery</span><span class="api-note">Consumer confirms or disputes delivery report.</span></div>
+      <div class="api-group-label">Reservations — <code>/api/v1/reservation</code></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/reservation/create</span><span class="api-note"><span class="tag-in">Implemented</span> Create reservation from an offer + own request. Auth: CONSUMER. Body: { offerId, requestId }</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/reservation/all</span><span class="api-note"><span class="tag-in">Implemented</span> All reservations. Auth: ADMIN, OPERATOR. Query: ?status=&paymentStatus=&eventId=&searchTerm=</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/reservation/my-reservations</span><span class="api-note"><span class="tag-in">Implemented</span> Own reservations. Auth: CONSUMER. Query: ?status=</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/reservation/provider/:providerId</span><span class="api-note"><span class="tag-in">Implemented</span> Reservations for a provider. Auth: PROVIDER, ADMIN, OPERATOR. Query: ?status=</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/reservation/:id</span><span class="api-note"><span class="tag-in">Implemented</span> Reservation detail. Auth: ADMIN, OPERATOR, CONSUMER (owner), PROVIDER.</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/reservation/cancel/:id</span><span class="api-note"><span class="tag-in">Implemented</span> Cancel own reservation. Auth: CONSUMER. Releases offer capacity + cancels request.</span></div>
     </div>
 
     <div class="api-group">
       <div class="api-group-label">Payments — <code>/api/v1/payments</code></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/payments/initiate</span><span class="api-note">Creates payment session for a confirmed reservation. Returns gateway URL.</span></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/payments/webhook</span><span class="api-note">Gateway callback. Uses idempotency key. Updates reservation status.</span></div>
-      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/payments/:id</span><span class="api-note">Payment status and transaction detail.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/payments/initiate</span><span class="api-note"><span class="tag-in">Implemented</span> Create payment session and return bKash checkout URL. Auth: CONSUMER. Body: { reservationId }</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/payments/callback</span><span class="api-note"><span class="tag-in">Implemented</span> bKash redirect callback. Query: ?paymentID=&amp;status=&amp;merchantInvoiceNumber=</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/payments/my-payments</span><span class="api-note"><span class="tag-in">Implemented</span> Own payment history. Auth: CONSUMER. Query: ?gatewayStatus=&amp;page=&amp;limit=</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/payments/all</span><span class="api-note"><span class="tag-in">Implemented</span> All payments. Auth: ADMIN, OPERATOR. Query: ?gatewayStatus=&amp;webhookStatus=&amp;searchTerm=</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/payments/:id</span><span class="api-note"><span class="tag-in">Implemented</span> Payment status + transaction detail. Auth: ADMIN, OPERATOR, CONSUMER (owner), PROVIDER.</span></div>
     </div>
 
     <div class="api-group">
-      <div class="api-group-label">Operator — Admin operations <code>/api/v1/admin</code></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/admin/events</span><span class="api-note">Create outage event for a time window. Auth: OPERATOR, ADMIN.</span></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/admin/events/:id/allocate</span><span class="api-note">Trigger allocation run. Returns plan for operator review.</span></div>
-      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/admin/events/:id/approve-allocation</span><span class="api-note">Operator approves plan — reservations become binding.</span></div>
-      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/admin/reservations/:id/status</span><span class="api-note">Override reservation status (dispute resolution, failure handling).</span></div>
-      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/admin/users</span><span class="api-note">List users. Filter by role, status. Pagination.</span></div>
-      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/admin/dashboard-stats</span><span class="api-note">Platform summary: active events, total capacity, revenue, incident counts.</span></div>
-      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/admin/audit-logs</span><span class="api-note">Full audit log. Filter by actor, action type, entity, date range.</span></div>
+      <div class="api-group-label">Delivery — <code>/api/v1/delivery</code></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/delivery/:reservationId</span><span class="api-note"><span class="tag-in">Implemented</span> Reservation with its delivery record. Auth: ADMIN, OPERATOR, CONSUMER (owner), PROVIDER (owner).</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/delivery/:reservationId/provider-check-in</span><span class="api-note"><span class="tag-in">Implemented</span> Provider check-in. Auth: PROVIDER (owner). Moves reservation to DELIVERY_PENDING.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/delivery/:reservationId/provider-report</span><span class="api-note"><span class="tag-in">Implemented</span> Submit actual delivered capacity. Auth: PROVIDER (owner). Body: { actualDeliveredKw }</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/delivery/:reservationId/consumer-confirm</span><span class="api-note"><span class="tag-in">Implemented</span> Confirm full delivery; partial delivery triggers incident + prorated refund. Auth: CONSUMER (owner).</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/delivery/:reservationId/consumer-dispute</span><span class="api-note"><span class="tag-in">Implemented</span> Flag delivery as disputed for operator resolution. Auth: CONSUMER (owner). Body: { disputeReason }</span></div>
+    </div>
+
+    <div class="api-group">
+      <div class="api-group-label">Operator / Admin — <code>/api/v1/admin</code></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/admin/overview</span><span class="api-note"><span class="tag-in">Implemented</span> Aggregated dashboard counts. Auth: ADMIN.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/admin/dashboard-stats</span><span class="api-note"><span class="tag-in">Implemented</span> Extended stats: payments, revenue, refunds, incidents. Auth: ADMIN.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/admin/users</span><span class="api-note"><span class="tag-in">Implemented</span> List users. Auth: ADMIN. Query: ?role=&amp;status=&amp;searchTerm=&amp;page=&amp;limit=</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/admin/users/:id</span><span class="api-note"><span class="tag-in">Implemented</span> User detail with profiles. Auth: ADMIN.</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/admin/users/:id/block</span><span class="api-note"><span class="tag-in">Implemented</span> Block/unblock user. Auth: ADMIN. Body: { isBlocked, reason? }</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/admin/users/:id/soft-delete</span><span class="api-note"><span class="tag-in">Implemented</span> Soft delete user. Auth: ADMIN.</span></div>
+      <div class="api-row"><span class="method get">GET</span><span class="api-path">/api/v1/admin/audit-logs</span><span class="api-note"><span class="tag-in">Implemented</span> Full audit log. Auth: ADMIN. Query: ?action=&amp;entityType=&amp;entityId=&amp;userId=</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/admin/events/:id/allocate</span><span class="api-note"><span class="tag-in">Implemented</span> Compute allocation plan for an event (no persistence). Auth: ADMIN, OPERATOR.</span></div>
+      <div class="api-row"><span class="method post">POST</span><span class="api-path">/api/v1/admin/events/:id/approve-allocation</span><span class="api-note"><span class="tag-in">Implemented</span> Approve plan — creates reservations, marks requests ALLOCATED, updates offers + event.allocatedKw, writes audit log. Auth: ADMIN, OPERATOR.</span></div>
+      <div class="api-row"><span class="method patch">PATCH</span><span class="api-path">/api/v1/admin/reservations/:id/status</span><span class="api-note"><span class="tag-in">Implemented</span> Override reservation status (dispute resolution, failure handling). FAILED/REFUNDED create refund + incident and release capacity. Auth: ADMIN, OPERATOR. Body: { status, paymentStatus?, resolution? }</span></div>
     </div>
 
     <div class="callout info">
@@ -981,8 +1013,8 @@
     </div>
 
     <div class="callout success">
-      <strong>Total: 36 endpoints documented — 11 implemented, 25 planned</strong>
-      Implemented: authentication (5) + provider application (6). Planned: user/profile (2), offers (4), events (2), requests (3), reservations/delivery (2), payments (3), and operator admin (7). All backed by real database operations — Prisma + PostgreSQL + Redis for OTP caching.
+      <strong>Total: 64 endpoints — all implemented</strong>
+      Authentication (7), user profile (2), provider application (6), capacity offers (7), outage events (8), capacity requests (8), reservations (6), payments (5), delivery (5), and operator/admin (10). All backed by real database operations — Prisma + PostgreSQL, with Redis for OTP caching and bKash for payment processing.
     </div>
   </section>
 
@@ -1030,8 +1062,8 @@
       <div class="stack-row">
         <div class="stack-layer">Payments</div>
         <div>
-          <div class="stack-choice">SSLCommerz (primary) — bKash as secondary</div>
-          <div class="stack-why">SSLCommerz has the most complete sandbox environment for assignment testing. Idempotency keys on all payment webhook handlers prevent duplicate charge processing.</div>
+          <div class="stack-choice">bKash (checkout API)</div>
+          <div class="stack-why">bKash payment gateway integrated with idempotency keys and callback verification. A reservation moves to PAYMENT_COMPLETED only after a verified gateway callback.</div>
         </div>
       </div>
       <div class="stack-row">
@@ -1073,7 +1105,7 @@
         <div class="stack-layer">Documentation</div>
         <div>
           <div class="stack-choice">Postman collection</div>
-          <div class="stack-why">All 28 endpoints documented with example requests, responses, and environment variables for all three roles.</div>
+          <div class="stack-why">All 64 endpoints documented with example requests, responses, and environment variables for all three roles.</div>
         </div>
       </div>
       <div class="stack-row" style="border-bottom: none;">
@@ -1182,15 +1214,15 @@
           <li><span class="tag-in">Done</span> Provider registration, email verification, and admin approval</li>
           <li><span class="tag-in">Done</span> Consumer registration with email OTP verification</li>
           <li><span class="tag-in">Done</span> Google OAuth2 social login</li>
-          <li>Standing and event-specific capacity offers</li>
-          <li>Operator-created outage events</li>
-          <li>Consumer capacity requests</li>
-          <li>Operator-reviewed allocation (5-tier priority)</li>
-          <li>Standard payment gateway (SSLCommerz)</li>
-          <li>Manual delivery confirmation by both parties</li>
-          <li>Provider failure + proportional refund flow</li>
-          <li>Provider reliability incident tracking</li>
-          <li>Audit logs on all critical actions</li>
+          <li><span class="tag-in">Done</span> Standing and event-specific capacity offers</li>
+          <li><span class="tag-in">Done</span> Operator-created outage events</li>
+          <li><span class="tag-in">Done</span> Consumer capacity requests</li>
+          <li><span class="tag-in">Done</span> Operator-reviewed allocation (5-tier priority)</li>
+          <li><span class="tag-in">Done</span> bKash payment gateway</li>
+          <li><span class="tag-in">Done</span> Manual delivery confirmation by both parties</li>
+          <li><span class="tag-in">Done</span> Provider failure + proportional refund flow</li>
+          <li><span class="tag-in">Done</span> Provider reliability incident tracking</li>
+          <li><span class="tag-in">Done</span> Audit logs on all critical actions</li>
           <li>Redis caching + rate limiting</li>
         </ul>
       </div>

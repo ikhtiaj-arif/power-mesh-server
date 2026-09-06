@@ -17,6 +17,8 @@ import { CapacityRequestRoutes } from "./modules/capacity-request/capacity-reque
 import { ReservationRoutes } from "./modules/reservation/reservation.routes";
 import { PaymentRoutes } from "./modules/payment/payment.routes";
 import { AdminRoutes } from "./modules/admin/admin.routes";
+import { UserRoutes } from "./modules/user/user.routes";
+import { DeliveryRoutes } from "./modules/delivery/delivery.routes";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
 import { notFound } from "./app/middleware/notFound";
  
@@ -45,6 +47,8 @@ app.use("/api/v1/request", CapacityRequestRoutes);
 app.use("/api/v1/reservation", ReservationRoutes);
 app.use("/api/v1/payments", PaymentRoutes);
 app.use("/api/v1/admin", AdminRoutes);
+app.use("/api/v1/users", UserRoutes);
+app.use("/api/v1/delivery", DeliveryRoutes);
 
 
 app.get("/test", async (req: Request, res: Response) => {

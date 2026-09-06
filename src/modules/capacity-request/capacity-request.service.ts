@@ -5,10 +5,8 @@ import {
   OutageEventStatus,
   RequestStatus,
 } from "../../../prisma/generated/prisma/enums";
-import type {
-  CapacityRequestWhereInput,
-  Prisma,
-} from "../../../prisma/generated/prisma";
+import { Prisma } from "../../../prisma/generated/prisma/client";
+import type { CapacityRequestWhereInput } from "../../../prisma/generated/prisma/models";
 import type {
   ICreateRequestPayload,
   ICancelRequestParams,
@@ -151,9 +149,8 @@ const getAllRequests = async (query: IGetAllRequestsQuery) => {
 
   andConditions.push({ deletedAt: null });
 
-  const where: Prisma.CapacityRequestWhereInput = {
-    AND: andConditions.length > 0 ? andConditions : undefined,
-  };
+  const where: Prisma.CapacityRequestWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
 
   const [allRequests, totalRequestCount] = await Promise.all([
     prisma.capacityRequest.findMany({
@@ -219,9 +216,8 @@ const getMyRequests = async (
     andConditions.push({ priorityTier: query.priorityTier });
   }
 
-  const where: Prisma.CapacityRequestWhereInput = {
-    AND: andConditions.length > 0 ? andConditions : undefined,
-  };
+  const where: Prisma.CapacityRequestWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
 
   const [myRequests, totalRequestCount] = await Promise.all([
     prisma.capacityRequest.findMany({
@@ -276,9 +272,8 @@ const getRequestsByEvent = async (
     andConditions.push({ status: query.status });
   }
 
-  const where: Prisma.CapacityRequestWhereInput = {
-    AND: andConditions.length > 0 ? andConditions : undefined,
-  };
+  const where: Prisma.CapacityRequestWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
 
   const [requests, totalRequestCount] = await Promise.all([
     prisma.capacityRequest.findMany({

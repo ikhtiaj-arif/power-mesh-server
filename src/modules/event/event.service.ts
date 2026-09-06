@@ -6,10 +6,8 @@ import {
   OutageEventStatus,
   RequestStatus,
 } from "../../../prisma/generated/prisma/enums";
-import type {
-  OutageEventWhereInput,
-  Prisma,
-} from "../../../prisma/generated/prisma";
+import { Prisma } from "../../../prisma/generated/prisma/client";
+import type { OutageEventWhereInput } from "../../../prisma/generated/prisma/models";
 import type {
   ICreateEventPayload,
   IGetAllEventsQuery,
@@ -56,7 +54,7 @@ const createEvent = async (
       scheduledEnd: new Date(payload.scheduledEnd),
       totalCapacityKw: payload.totalCapacityKw,
       survivalQuotaKw: payload.survivalQuotaKw,
-      notes: payload.notes,
+      notes: payload.notes ?? null,
     },
     include: {
       operator: {
@@ -154,9 +152,8 @@ const getAllEvents = async (query: IGetAllEventsQuery) => {
 
   andConditions.push({ deletedAt: null });
 
-  const where: Prisma.OutageEventWhereInput = {
-    AND: andConditions.length > 0 ? andConditions : undefined,
-  };
+  const where: Prisma.OutageEventWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
 
   const [allEvents, totalEventCount] = await Promise.all([
     prisma.outageEvent.findMany({
@@ -235,9 +232,8 @@ const getMyEvents = async (
     });
   }
 
-  const where: Prisma.OutageEventWhereInput = {
-    AND: andConditions.length > 0 ? andConditions : undefined,
-  };
+  const where: Prisma.OutageEventWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
 
   const [myEvents, totalEventCount] = await Promise.all([
     prisma.outageEvent.findMany({
@@ -301,9 +297,8 @@ const getAvailableEvents = async (query: IGetAvailableEventsQuery) => {
     });
   }
 
-  const where: Prisma.OutageEventWhereInput = {
-    AND: andConditions.length > 0 ? andConditions : undefined,
-  };
+  const where: Prisma.OutageEventWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
 
   const [events, totalEventCount] = await Promise.all([
     prisma.outageEvent.findMany({

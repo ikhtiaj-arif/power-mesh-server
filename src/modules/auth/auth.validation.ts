@@ -47,8 +47,13 @@ const LoginZodSchema = z.object({
     .regex(/[^A-Za-z0-9]/, "Password must contain atleast 1 Special Character"),
 });
 
+const RefreshTokenZodSchema = z.object({
+  refreshToken: z.string().optional(),
+});
+
 export const UserValidation = {
   ConsumerRegistrationZodSchema,
   LoginZodSchema,
   ConsumerVerifyEmailZodSchema,
+  RefreshTokenZodSchema,
 };

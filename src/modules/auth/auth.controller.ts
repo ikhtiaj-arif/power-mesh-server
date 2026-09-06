@@ -115,6 +115,50 @@ const googleLogin = catchAsync(async (req: Request, res: Response) => {
  
  
 
+const refreshToken = catchAsync(async (req: Request, res: Response) => {
+	const token =
+		(req.cookies.refreshToken as string) || (req.body.refreshToken as string);
+
+	if (!token) {
+		throw new AppError(httpStatus.UNAUTHORIZED, "Refresh token is required");
+	}
+
+	const result = await AuthServices.refreshToken(token);
+	const { accessToken, refreshToken: newRefreshToken } = result;
+
+	res.cookie("accessToken", accessToken, {
+		httpOnly: true,
+		secure: false,
+		sameSite: "none",
+		maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
+	});
+	res.cookie("refreshToken", newRefreshToken, {
+		httpOnly: true,
+		secure: false,
+		sameSite: "none",
+		maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+	});
+
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: "Tokens refreshed successfully",
+		data: result,
+	});
+});
+
+const logout = catchAsync(async (req: Request, res: Response) => {
+	res.clearCookie("accessToken");
+	res.clearCookie("refreshToken");
+
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: "Logged out successfully",
+		data: null,
+	});
+});
+
 const getMe = catchAsync(async (req: Request, res: Response) => {
 	const user = req.user as unknown as RequestUser;
 
@@ -139,5 +183,7 @@ export const AuthController = {
   loginUser,
     verifyConsumerEmail,
     googleLogin,
+    refreshToken,
+    logout,
     getMe
 };

@@ -7,10 +7,8 @@ import {
   RequestStatus,
   ReservationStatus,
 } from "../../../prisma/generated/prisma/enums";
-import type {
-  Prisma,
-  ReservationWhereInput,
-} from "../../../prisma/generated/prisma";
+import { Prisma } from "../../../prisma/generated/prisma/client";
+import type { ReservationWhereInput } from "../../../prisma/generated/prisma/models";
 import type {
   ICancelReservationParams,
   ICreateReservationPayload,
@@ -220,9 +218,8 @@ const getAllReservations = async (query: IGetAllReservationsQuery) => {
 
   andConditions.push({ deletedAt: null });
 
-  const where: Prisma.ReservationWhereInput = {
-    AND: andConditions.length > 0 ? andConditions : undefined,
-  };
+  const where: Prisma.ReservationWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
 
   const [reservations, totalReservationCount] = await Promise.all([
     prisma.reservation.findMany({
@@ -295,9 +292,8 @@ const getMyReservations = async (
     andConditions.push({ status: query.status });
   }
 
-  const where: Prisma.ReservationWhereInput = {
-    AND: andConditions.length > 0 ? andConditions : undefined,
-  };
+  const where: Prisma.ReservationWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
 
   const [reservations, totalReservationCount] = await Promise.all([
     prisma.reservation.findMany({
@@ -363,9 +359,8 @@ const getProviderReservations = async (
     andConditions.push({ status: query.status });
   }
 
-  const where: Prisma.ReservationWhereInput = {
-    AND: andConditions.length > 0 ? andConditions : undefined,
-  };
+  const where: Prisma.ReservationWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
 
   const [reservations, totalReservationCount] = await Promise.all([
     prisma.reservation.findMany({

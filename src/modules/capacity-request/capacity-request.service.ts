@@ -1,15 +1,12 @@
 import httpStatus from "http-status";
+import type { Prisma } from "../../../prisma/generated/prisma/client";
+import { OutageEventStatus, RequestStatus } from "../../../prisma/generated/prisma/enums";
+import type { CapacityRequestWhereInput } from "../../../prisma/generated/prisma/models";
 import { prisma } from "../../app/lib/primsa";
 import { AppError } from "../../utils/appError";
-import {
-  OutageEventStatus,
-  RequestStatus,
-} from "../../../prisma/generated/prisma/enums";
-import { Prisma } from "../../../prisma/generated/prisma/client";
-import type { CapacityRequestWhereInput } from "../../../prisma/generated/prisma/models";
 import type {
-  ICreateRequestPayload,
   ICancelRequestParams,
+  ICreateRequestPayload,
   IGetAllRequestsQuery,
   IGetMyRequestsQuery,
   IGetRequestByIdParams,
@@ -20,10 +17,7 @@ import type {
   IUpdateRequestPayload,
 } from "./capacity-request.interface";
 
-const createRequest = async (
-  payload: ICreateRequestPayload,
-  userId: string,
-) => {
+const createRequest = async (payload: ICreateRequestPayload, userId: string) => {
   const consumer = await prisma.consumer.findUnique({
     where: { userId },
   });
@@ -60,10 +54,7 @@ const createRequest = async (
   });
 
   if (existingRequest) {
-    throw new AppError(
-      httpStatus.CONFLICT,
-      "You already have an active request for this event",
-    );
+    throw new AppError(httpStatus.CONFLICT, "You already have an active request for this event");
   }
 
   const request = await prisma.capacityRequest.create({
@@ -185,10 +176,7 @@ const getAllRequests = async (query: IGetAllRequestsQuery) => {
   };
 };
 
-const getMyRequests = async (
-  query: IGetMyRequestsQuery,
-  userId: string,
-) => {
+const getMyRequests = async (query: IGetMyRequestsQuery, userId: string) => {
   const consumer = await prisma.consumer.findUnique({
     where: { userId },
   });
@@ -356,10 +344,7 @@ const updateRequest = async (
   }
 
   if (request.consumerId !== consumer.id) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "You can only update your own requests",
-    );
+    throw new AppError(httpStatus.FORBIDDEN, "You can only update your own requests");
   }
 
   if (request.status !== RequestStatus.PENDING) {
@@ -399,10 +384,7 @@ const updateRequest = async (
   return updatedRequest;
 };
 
-const cancelRequest = async (
-  params: ICancelRequestParams,
-  userId: string,
-) => {
+const cancelRequest = async (params: ICancelRequestParams, userId: string) => {
   const consumer = await prisma.consumer.findUnique({
     where: { userId },
   });
@@ -424,10 +406,7 @@ const cancelRequest = async (
   }
 
   if (request.consumerId !== consumer.id) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "You can only cancel your own requests",
-    );
+    throw new AppError(httpStatus.FORBIDDEN, "You can only cancel your own requests");
   }
 
   if (request.status !== RequestStatus.PENDING) {
@@ -445,10 +424,7 @@ const cancelRequest = async (
   return cancelledRequest;
 };
 
-const softDeleteRequest = async (
-  params: ISoftDeleteRequestParams,
-  userId: string,
-) => {
+const softDeleteRequest = async (params: ISoftDeleteRequestParams, userId: string) => {
   const consumer = await prisma.consumer.findUnique({
     where: { userId },
   });
@@ -470,10 +446,7 @@ const softDeleteRequest = async (
   }
 
   if (request.consumerId !== consumer.id) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "You can only delete your own requests",
-    );
+    throw new AppError(httpStatus.FORBIDDEN, "You can only delete your own requests");
   }
 
   if (request.status !== RequestStatus.PENDING) {

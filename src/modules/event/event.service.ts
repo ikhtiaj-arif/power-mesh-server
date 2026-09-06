@@ -1,13 +1,13 @@
 import httpStatus from "http-status";
-import { prisma } from "../../app/lib/primsa";
-import { AppError } from "../../utils/appError";
+import type { Prisma } from "../../../prisma/generated/prisma/client";
 import {
   OfferStatus,
   OutageEventStatus,
   RequestStatus,
 } from "../../../prisma/generated/prisma/enums";
-import { Prisma } from "../../../prisma/generated/prisma/client";
 import type { OutageEventWhereInput } from "../../../prisma/generated/prisma/models";
+import { prisma } from "../../app/lib/primsa";
+import { AppError } from "../../utils/appError";
 import type {
   ICreateEventPayload,
   IGetAllEventsQuery,
@@ -22,23 +22,14 @@ import type {
 } from "./event.interface";
 
 const VALID_STATUS_TRANSITIONS: Record<string, OutageEventStatus[]> = {
-  [OutageEventStatus.SCHEDULED]: [
-    OutageEventStatus.CONFIRMED,
-    OutageEventStatus.CANCELLED,
-  ],
-  [OutageEventStatus.CONFIRMED]: [
-    OutageEventStatus.IN_PROGRESS,
-    OutageEventStatus.CANCELLED,
-  ],
+  [OutageEventStatus.SCHEDULED]: [OutageEventStatus.CONFIRMED, OutageEventStatus.CANCELLED],
+  [OutageEventStatus.CONFIRMED]: [OutageEventStatus.IN_PROGRESS, OutageEventStatus.CANCELLED],
   [OutageEventStatus.IN_PROGRESS]: [OutageEventStatus.COMPLETED],
   [OutageEventStatus.COMPLETED]: [],
   [OutageEventStatus.CANCELLED]: [],
 };
 
-const createEvent = async (
-  payload: ICreateEventPayload,
-  userId: string,
-) => {
+const createEvent = async (payload: ICreateEventPayload, userId: string) => {
   const operator = await prisma.operator.findUnique({
     where: { userId },
   });
@@ -193,10 +184,7 @@ const getAllEvents = async (query: IGetAllEventsQuery) => {
   };
 };
 
-const getMyEvents = async (
-  query: IGetMyEventsQuery,
-  userId: string,
-) => {
+const getMyEvents = async (query: IGetMyEventsQuery, userId: string) => {
   const operator = await prisma.operator.findUnique({
     where: { userId },
   });
@@ -408,10 +396,7 @@ const updateEvent = async (
   }
 
   if (event.operatorId !== operator.id) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "You can only update your own events",
-    );
+    throw new AppError(httpStatus.FORBIDDEN, "You can only update your own events");
   }
 
   if (event.status !== OutageEventStatus.SCHEDULED) {
@@ -449,18 +434,14 @@ const updateEvent = async (
   const finalSurvival = (updateData.survivalQuotaKw as number) ?? event.survivalQuotaKw;
 
   if (finalSurvival > finalTotal) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "survivalQuotaKw cannot exceed totalCapacityKw",
-    );
+    throw new AppError(httpStatus.BAD_REQUEST, "survivalQuotaKw cannot exceed totalCapacityKw");
   }
 
   if (updateData.scheduledStart && updateData.scheduledEnd) {
-    if (new Date(updateData.scheduledEnd as string) <= new Date(updateData.scheduledStart as string)) {
-      throw new AppError(
-        httpStatus.BAD_REQUEST,
-        "scheduledEnd must be after scheduledStart",
-      );
+    if (
+      new Date(updateData.scheduledEnd as string) <= new Date(updateData.scheduledStart as string)
+    ) {
+      throw new AppError(httpStatus.BAD_REQUEST, "scheduledEnd must be after scheduledStart");
     }
   }
 
@@ -507,10 +488,7 @@ const updateEventStatus = async (
   }
 
   if (event.operatorId !== operator.id) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "You can only update your own events",
-    );
+    throw new AppError(httpStatus.FORBIDDEN, "You can only update your own events");
   }
 
   const allowedTransitions = VALID_STATUS_TRANSITIONS[event.status] ?? [];
@@ -551,10 +529,7 @@ const updateEventStatus = async (
   return updatedEvent;
 };
 
-const softDeleteEvent = async (
-  params: ISoftDeleteEventParams,
-  userId: string,
-) => {
+const softDeleteEvent = async (params: ISoftDeleteEventParams, userId: string) => {
   const operator = await prisma.operator.findUnique({
     where: { userId },
   });
@@ -582,10 +557,7 @@ const softDeleteEvent = async (
         where: {
           deletedAt: null,
           status: {
-            in: [
-              RequestStatus.PENDING,
-              RequestStatus.ALLOCATED,
-            ],
+            in: [RequestStatus.PENDING, RequestStatus.ALLOCATED],
           },
         },
       },
@@ -601,10 +573,7 @@ const softDeleteEvent = async (
   }
 
   if (event.operatorId !== operator.id) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "You can only delete your own events",
-    );
+    throw new AppError(httpStatus.FORBIDDEN, "You can only delete your own events");
   }
 
   if (event.status !== OutageEventStatus.SCHEDULED) {
@@ -615,17 +584,11 @@ const softDeleteEvent = async (
   }
 
   if (event.capacityOffers.length > 0) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "Cannot delete event with active capacity offers",
-    );
+    throw new AppError(httpStatus.BAD_REQUEST, "Cannot delete event with active capacity offers");
   }
 
   if (event.capacityRequests.length > 0) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "Cannot delete event with active capacity requests",
-    );
+    throw new AppError(httpStatus.BAD_REQUEST, "Cannot delete event with active capacity requests");
   }
 
   const deletedEvent = await prisma.outageEvent.update({

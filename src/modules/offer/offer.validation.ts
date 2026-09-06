@@ -3,10 +3,7 @@ import z from "zod";
 const CreateOfferZodSchema = z
   .object({
     eventId: z.string().uuid("Invalid event ID"),
-    capacityKw: z
-      .number()
-      .int()
-      .positive("Capacity must be a positive integer"),
+    capacityKw: z.number().int().positive("Capacity must be a positive integer"),
     pricePerKwh: z.number().positive("Price must be positive"),
     deliveryStart: z.string().datetime("Invalid delivery start date"),
     deliveryEnd: z.string().datetime("Invalid delivery end date"),
@@ -21,13 +18,7 @@ const UpdateOfferZodSchema = z.object({
   deliveryStart: z.string().datetime().optional(),
   deliveryEnd: z.string().datetime().optional(),
   status: z
-    .enum([
-      "AVAILABLE",
-      "PARTIALLY_AVAILABLE",
-      "FULLY_ALLOCATED",
-      "EXPIRED",
-      "CANCELLED",
-    ])
+    .enum(["AVAILABLE", "PARTIALLY_AVAILABLE", "FULLY_ALLOCATED", "EXPIRED", "CANCELLED"])
     .optional(),
 });
 

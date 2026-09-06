@@ -1,9 +1,9 @@
 import { Router } from "express";
+import { UserRole } from "../../../prisma/generated/prisma/enums";
+import { auth } from "../../app/middleware/checkAuth";
+import { validateRequest } from "../../app/middleware/validation";
 import { EventController } from "./event.controller";
 import { EventValidation } from "./event.validation";
-import { validateRequest } from "../../app/middleware/validation";
-import { auth } from "../../app/middleware/checkAuth";
-import { UserRole } from "../../../prisma/generated/prisma/enums";
 
 const router = Router();
 
@@ -14,21 +14,13 @@ router.post(
   EventController.createEvent,
 );
 
-router.get(
-  "/all",
-  auth(UserRole.ADMIN, UserRole.OPERATOR),
-  EventController.getAllEvents,
-);
+router.get("/all", auth(UserRole.ADMIN, UserRole.OPERATOR), EventController.getAllEvents);
 
-router.get(
-  "/my-events",
-  auth(UserRole.OPERATOR),
-  EventController.getMyEvents,
-);
+router.get("/my-events", auth(UserRole.OPERATOR), EventController.getMyEvents);
 
 router.get(
   "/available",
-  auth(UserRole.CONSUMER, UserRole.PROVIDER),
+  auth(UserRole.CONSUMER, UserRole.PROVIDER, UserRole.ADMIN, UserRole.OPERATOR),
   EventController.getAvailableEvents,
 );
 
@@ -52,10 +44,6 @@ router.patch(
   EventController.updateEventStatus,
 );
 
-router.patch(
-  "/soft-delete/:id",
-  auth(UserRole.OPERATOR),
-  EventController.softDeleteEvent,
-);
+router.patch("/soft-delete/:id", auth(UserRole.OPERATOR), EventController.softDeleteEvent);
 
 export const EventRoutes = router;

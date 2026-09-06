@@ -58,7 +58,7 @@ const grantToken = async () => {
     },
   });
 
-  return data;
+  return data as { id_token: string; refresh_token: string };
 };
 
 const refreshToken = async (refreshToken: string) => {
@@ -93,7 +93,7 @@ const refreshToken = async (refreshToken: string) => {
     },
   });
 
-  return data;
+  return data as { id_token: string };
 };
 
 export const getAccessToken = async (): Promise<string> => {
@@ -109,15 +109,15 @@ export const getAccessToken = async (): Promise<string> => {
     refreshTokenTTL > REFRESH_BEFORE_SECONDS
   ) {
     const refreshed = await refreshToken(redisRefreshToken);
-    return refreshed.id_token!;
+    return refreshed.id_token;
   }
 
-  if (idTokenTTL > REFRESH_BEFORE_SECONDS) {
-    return idToken!;
+  if (idTokenTTL > REFRESH_BEFORE_SECONDS && idToken) {
+    return idToken;
   }
 
   const token = await grantToken();
-  return token.id_token!;
+  return token.id_token;
 };
 
 interface ICreatePaymentInput {
@@ -132,9 +132,7 @@ interface ICreatePaymentResponse {
   bkashURL: string;
 }
 
-const createPayment = async (
-  input: ICreatePaymentInput,
-): Promise<ICreatePaymentResponse> => {
+const createPayment = async (input: ICreatePaymentInput): Promise<ICreatePaymentResponse> => {
   const accessToken = await getAccessToken();
   const client = createClient();
   client.defaults.headers.Authorization = accessToken;
@@ -170,9 +168,7 @@ interface IExecutePaymentResponse {
   merchantInvoiceNumber?: string;
 }
 
-const executePayment = async (
-  paymentID: string,
-): Promise<IExecutePaymentResponse> => {
+const executePayment = async (paymentID: string): Promise<IExecutePaymentResponse> => {
   const accessToken = await getAccessToken();
   const client = createClient();
   client.defaults.headers.Authorization = accessToken;

@@ -1,7 +1,4 @@
-import type {
-  PaymentStatus,
-  ReservationStatus,
-} from "../../../prisma/generated/prisma/enums";
+import type { PaymentStatus, ReservationStatus } from "../../../prisma/generated/prisma/enums";
 
 export interface ICreateReservationPayload {
   offerId: string;

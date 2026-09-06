@@ -1,10 +1,10 @@
 import type { Request, Response } from "express";
-import { catchAsync } from "../../utils/catchAsync";
-import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
-import { PaymentServices } from "./payment.service";
 import type { RequestUser } from "../../app/middleware/checkAuth";
 import { AppError } from "../../utils/appError";
+import { catchAsync } from "../../utils/catchAsync";
+import { sendResponse } from "../../utils/sendResponse";
+import { PaymentServices } from "./payment.service";
 
 const initiatePayment = catchAsync(async (req: Request, res: Response) => {
   const user = req.user as unknown as RequestUser;
@@ -56,10 +56,7 @@ const getMyPayments = catchAsync(async (req: Request, res: Response) => {
   }
 
   const query = req.query;
-  const result = await PaymentServices.getMyPayments(
-    query as never,
-    user.userId,
-  );
+  const result = await PaymentServices.getMyPayments(query as never, user.userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

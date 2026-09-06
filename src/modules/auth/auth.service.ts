@@ -1,29 +1,25 @@
-import type { JwtPayload, SignOptions } from "jsonwebtoken";
-import config from "../../app/config";
-import { jwtUtils } from "../../utils/jwt";
-import { AppError } from "../../utils/appError";
+import crypto from "node:crypto";
+import path from "node:path";
 import bcrypt from "bcryptjs";
+import ejs from "ejs";
+import type { TokenPayload } from "google-auth-library";
 import httpStatus from "http-status";
-import crypto from "crypto";
+import type { JwtPayload, SignOptions } from "jsonwebtoken";
+import { AuthProvider, UserRole, UserStatus } from "../../../prisma/generated/prisma/enums";
+import config from "../../app/config";
+import { googleClient } from "../../app/lib/googleAuth";
+import { transporter } from "../../app/lib/nodemailer";
 import { prisma } from "../../app/lib/primsa";
-import path from "path";
-import {
-  AuthProvider,
-  UserRole,
-  UserStatus,
-} from "../../../prisma/generated/prisma/enums";
+import { redisClient } from "../../app/lib/redis";
+import type { RequestUser } from "../../app/middleware/checkAuth";
+import { AppError } from "../../utils/appError";
+import { jwtUtils } from "../../utils/jwt";
 import type {
   IGoogleLoginPayload,
   ILoginUserPayload,
   IRegisterConsumerPayload,
   IVerifyConsumerPayload,
 } from "./auth.interface";
-import { redisClient } from "../../app/lib/redis";
-import { transporter } from "../../app/lib/nodemailer";
-import ejs from "ejs";
-import type { TokenPayload } from "google-auth-library";
-import { googleClient } from "../../app/lib/googleAuth";
-import type { RequestUser } from "../../app/middleware/checkAuth";
 
 const registerConsumer = async (payload: IRegisterConsumerPayload) => {
   const { firstName, lastName, password, consumer: consumerData } = payload;
@@ -34,10 +30,7 @@ const registerConsumer = async (payload: IRegisterConsumerPayload) => {
   });
 
   if (isUserExists) {
-    throw new AppError(
-      httpStatus.CONFLICT,
-      "User with this email already exists",
-    );
+    throw new AppError(httpStatus.CONFLICT, "User with this email already exists");
   }
   const hashedPassword = await bcrypt.hash(password, 8);
 
@@ -60,25 +53,18 @@ const registerConsumer = async (payload: IRegisterConsumerPayload) => {
     consumer: consumerData,
   };
   //   console.log(redisUserDataPayload);
-  await redisClient.set(
-    consumerRegistrationKey,
-    JSON.stringify(redisUserDataPayload),
-    {
-      expiration: {
-        type: "EX",
-        value: 5 * 60,
-      },
+  await redisClient.set(consumerRegistrationKey, JSON.stringify(redisUserDataPayload), {
+    expiration: {
+      type: "EX",
+      value: 5 * 60,
     },
-  );
+  });
 
-  const templatePath = path.join(
-    process.cwd(),
-    "src/app/templates/registration-user-otp.ejs",
-  );
+  const templatePath = path.join(process.cwd(), "src/app/templates/registration-user-otp.ejs");
   const expSec = 5 * 60;
 
   const html = await ejs.renderFile(templatePath, {
-    name: firstName + " " + lastName,
+    name: `${firstName} ${lastName}`,
     otp,
     expirationMinutes: expSec / 60,
   });
@@ -126,8 +112,7 @@ const verifyConsumerEmail = async (payload: IVerifyConsumerPayload) => {
     throw new AppError(httpStatus.NOT_FOUND, "User does not exists");
   }
 
-  const consumerPayload: IRegisterConsumerPayload =
-    JSON.parse(redisConsumerData);
+  const consumerPayload: IRegisterConsumerPayload = JSON.parse(redisConsumerData);
 
   const createdUser = await prisma.user.create({
     data: {
@@ -153,14 +138,11 @@ const verifyConsumerEmail = async (payload: IVerifyConsumerPayload) => {
   });
 
   await redisClient.del(consumerRegistrationKey);
-  const templatePath = path.join(
-    process.cwd(),
-    "src/app/templates/consumer-welcome-email.ejs",
-  );
-  const expSec = 5 * 60;
+  const templatePath = path.join(process.cwd(), "src/app/templates/consumer-welcome-email.ejs");
+  const _expSec = 5 * 60;
 
   const html = await ejs.renderFile(templatePath, {
-    name: createdUser.firstName + " " + createdUser.lastName,
+    name: `${createdUser.firstName} ${createdUser.lastName}`,
   });
 
   await transporter.sendMail({
@@ -174,7 +156,7 @@ const verifyConsumerEmail = async (payload: IVerifyConsumerPayload) => {
   const { consumer, ...user } = createdUser;
   const jwtPayload = {
     userId: user.id,
-    name: user.firstName + " " + user.lastName,
+    name: `${user.firstName} ${user.lastName}`,
     email: user.email,
     role: user.role,
   };
@@ -226,10 +208,7 @@ const loginUser = async (payload: ILoginUserPayload) => {
     );
   }
 
-  const isPasswordMatched = await bcrypt.compare(
-    password,
-    user.password as string,
-  );
+  const isPasswordMatched = await bcrypt.compare(password, user.password as string);
 
   if (!isPasswordMatched) {
     throw new AppError(httpStatus.UNAUTHORIZED, "Invalid credentials");
@@ -237,7 +216,7 @@ const loginUser = async (payload: ILoginUserPayload) => {
 
   const jwtPayload = {
     userId: user.id,
-    name: user.firstName + " " + user.lastName,
+    name: `${user.firstName} ${user.lastName}`,
     email: user.email,
     role: user.role,
   };
@@ -261,17 +240,12 @@ const loginUser = async (payload: ILoginUserPayload) => {
 };
 
 const refreshToken = async (token: string) => {
-  const verifiedRefreshToken = jwtUtils.verifyToken(
-    token,
-    config.jwt_refresh_secret,
-  );
+  const verifiedRefreshToken = jwtUtils.verifyToken(token, config.jwt_refresh_secret);
 
-  if (!verifiedRefreshToken.success || !verifiedRefreshToken.data) {
+  if (!verifiedRefreshToken.success) {
     throw new AppError(
       httpStatus.UNAUTHORIZED,
-      config.node_env === "development"
-        ? verifiedRefreshToken.error
-        : "Invalid refresh token",
+      config.node_env === "development" ? verifiedRefreshToken.error : "Invalid refresh token",
     );
   }
 
@@ -287,7 +261,7 @@ const refreshToken = async (token: string) => {
 
   const jwtPayload = {
     userId: user.id,
-    name: user.firstName + " " + user.lastName,
+    name: `${user.firstName} ${user.lastName}`,
     email: user.email,
     role: user.role,
   };
@@ -323,17 +297,11 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
   } catch (error) {
     console.log("Google ID Token Verification Failed", error);
 
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "Invalid or expired Google ID token",
-    );
+    throw new AppError(httpStatus.BAD_REQUEST, "Invalid or expired Google ID token");
   }
 
   if (!googlePayload) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "Invalid or expired Google ID token",
-    );
+    throw new AppError(httpStatus.BAD_REQUEST, "Invalid or expired Google ID token");
   }
 
   if (!googlePayload.sub) {
@@ -347,13 +315,10 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
   const email = googlePayload.email;
   const googleId = googlePayload.sub;
 
-  const firstName =
-    googlePayload.given_name || googlePayload.name?.split(" ")[0] || "Google";
+  const firstName = googlePayload.given_name || googlePayload.name?.split(" ")[0] || "Google";
 
   const lastName =
-    googlePayload.family_name ||
-    googlePayload.name?.split(" ").slice(1).join(" ") ||
-    "User";
+    googlePayload.family_name || googlePayload.name?.split(" ").slice(1).join(" ") || "User";
 
   // 1. Try to find existing Google account
   let user = await prisma.user.findFirst({
@@ -380,10 +345,7 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
 
     if (existingUser) {
       if (existingUser.deletedAt || !existingUser.isActive) {
-        throw new AppError(
-          httpStatus.FORBIDDEN,
-          "User account is inactive or deleted",
-        );
+        throw new AppError(httpStatus.FORBIDDEN, "User account is inactive or deleted");
       }
 
       if (existingUser.role !== UserRole.CONSUMER) {
@@ -450,10 +412,7 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
   }
 
   if (!user.isActive || user.deletedAt) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "User account is inactive or deleted",
-    );
+    throw new AppError(httpStatus.FORBIDDEN, "User account is inactive or deleted");
   }
 
   // 5. Issue application JWT

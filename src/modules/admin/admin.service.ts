@@ -1,8 +1,6 @@
+import crypto from "node:crypto";
 import httpStatus from "http-status";
-import crypto from "crypto";
-import { prisma } from "../../app/lib/primsa";
-import { bkash } from "../../app/lib/bkash";
-import { AppError } from "../../utils/appError";
+import type { Prisma } from "../../../prisma/generated/prisma/client";
 import {
   AuditAction,
   DeliveryStatus,
@@ -15,8 +13,10 @@ import {
   ReservationStatus,
   UserStatus,
 } from "../../../prisma/generated/prisma/enums";
-import { Prisma } from "../../../prisma/generated/prisma/client";
 import type { UserWhereInput } from "../../../prisma/generated/prisma/models";
+import { bkash } from "../../app/lib/bkash";
+import { prisma } from "../../app/lib/primsa";
+import { AppError } from "../../utils/appError";
 import type {
   IBlockUserParams,
   IBlockUserPayload,
@@ -126,8 +126,7 @@ const getAllUsers = async (query: IGetAllUsersQuery) => {
 
   andConditions.push({ isDeleted: false });
 
-  const where: Prisma.UserWhereInput =
-    andConditions.length > 0 ? { AND: andConditions } : {};
+  const where: Prisma.UserWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
 
   const [users, totalUserCount] = await Promise.all([
     prisma.user.findMany({
@@ -176,10 +175,7 @@ const getUserById = async (params: IGetUserByIdParams) => {
   return user;
 };
 
-const blockUser = async (
-  params: IBlockUserParams,
-  payload: IBlockUserPayload,
-) => {
+const blockUser = async (params: IBlockUserParams, payload: IBlockUserPayload) => {
   const user = await prisma.user.findUnique({
     where: { id: params.id },
   });
@@ -256,8 +252,7 @@ const getAuditLogs = async (query: IGetAuditLogsQuery) => {
     andConditions.push({ userId: query.userId });
   }
 
-  const where: Prisma.AuditLogWhereInput =
-    andConditions.length > 0 ? { AND: andConditions } : {};
+  const where: Prisma.AuditLogWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
 
   const [logs, totalLogCount] = await Promise.all([
     prisma.auditLog.findMany({
@@ -339,11 +334,7 @@ const getDashboardStats = async () => {
       where: {
         deletedAt: null,
         status: {
-          in: [
-            ReservationStatus.FAILED,
-            ReservationStatus.REFUNDED,
-            ReservationStatus.CANCELLED,
-          ],
+          in: [ReservationStatus.FAILED, ReservationStatus.REFUNDED, ReservationStatus.CANCELLED],
         },
       },
     }),
@@ -439,14 +430,13 @@ const computeAllocationPlan = (
     id: string;
     status: string;
   },
-  offers: Prisma.CapacityOfferGetPayload<{}>[],
-  requests: Prisma.CapacityRequestGetPayload<{}>[],
+  offers: Prisma.CapacityOfferGetPayload<object>[],
+  requests: Prisma.CapacityRequestGetPayload<object>[],
 ): IAllocationPlan => {
   const availableOffers = offers
     .filter(
       (offer) =>
-        offer.status === OfferStatus.AVAILABLE ||
-        offer.status === OfferStatus.PARTIALLY_AVAILABLE,
+        offer.status === OfferStatus.AVAILABLE || offer.status === OfferStatus.PARTIALLY_AVAILABLE,
     )
     .map((offer) => ({
       ...offer,
@@ -463,8 +453,7 @@ const computeAllocationPlan = (
     .filter((request) => request.status === RequestStatus.PENDING)
     .sort(
       (a, b) =>
-        PRIORITY_ORDER.indexOf(a.priorityTier) -
-          PRIORITY_ORDER.indexOf(b.priorityTier) ||
+        PRIORITY_ORDER.indexOf(a.priorityTier) - PRIORITY_ORDER.indexOf(b.priorityTier) ||
         a.createdAt.getTime() - b.createdAt.getTime(),
     );
 
@@ -501,10 +490,7 @@ const computeAllocationPlan = (
     offer.remaining -= request.requestedKw;
   }
 
-  const totalAllocatedKw = allocations.reduce(
-    (sum, allocation) => sum + allocation.allocatedKw,
-    0,
-  );
+  const totalAllocatedKw = allocations.reduce((sum, allocation) => sum + allocation.allocatedKw, 0);
 
   return {
     eventId: event.id,
@@ -536,10 +522,7 @@ const getEventWithCapacity = async (eventId: string) => {
 const runAllocation = async (params: IGetEventParams) => {
   const event = await getEventWithCapacity(params.id);
 
-  if (
-    event.status !== "SCHEDULED" &&
-    event.status !== "CONFIRMED"
-  ) {
+  if (event.status !== "SCHEDULED" && event.status !== "CONFIRMED") {
     throw new AppError(
       httpStatus.BAD_REQUEST,
       `Allocation cannot be computed for event with status "${event.status}"`,
@@ -559,16 +542,10 @@ const runAllocation = async (params: IGetEventParams) => {
   };
 };
 
-const approveAllocation = async (
-  params: IGetEventParams,
-  userId: string,
-) => {
+const approveAllocation = async (params: IGetEventParams, userId: string) => {
   const preview = await getEventWithCapacity(params.id);
 
-  if (
-    preview.status !== "SCHEDULED" &&
-    preview.status !== "CONFIRMED"
-  ) {
+  if (preview.status !== "SCHEDULED" && preview.status !== "CONFIRMED") {
     throw new AppError(
       httpStatus.BAD_REQUEST,
       `Allocation cannot be approved for event with status "${preview.status}"`,
@@ -589,11 +566,7 @@ const approveAllocation = async (
         throw new AppError(httpStatus.NOT_FOUND, "Outage event not found");
       }
 
-      const plan = computeAllocationPlan(
-        event,
-        event.capacityOffers,
-        event.capacityRequests,
-      );
+      const plan = computeAllocationPlan(event, event.capacityOffers, event.capacityRequests);
 
       const offerAssignments = new Map<
         string,
@@ -628,12 +601,10 @@ const approveAllocation = async (
           reservedKw: 0,
         };
         current.assignedKw += allocation.allocatedKw;
-        current.capacityKw = event.capacityOffers.find(
-          (offer) => offer.id === allocation.offerId,
-        )?.capacityKw ?? 0;
-        current.reservedKw = event.capacityOffers.find(
-          (offer) => offer.id === allocation.offerId,
-        )?.reservedKw ?? 0;
+        current.capacityKw =
+          event.capacityOffers.find((offer) => offer.id === allocation.offerId)?.capacityKw ?? 0;
+        current.reservedKw =
+          event.capacityOffers.find((offer) => offer.id === allocation.offerId)?.reservedKw ?? 0;
         offerAssignments.set(allocation.offerId, current);
       }
 
@@ -715,27 +686,17 @@ const updateReservationStatus = async (
 
   const newStatus = payload.status;
   const isFailureStatus =
-    newStatus === ReservationStatus.FAILED ||
-    newStatus === ReservationStatus.REFUNDED;
+    newStatus === ReservationStatus.FAILED || newStatus === ReservationStatus.REFUNDED;
   const isCancellation = newStatus === ReservationStatus.CANCELLED;
 
-  const releaseOfferCapacity = (
-    tx: Prisma.TransactionClient,
-    allocatedKw: number,
-  ) => {
-    const newReservedKw = Math.max(
-      0,
-      reservation.offer.reservedKw - allocatedKw,
-    );
+  const releaseOfferCapacity = (tx: Prisma.TransactionClient, allocatedKw: number) => {
+    const newReservedKw = Math.max(0, reservation.offer.reservedKw - allocatedKw);
 
     return tx.capacityOffer.update({
       where: { id: reservation.offerId },
       data: {
         reservedKw: newReservedKw,
-        status:
-          newReservedKw > 0
-            ? OfferStatus.PARTIALLY_AVAILABLE
-            : OfferStatus.AVAILABLE,
+        status: newReservedKw > 0 ? OfferStatus.PARTIALLY_AVAILABLE : OfferStatus.AVAILABLE,
       },
     });
   };
@@ -766,9 +727,7 @@ const updateReservationStatus = async (
             : "Refund after delivery failure";
 
         let gatewayRefundId: string | undefined;
-        let bkashRefundResult: Awaited<
-          ReturnType<typeof bkash.refundPayment>
-        > | null = null;
+        let bkashRefundResult: Awaited<ReturnType<typeof bkash.refundPayment>> | null = null;
 
         if (paymentInfo.gatewayId && paymentInfo.bkashTrxId) {
           try {
@@ -838,9 +797,7 @@ const updateReservationStatus = async (
       where: { id: reservation.id },
       data: {
         status: newStatus,
-        ...(payload.paymentStatus !== undefined
-          ? { paymentStatus: payload.paymentStatus }
-          : {}),
+        ...(payload.paymentStatus !== undefined ? { paymentStatus: payload.paymentStatus } : {}),
       },
       include: {
         payment: true,
@@ -857,9 +814,7 @@ const updateReservationStatus = async (
         oldValues: { status: reservation.status },
         newValues: {
           status: newStatus,
-          ...(payload.resolution !== undefined
-            ? { resolution: payload.resolution }
-            : {}),
+          ...(payload.resolution !== undefined ? { resolution: payload.resolution } : {}),
         },
       },
     });

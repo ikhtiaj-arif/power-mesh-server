@@ -1,14 +1,14 @@
+import crypto from "node:crypto";
 import httpStatus from "http-status";
-import crypto from "crypto";
-import { prisma } from "../../app/lib/primsa";
-import { AppError } from "../../utils/appError";
+import type { Prisma } from "../../../prisma/generated/prisma/client";
 import {
   OfferStatus,
   RequestStatus,
   ReservationStatus,
 } from "../../../prisma/generated/prisma/enums";
-import { Prisma } from "../../../prisma/generated/prisma/client";
 import type { ReservationWhereInput } from "../../../prisma/generated/prisma/models";
+import { prisma } from "../../app/lib/primsa";
+import { AppError } from "../../utils/appError";
 import type {
   ICancelReservationParams,
   ICreateReservationPayload,
@@ -19,10 +19,7 @@ import type {
   IGetReservationByIdParams,
 } from "./reservation.interface";
 
-const createReservation = async (
-  payload: ICreateReservationPayload,
-  userId: string,
-) => {
+const createReservation = async (payload: ICreateReservationPayload, userId: string) => {
   const consumer = await prisma.consumer.findUnique({
     where: { userId },
   });
@@ -40,10 +37,7 @@ const createReservation = async (
   }
 
   if (request.consumerId !== consumer.id) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "You can only reserve capacity for your own requests",
-    );
+    throw new AppError(httpStatus.FORBIDDEN, "You can only reserve capacity for your own requests");
   }
 
   if (request.status !== RequestStatus.PENDING) {
@@ -61,10 +55,7 @@ const createReservation = async (
     throw new AppError(httpStatus.NOT_FOUND, "Offer not found");
   }
 
-  if (
-    offer.status !== OfferStatus.AVAILABLE &&
-    offer.status !== OfferStatus.PARTIALLY_AVAILABLE
-  ) {
+  if (offer.status !== OfferStatus.AVAILABLE && offer.status !== OfferStatus.PARTIALLY_AVAILABLE) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
       `Offer is not available for reservation (status "${offer.status}")`,
@@ -265,10 +256,7 @@ const getAllReservations = async (query: IGetAllReservationsQuery) => {
   };
 };
 
-const getMyReservations = async (
-  query: IGetMyReservationsQuery,
-  userId: string,
-) => {
+const getMyReservations = async (query: IGetMyReservationsQuery, userId: string) => {
   const consumer = await prisma.consumer.findUnique({
     where: { userId },
   });
@@ -429,10 +417,7 @@ const getReservationById = async (params: IGetReservationByIdParams) => {
   return reservation;
 };
 
-const cancelReservation = async (
-  params: ICancelReservationParams,
-  userId: string,
-) => {
+const cancelReservation = async (params: ICancelReservationParams, userId: string) => {
   const consumer = await prisma.consumer.findUnique({
     where: { userId },
   });
@@ -458,10 +443,7 @@ const cancelReservation = async (
   }
 
   if (reservation.consumerId !== consumer.id) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "You can only cancel your own reservations",
-    );
+    throw new AppError(httpStatus.FORBIDDEN, "You can only cancel your own reservations");
   }
 
   if (
@@ -483,18 +465,14 @@ const cancelReservation = async (
       },
     });
 
-    const newReservedKw =
-      reservation.offer.reservedKw - reservation.allocatedKw;
+    const newReservedKw = reservation.offer.reservedKw - reservation.allocatedKw;
     const newReserved = Math.max(0, newReservedKw);
 
     await tx.capacityOffer.update({
       where: { id: reservation.offerId },
       data: {
         reservedKw: newReserved,
-        status:
-          newReserved > 0
-            ? OfferStatus.PARTIALLY_AVAILABLE
-            : OfferStatus.AVAILABLE,
+        status: newReserved > 0 ? OfferStatus.PARTIALLY_AVAILABLE : OfferStatus.AVAILABLE,
       },
     });
 

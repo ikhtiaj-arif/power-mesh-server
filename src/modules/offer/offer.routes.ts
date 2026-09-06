@@ -1,9 +1,9 @@
 import { Router } from "express";
+import { UserRole } from "../../../prisma/generated/prisma/enums";
+import { auth } from "../../app/middleware/checkAuth";
+import { validateRequest } from "../../app/middleware/validation";
 import { OfferController } from "./offer.controller";
 import { OfferValidation } from "./offer.validation";
-import { validateRequest } from "../../app/middleware/validation";
-import { auth } from "../../app/middleware/checkAuth";
-import { UserRole } from "../../../prisma/generated/prisma/enums";
 
 const router = Router();
 
@@ -14,17 +14,9 @@ router.post(
   OfferController.createOffer,
 );
 
-router.get(
-  "/all",
-  auth(UserRole.ADMIN, UserRole.OPERATOR),
-  OfferController.getAllOffers,
-);
+router.get("/all", auth(UserRole.ADMIN, UserRole.OPERATOR), OfferController.getAllOffers);
 
-router.get(
-  "/my-offers",
-  auth(UserRole.PROVIDER),
-  OfferController.getMyOffers,
-);
+router.get("/my-offers", auth(UserRole.PROVIDER), OfferController.getMyOffers);
 
 router.get(
   "/event/:eventId",
@@ -45,10 +37,6 @@ router.patch(
   OfferController.updateOffer,
 );
 
-router.patch(
-  "/soft-delete/:id",
-  auth(UserRole.PROVIDER),
-  OfferController.softDeleteOffer,
-);
+router.patch("/soft-delete/:id", auth(UserRole.PROVIDER), OfferController.softDeleteOffer);
 
 export const OfferRoutes = router;

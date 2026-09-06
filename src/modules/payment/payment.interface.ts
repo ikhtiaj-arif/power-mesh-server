@@ -1,6 +1,6 @@
 import type {
-  PaymentStatus,
   PaymentMethod,
+  PaymentStatus,
   WebhookStatus,
 } from "../../../prisma/generated/prisma/enums";
 

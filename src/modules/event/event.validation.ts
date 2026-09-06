@@ -4,14 +4,8 @@ const CreateEventZodSchema = z
   .object({
     scheduledStart: z.string().datetime("Invalid scheduled start date"),
     scheduledEnd: z.string().datetime("Invalid scheduled end date"),
-    totalCapacityKw: z
-      .number()
-      .int()
-      .positive("Total capacity must be a positive integer"),
-    survivalQuotaKw: z
-      .number()
-      .int()
-      .positive("Survival quota must be a positive integer"),
+    totalCapacityKw: z.number().int().positive("Total capacity must be a positive integer"),
+    survivalQuotaKw: z.number().int().positive("Survival quota must be a positive integer"),
     notes: z.string().max(1000).optional(),
   })
   .refine((data) => new Date(data.scheduledEnd) > new Date(data.scheduledStart), {
@@ -51,13 +45,7 @@ const UpdateEventZodSchema = z
   );
 
 const UpdateEventStatusZodSchema = z.object({
-  status: z.enum([
-    "SCHEDULED",
-    "CONFIRMED",
-    "IN_PROGRESS",
-    "COMPLETED",
-    "CANCELLED",
-  ]),
+  status: z.enum(["SCHEDULED", "CONFIRMED", "IN_PROGRESS", "COMPLETED", "CANCELLED"]),
 });
 
 const EventIdParamZodSchema = z.object({

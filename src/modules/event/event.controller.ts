@@ -1,10 +1,10 @@
 import type { Request, Response } from "express";
-import { catchAsync } from "../../utils/catchAsync";
-import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
-import { EventServices } from "./event.service";
 import type { RequestUser } from "../../app/middleware/checkAuth";
 import { AppError } from "../../utils/appError";
+import { catchAsync } from "../../utils/catchAsync";
+import { sendResponse } from "../../utils/sendResponse";
+import { EventServices } from "./event.service";
 
 const createEvent = catchAsync(async (req: Request, res: Response) => {
   const user = req.user as unknown as RequestUser;
@@ -106,11 +106,7 @@ const updateEventStatus = catchAsync(async (req: Request, res: Response) => {
   }
 
   const id = req.params.id as string;
-  const result = await EventServices.updateEventStatus(
-    { id },
-    req.body,
-    user.userId,
-  );
+  const result = await EventServices.updateEventStatus({ id }, req.body, user.userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

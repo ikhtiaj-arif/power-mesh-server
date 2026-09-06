@@ -1,9 +1,9 @@
 import { Router } from "express";
+import { UserRole } from "../../../prisma/generated/prisma/enums";
+import { auth } from "../../app/middleware/checkAuth";
+import { validateRequest } from "../../app/middleware/validation";
 import { PaymentController } from "./payment.controller";
 import { PaymentValidation } from "./payment.validation";
-import { validateRequest } from "../../app/middleware/validation";
-import { auth } from "../../app/middleware/checkAuth";
-import { UserRole } from "../../../prisma/generated/prisma/enums";
 
 const router = Router();
 
@@ -16,17 +16,9 @@ router.post(
 
 router.get("/callback", PaymentController.handleBkashCallback);
 
-router.get(
-  "/my-payments",
-  auth(UserRole.CONSUMER),
-  PaymentController.getMyPayments,
-);
+router.get("/my-payments", auth(UserRole.CONSUMER), PaymentController.getMyPayments);
 
-router.get(
-  "/all",
-  auth(UserRole.ADMIN, UserRole.OPERATOR),
-  PaymentController.getAllPayments,
-);
+router.get("/all", auth(UserRole.ADMIN, UserRole.OPERATOR), PaymentController.getAllPayments);
 
 router.get(
   "/:id",

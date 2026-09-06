@@ -1,10 +1,10 @@
 import type { Request, Response } from "express";
-import { catchAsync } from "../../utils/catchAsync";
-import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
-import { CapacityRequestServices } from "./capacity-request.service";
 import type { RequestUser } from "../../app/middleware/checkAuth";
 import { AppError } from "../../utils/appError";
+import { catchAsync } from "../../utils/catchAsync";
+import { sendResponse } from "../../utils/sendResponse";
+import { CapacityRequestServices } from "./capacity-request.service";
 
 const createRequest = catchAsync(async (req: Request, res: Response) => {
   const user = req.user as unknown as RequestUser;
@@ -13,10 +13,7 @@ const createRequest = catchAsync(async (req: Request, res: Response) => {
     throw new AppError(httpStatus.BAD_REQUEST, "User information is missing");
   }
 
-  const result = await CapacityRequestServices.createRequest(
-    req.body,
-    user.userId,
-  );
+  const result = await CapacityRequestServices.createRequest(req.body, user.userId);
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -47,10 +44,7 @@ const getMyRequests = catchAsync(async (req: Request, res: Response) => {
   }
 
   const query = req.query;
-  const result = await CapacityRequestServices.getMyRequests(
-    query as never,
-    user.userId,
-  );
+  const result = await CapacityRequestServices.getMyRequests(query as never, user.userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -64,10 +58,7 @@ const getMyRequests = catchAsync(async (req: Request, res: Response) => {
 const getRequestsByEvent = catchAsync(async (req: Request, res: Response) => {
   const eventId = req.params.eventId as string;
   const query = req.query;
-  const result = await CapacityRequestServices.getRequestsByEvent(
-    { eventId },
-    query as never,
-  );
+  const result = await CapacityRequestServices.getRequestsByEvent({ eventId }, query as never);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -98,11 +89,7 @@ const updateRequest = catchAsync(async (req: Request, res: Response) => {
   }
 
   const id = req.params.id as string;
-  const result = await CapacityRequestServices.updateRequest(
-    { id },
-    req.body,
-    user.userId,
-  );
+  const result = await CapacityRequestServices.updateRequest({ id }, req.body, user.userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -120,10 +107,7 @@ const cancelRequest = catchAsync(async (req: Request, res: Response) => {
   }
 
   const id = req.params.id as string;
-  const result = await CapacityRequestServices.cancelRequest(
-    { id },
-    user.userId,
-  );
+  const result = await CapacityRequestServices.cancelRequest({ id }, user.userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -141,10 +125,7 @@ const softDeleteRequest = catchAsync(async (req: Request, res: Response) => {
   }
 
   const id = req.params.id as string;
-  const result = await CapacityRequestServices.softDeleteRequest(
-    { id },
-    user.userId,
-  );
+  const result = await CapacityRequestServices.softDeleteRequest({ id }, user.userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

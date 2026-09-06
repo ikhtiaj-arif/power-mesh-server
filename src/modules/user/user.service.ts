@@ -1,8 +1,8 @@
 import httpStatus from "http-status";
+import type { Prisma } from "../../../prisma/generated/prisma/client";
 import { prisma } from "../../app/lib/primsa";
-import { AppError } from "../../utils/appError";
-import { Prisma } from "../../../prisma/generated/prisma/client";
 import type { RequestUser } from "../../app/middleware/checkAuth";
+import { AppError } from "../../utils/appError";
 import type { IUpdateMePayload } from "./user.interface";
 
 const getMe = async (user: RequestUser) => {

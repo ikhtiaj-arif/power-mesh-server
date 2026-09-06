@@ -1,6 +1,4 @@
 import httpStatus from "http-status";
-import { prisma } from "../../app/lib/primsa";
-import { AppError } from "../../utils/appError";
 import {
   DeliveryStatus,
   IncidentStatus,
@@ -8,7 +6,9 @@ import {
   ReservationStatus,
   UserRole,
 } from "../../../prisma/generated/prisma/enums";
+import { prisma } from "../../app/lib/primsa";
 import type { RequestUser } from "../../app/middleware/checkAuth";
+import { AppError } from "../../utils/appError";
 import type {
   IConsumerConfirmParams,
   IConsumerDisputeParams,
@@ -24,10 +24,7 @@ const DELIVERY_WINDOW_STATUSES: ReservationStatus[] = [
   ReservationStatus.DELIVERY_PENDING,
 ];
 
-const getDeliveryByReservation = async (
-  params: IGetDeliveryParams,
-  user: RequestUser,
-) => {
+const getDeliveryByReservation = async (params: IGetDeliveryParams, user: RequestUser) => {
   const reservation = await prisma.reservation.findUnique({
     where: { id: params.reservationId, deletedAt: null },
     include: {
@@ -59,20 +56,14 @@ const getDeliveryByReservation = async (
       (provider !== null && provider.id === reservation.providerId);
 
     if (!isOwner) {
-      throw new AppError(
-        httpStatus.FORBIDDEN,
-        "You do not have access to this delivery",
-      );
+      throw new AppError(httpStatus.FORBIDDEN, "You do not have access to this delivery");
     }
   }
 
   return reservation;
 };
 
-const providerCheckIn = async (
-  params: IProviderCheckInParams,
-  userId: string,
-) => {
+const providerCheckIn = async (params: IProviderCheckInParams, userId: string) => {
   const provider = await prisma.provider.findUnique({
     where: { userId },
   });
@@ -90,10 +81,7 @@ const providerCheckIn = async (
   }
 
   if (reservation.providerId !== provider.id) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "You can only check in to your own reservations",
-    );
+    throw new AppError(httpStatus.FORBIDDEN, "You can only check in to your own reservations");
   }
 
   if (!DELIVERY_WINDOW_STATUSES.includes(reservation.status)) {
@@ -185,10 +173,7 @@ const providerReport = async (
   return delivery;
 };
 
-const consumerConfirm = async (
-  params: IConsumerConfirmParams,
-  userId: string,
-) => {
+const consumerConfirm = async (params: IConsumerConfirmParams, userId: string) => {
   const consumer = await prisma.consumer.findUnique({
     where: { userId },
   });
@@ -210,10 +195,7 @@ const consumerConfirm = async (
   }
 
   if (reservation.consumerId !== consumer.id) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "You can only confirm your own reservations",
-    );
+    throw new AppError(httpStatus.FORBIDDEN, "You can only confirm your own reservations");
   }
 
   if (!DELIVERY_WINDOW_STATUSES.includes(reservation.status)) {
@@ -226,10 +208,7 @@ const consumerConfirm = async (
   const delivery = reservation.delivery;
 
   if (delivery === null || delivery.actualDeliveredKw === null) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "Provider has not submitted a delivery report yet",
-    );
+    throw new AppError(httpStatus.BAD_REQUEST, "Provider has not submitted a delivery report yet");
   }
 
   const actualDeliveredKw = delivery.actualDeliveredKw;
@@ -334,10 +313,7 @@ const consumerDispute = async (
   }
 
   if (reservation.consumerId !== consumer.id) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "You can only dispute your own reservations",
-    );
+    throw new AppError(httpStatus.FORBIDDEN, "You can only dispute your own reservations");
   }
 
   if (!DELIVERY_WINDOW_STATUSES.includes(reservation.status)) {
@@ -348,10 +324,7 @@ const consumerDispute = async (
   }
 
   if (reservation.delivery === null) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "Provider has not submitted a delivery report yet",
-    );
+    throw new AppError(httpStatus.BAD_REQUEST, "Provider has not submitted a delivery report yet");
   }
 
   const delivery = await prisma.delivery.update({

@@ -1,9 +1,9 @@
 import { Router } from "express";
+import { UserRole } from "../../../prisma/generated/prisma/enums";
+import { auth } from "../../app/middleware/checkAuth";
+import { validateRequest } from "../../app/middleware/validation";
 import { ReservationController } from "./reservation.controller";
 import { ReservationValidation } from "./reservation.validation";
-import { validateRequest } from "../../app/middleware/validation";
-import { auth } from "../../app/middleware/checkAuth";
-import { UserRole } from "../../../prisma/generated/prisma/enums";
 
 const router = Router();
 
@@ -20,11 +20,7 @@ router.get(
   ReservationController.getAllReservations,
 );
 
-router.get(
-  "/my-reservations",
-  auth(UserRole.CONSUMER),
-  ReservationController.getMyReservations,
-);
+router.get("/my-reservations", auth(UserRole.CONSUMER), ReservationController.getMyReservations);
 
 router.get(
   "/provider/:providerId",
@@ -38,10 +34,6 @@ router.get(
   ReservationController.getReservationById,
 );
 
-router.patch(
-  "/cancel/:id",
-  auth(UserRole.CONSUMER),
-  ReservationController.cancelReservation,
-);
+router.patch("/cancel/:id", auth(UserRole.CONSUMER), ReservationController.cancelReservation);
 
 export const ReservationRoutes = router;

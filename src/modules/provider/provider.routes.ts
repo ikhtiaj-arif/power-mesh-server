@@ -1,9 +1,9 @@
 import { Router } from "express";
+import { UserRole } from "../../../prisma/generated/prisma/enums";
+import { auth } from "../../app/middleware/checkAuth";
+import { validateRequest } from "../../app/middleware/validation";
 import { ProviderController } from "./provider.controller";
 import { ProviderValidation } from "./provider.validation";
-import { validateRequest } from "../../app/middleware/validation";
-import { auth } from "../../app/middleware/checkAuth";
-import { UserRole } from "../../../prisma/generated/prisma/enums";
 
 const router = Router();
 
@@ -39,10 +39,6 @@ router.get(
   ProviderController.getAllProviders,
 );
 
-router.get(
-  "/:id",
-  auth(UserRole.ADMIN, UserRole.OPERATOR),
-  ProviderController.getProviderById,
-);
+router.get("/:id", auth(UserRole.ADMIN, UserRole.OPERATOR), ProviderController.getProviderById);
 
 export const ProviderRoutes = router;

@@ -1,10 +1,10 @@
 import type { Request, Response } from "express";
-import { catchAsync } from "../../utils/catchAsync";
-import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
-import { OfferServices } from "./offer.service";
 import type { RequestUser } from "../../app/middleware/checkAuth";
 import { AppError } from "../../utils/appError";
+import { catchAsync } from "../../utils/catchAsync";
+import { sendResponse } from "../../utils/sendResponse";
+import { OfferServices } from "./offer.service";
 
 const createOffer = catchAsync(async (req: Request, res: Response) => {
   const user = req.user as unknown as RequestUser;
@@ -12,7 +12,6 @@ const createOffer = catchAsync(async (req: Request, res: Response) => {
   if (!user) {
     throw new AppError(httpStatus.BAD_REQUEST, "User information is missing");
   }
-  
 
   const result = await OfferServices.createOffer(req.body, user.userId);
 
@@ -45,10 +44,7 @@ const getMyOffers = catchAsync(async (req: Request, res: Response) => {
   }
 
   const query = req.query;
-  const result = await OfferServices.getMyOffers(
-    query as never,
-    user.userId,
-  );
+  const result = await OfferServices.getMyOffers(query as never, user.userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -79,11 +75,7 @@ const updateOffer = catchAsync(async (req: Request, res: Response) => {
   }
 
   const id = req.params.id as string;
-  const result = await OfferServices.updateOffer(
-    { id },
-    req.body,
-    user.userId,
-  );
+  const result = await OfferServices.updateOffer({ id }, req.body, user.userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -101,10 +93,7 @@ const softDeleteOffer = catchAsync(async (req: Request, res: Response) => {
   }
 
   const id = req.params.id as string;
-  const result = await OfferServices.softDeleteOffer(
-    { id },
-    user.userId,
-  );
+  const result = await OfferServices.softDeleteOffer({ id }, user.userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -117,10 +106,7 @@ const softDeleteOffer = catchAsync(async (req: Request, res: Response) => {
 const getOffersByEvent = catchAsync(async (req: Request, res: Response) => {
   const eventId = req.params.eventId as string;
   const query = req.query;
-  const result = await OfferServices.getOffersByEvent(
-    { eventId },
-    query as never,
-  );
+  const result = await OfferServices.getOffersByEvent({ eventId }, query as never);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

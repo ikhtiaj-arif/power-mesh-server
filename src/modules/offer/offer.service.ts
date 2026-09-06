@@ -1,13 +1,13 @@
 import httpStatus from "http-status";
-import { prisma } from "../../app/lib/primsa";
-import { AppError } from "../../utils/appError";
+import type { Prisma } from "../../../prisma/generated/prisma/client";
 import {
   OfferStatus,
   ProviderStatus,
   ReservationStatus,
 } from "../../../prisma/generated/prisma/enums";
-import { Prisma } from "../../../prisma/generated/prisma/client";
 import type { CapacityOfferWhereInput } from "../../../prisma/generated/prisma/models";
+import { prisma } from "../../app/lib/primsa";
+import { AppError } from "../../utils/appError";
 import type {
   ICreateOfferPayload,
   IGetAllOffersQuery,
@@ -20,10 +20,7 @@ import type {
   IUpdateOfferPayload,
 } from "./offer.interface";
 
-const createOffer = async (
-  payload: ICreateOfferPayload,
-  userId: string,
-) => {
+const createOffer = async (payload: ICreateOfferPayload, userId: string) => {
   const provider = await prisma.provider.findUnique({
     where: { userId: userId },
   });
@@ -33,10 +30,7 @@ const createOffer = async (
   }
 
   if (provider.status !== ProviderStatus.APPROVED) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "Only approved providers can create offers",
-    );
+    throw new AppError(httpStatus.FORBIDDEN, "Only approved providers can create offers");
   }
 
   const event = await prisma.outageEvent.findUnique({
@@ -73,7 +67,7 @@ const createOffer = async (
 
   const offer = await prisma.capacityOffer.create({
     data: {
-     providerId: provider.id,
+      providerId: provider.id,
       eventId: payload.eventId,
       capacityKw: payload.capacityKw,
       pricePerKwh: payload.pricePerKwh,
@@ -205,10 +199,7 @@ const getAllOffers = async (query: IGetAllOffersQuery) => {
   };
 };
 
-const getMyOffers = async (
-  query: IGetMyOffersQuery,
-  userId: string,
-) => {
+const getMyOffers = async (query: IGetMyOffersQuery, userId: string) => {
   const limit = query.limit ? Number(query.limit) : 10;
   const page = query.page ? Number(query.page) : 1;
   const skip = (page - 1) * limit;
@@ -220,7 +211,7 @@ const getMyOffers = async (
   const provider = await prisma.provider.findUnique({
     where: { userId: userId },
   });
-   if (!provider) {
+  if (!provider) {
     throw new AppError(httpStatus.NOT_FOUND, "Provider profile not found");
   }
 
@@ -331,20 +322,11 @@ const updateOffer = async (
   }
 
   if (offer.providerId !== providerId) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "You can only update your own offers",
-    );
+    throw new AppError(httpStatus.FORBIDDEN, "You can only update your own offers");
   }
 
-  if (
-    offer.status !== OfferStatus.AVAILABLE &&
-    offer.status !== OfferStatus.PARTIALLY_AVAILABLE
-  ) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      `Cannot update offer with status "${offer.status}"`,
-    );
+  if (offer.status !== OfferStatus.AVAILABLE && offer.status !== OfferStatus.PARTIALLY_AVAILABLE) {
+    throw new AppError(httpStatus.BAD_REQUEST, `Cannot update offer with status "${offer.status}"`);
   }
 
   const updateData: Prisma.CapacityOfferUpdateInput = {};
@@ -383,10 +365,7 @@ const updateOffer = async (
   return updatedOffer;
 };
 
-const softDeleteOffer = async (
-  params: ISoftDeleteOfferParams,
-  providerId: string,
-) => {
+const softDeleteOffer = async (params: ISoftDeleteOfferParams, providerId: string) => {
   const offer = await prisma.capacityOffer.findUnique({
     where: { id: params.id },
     include: {
@@ -413,17 +392,11 @@ const softDeleteOffer = async (
   }
 
   if (offer.providerId !== providerId) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "You can only delete your own offers",
-    );
+    throw new AppError(httpStatus.FORBIDDEN, "You can only delete your own offers");
   }
 
   if (offer.reservations.length > 0) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "Cannot delete offer with active reservations",
-    );
+    throw new AppError(httpStatus.BAD_REQUEST, "Cannot delete offer with active reservations");
   }
 
   const deletedOffer = await prisma.capacityOffer.update({
@@ -434,10 +407,7 @@ const softDeleteOffer = async (
   return deletedOffer;
 };
 
-const getOffersByEvent = async (
-  params: IGetOffersByEventParams,
-  query: IGetOffersByEventQuery,
-) => {
+const getOffersByEvent = async (params: IGetOffersByEventParams, query: IGetOffersByEventQuery) => {
   const event = await prisma.outageEvent.findUnique({
     where: { id: params.eventId },
   });

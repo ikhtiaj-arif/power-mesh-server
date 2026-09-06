@@ -2,10 +2,7 @@ import z from "zod";
 
 const CreateRequestZodSchema = z.object({
   eventId: z.string().uuid("Invalid event ID"),
-  requestedKw: z
-    .number()
-    .int()
-    .positive("Requested capacity must be a positive integer"),
+  requestedKw: z.number().int().positive("Requested capacity must be a positive integer"),
   maxPricePerKwh: z.number().positive("Max price must be positive"),
   priorityTier: z.enum(["CRITICAL", "HIGH", "MEDIUM", "LOW", "FLEXIBLE"]),
 });
@@ -13,9 +10,7 @@ const CreateRequestZodSchema = z.object({
 const UpdateRequestZodSchema = z.object({
   requestedKw: z.number().int().positive().optional(),
   maxPricePerKwh: z.number().positive().optional(),
-  priorityTier: z
-    .enum(["CRITICAL", "HIGH", "MEDIUM", "LOW", "FLEXIBLE"])
-    .optional(),
+  priorityTier: z.enum(["CRITICAL", "HIGH", "MEDIUM", "LOW", "FLEXIBLE"]).optional(),
 });
 
 const RequestIdParamZodSchema = z.object({

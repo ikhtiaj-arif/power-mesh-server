@@ -1,16 +1,16 @@
-import config from "../../app/config";
-import { jwtUtils } from "../../utils/jwt";
-import { AppError } from "../../utils/appError";
+import crypto from "node:crypto";
+import path from "node:path";
 import bcrypt from "bcryptjs";
+import ejs from "ejs";
 import httpStatus from "http-status";
-import crypto from "crypto";
+import type { SignOptions } from "jsonwebtoken";
+import { ProviderStatus, UserRole, UserStatus } from "../../../prisma/generated/prisma/enums";
+import config from "../../app/config";
+import { transporter } from "../../app/lib/nodemailer";
 import { prisma } from "../../app/lib/primsa";
-import path from "path";
-import {
-  ProviderStatus,
-  UserStatus,
-  UserRole,
-} from "../../../prisma/generated/prisma/enums";
+import { redisClient } from "../../app/lib/redis";
+import { AppError } from "../../utils/appError";
+import { jwtUtils } from "../../utils/jwt";
 import type {
   IApplyAsProviderPayload,
   IApproveProviderPayload,
@@ -19,10 +19,6 @@ import type {
   IRejectProviderPayload,
   IVerifyProviderEmailPayload,
 } from "./provider.interface";
-import { redisClient } from "../../app/lib/redis";
-import { transporter } from "../../app/lib/nodemailer";
-import ejs from "ejs";
-import type { SignOptions } from "jsonwebtoken";
 
 const applyAsProvider = async (payload: IApplyAsProviderPayload) => {
   const { firstName, lastName, password, provider: providerData } = payload;
@@ -33,10 +29,7 @@ const applyAsProvider = async (payload: IApplyAsProviderPayload) => {
   });
 
   if (isUserExists) {
-    throw new AppError(
-      httpStatus.CONFLICT,
-      "User with this email already exists",
-    );
+    throw new AppError(httpStatus.CONFLICT, "User with this email already exists");
   }
 
   const isLicenseExists = await prisma.provider.findUnique({
@@ -44,10 +37,7 @@ const applyAsProvider = async (payload: IApplyAsProviderPayload) => {
   });
 
   if (isLicenseExists) {
-    throw new AppError(
-      httpStatus.CONFLICT,
-      "A provider with this license number already exists",
-    );
+    throw new AppError(httpStatus.CONFLICT, "A provider with this license number already exists");
   }
 
   const hashedPassword = await bcrypt.hash(password, 8);
@@ -71,25 +61,18 @@ const applyAsProvider = async (payload: IApplyAsProviderPayload) => {
     provider: providerData,
   };
 
-  await redisClient.set(
-    registrationKey,
-    JSON.stringify(redisPayload),
-    {
-      expiration: {
-        type: "EX",
-        value: 5 * 60,
-      },
+  await redisClient.set(registrationKey, JSON.stringify(redisPayload), {
+    expiration: {
+      type: "EX",
+      value: 5 * 60,
     },
-  );
+  });
 
-  const templatePath = path.join(
-    process.cwd(),
-    "src/app/templates/registration-user-otp.ejs",
-  );
+  const templatePath = path.join(process.cwd(), "src/app/templates/registration-user-otp.ejs");
   const expSec = 5 * 60;
 
   const html = await ejs.renderFile(templatePath, {
-    name: firstName + " " + lastName,
+    name: `${firstName} ${lastName}`,
     otp,
     expirationMinutes: expSec / 60,
   });
@@ -133,10 +116,7 @@ const verifyProviderEmail = async (payload: IVerifyProviderEmailPayload) => {
   const registrationKey = `provider-registration-data:${email}`;
   const redisData = await redisClient.get(registrationKey);
   if (!redisData) {
-    throw new AppError(
-      httpStatus.NOT_FOUND,
-      "Registration data not found. Please apply again.",
-    );
+    throw new AppError(httpStatus.NOT_FOUND, "Registration data not found. Please apply again.");
   }
 
   const providerPayload: IApplyAsProviderPayload = JSON.parse(redisData);
@@ -170,13 +150,10 @@ const verifyProviderEmail = async (payload: IVerifyProviderEmailPayload) => {
 
   await redisClient.del(registrationKey);
 
-  const templatePath = path.join(
-    process.cwd(),
-    "src/app/templates/provider-welcome-email.ejs",
-  );
+  const templatePath = path.join(process.cwd(), "src/app/templates/provider-welcome-email.ejs");
 
   const html = await ejs.renderFile(templatePath, {
-    name: createdUser.firstName + " " + createdUser.lastName,
+    name: `${createdUser.firstName} ${createdUser.lastName}`,
   });
 
   await transporter.sendMail({
@@ -189,7 +166,7 @@ const verifyProviderEmail = async (payload: IVerifyProviderEmailPayload) => {
   const { provider, ...user } = createdUser;
   const jwtPayload = {
     userId: user.id,
-    name: user.firstName + " " + user.lastName,
+    name: `${user.firstName} ${user.lastName}`,
     email: user.email,
     role: user.role,
   };
@@ -229,10 +206,7 @@ const approveProvider = async (payload: IApproveProviderPayload, adminId: string
   }
 
   if (provider.status === ProviderStatus.REJECTED) {
-    throw new AppError(
-      httpStatus.CONFLICT,
-      "Provider has been rejected. They need to re-apply.",
-    );
+    throw new AppError(httpStatus.CONFLICT, "Provider has been rejected. They need to re-apply.");
   }
 
   const updatedProvider = await prisma.provider.update({
@@ -246,13 +220,10 @@ const approveProvider = async (payload: IApproveProviderPayload, adminId: string
     include: { user: { omit: { password: true } } },
   });
 
-  const templatePath = path.join(
-    process.cwd(),
-    "src/app/templates/provider-welcome-email.ejs",
-  );
+  const templatePath = path.join(process.cwd(), "src/app/templates/provider-welcome-email.ejs");
 
   const html = await ejs.renderFile(templatePath, {
-    name: updatedProvider.user.firstName + " " + updatedProvider.user.lastName,
+    name: `${updatedProvider.user.firstName} ${updatedProvider.user.lastName}`,
   });
 
   await transporter.sendMail({
@@ -293,7 +264,7 @@ const rejectProvider = async (payload: IRejectProviderPayload) => {
 
 const getAllProviders = async (query: IGetAllProvidersQuery) => {
   const { page, limit, status } = query;
-  const skip = (page - 1) * limit;
+  const _skip = (page - 1) * limit;
 
   const where: Record<string, unknown> = {
     deletedAt: null,

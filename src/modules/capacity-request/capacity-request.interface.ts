@@ -1,7 +1,4 @@
-import type {
-  PriorityTier,
-  RequestStatus,
-} from "../../../prisma/generated/prisma/enums";
+import type { PriorityTier, RequestStatus } from "../../../prisma/generated/prisma/enums";
 
 export interface ICreateRequestPayload {
   eventId: string;

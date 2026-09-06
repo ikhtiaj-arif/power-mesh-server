@@ -1,12 +1,12 @@
 import type { Request, Response } from "express";
-import { catchAsync } from "../../utils/catchAsync";
-import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
-import { AdminServices } from "./admin.service";
 import type { RequestUser } from "../../app/middleware/checkAuth";
 import { AppError } from "../../utils/appError";
+import { catchAsync } from "../../utils/catchAsync";
+import { sendResponse } from "../../utils/sendResponse";
+import { AdminServices } from "./admin.service";
 
-const getOverview = catchAsync(async (req: Request, res: Response) => {
+const getOverview = catchAsync(async (_req: Request, res: Response) => {
   const result = await AdminServices.getOverview();
 
   sendResponse(res, {
@@ -79,7 +79,7 @@ const getAuditLogs = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getDashboardStats = catchAsync(async (req: Request, res: Response) => {
+const getDashboardStats = catchAsync(async (_req: Request, res: Response) => {
   const result = await AdminServices.getDashboardStats();
 
   sendResponse(res, {
@@ -120,29 +120,23 @@ const approveAllocation = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const updateReservationStatus = catchAsync(
-  async (req: Request, res: Response) => {
-    const user = req.user as unknown as RequestUser;
+const updateReservationStatus = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user as unknown as RequestUser;
 
-    if (!user) {
-      throw new AppError(httpStatus.BAD_REQUEST, "User information is missing");
-    }
+  if (!user) {
+    throw new AppError(httpStatus.BAD_REQUEST, "User information is missing");
+  }
 
-    const id = req.params.id as string;
-    const result = await AdminServices.updateReservationStatus(
-      { id },
-      req.body,
-      user.userId,
-    );
+  const id = req.params.id as string;
+  const result = await AdminServices.updateReservationStatus({ id }, req.body, user.userId);
 
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "Reservation status updated successfully",
-      data: result,
-    });
-  },
-);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Reservation status updated successfully",
+    data: result,
+  });
+});
 
 export const AdminController = {
   getOverview,

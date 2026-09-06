@@ -1,7 +1,19 @@
+import path from "node:path";
 import dotenv from "dotenv";
-import path from "path";
 
 dotenv.config({ path: path.join(process.cwd(), ".env") });
+
+/**
+ * Reads an environment variable and fails fast at boot if it is missing.
+ * Prefer this over bare non-null assertions so config errors surface early.
+ */
+const required = (name: string): string => {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value;
+};
 
 export default {
   node_env: process.env.NODE_ENV,
@@ -10,37 +22,37 @@ export default {
   frontend_url: process.env.FRONTEND_URL,
   bcrypt_salt_rounds: process.env.BCRYPT_SALT_ROUNDS || "10",
 
-  jwt_access_secret: process.env.JWT_ACCESS_SECRET!,
-  jwt_refresh_secret: process.env.JWT_REFRESH_SECRET!,
-  jwt_access_expires_in: process.env.JWT_ACCESS_EXPIRES_IN!,
-  jwt_refresh_expires_in: process.env.JWT_REFRESH_EXPIRES_IN!,
+  jwt_access_secret: required("JWT_ACCESS_SECRET"),
+  jwt_refresh_secret: required("JWT_REFRESH_SECRET"),
+  jwt_access_expires_in: required("JWT_ACCESS_EXPIRES_IN"),
+  jwt_refresh_expires_in: required("JWT_REFRESH_EXPIRES_IN"),
 
-  google_client_id: process.env.GOOGLE_CLIENT_ID!,
-  google_client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+  google_client_id: required("GOOGLE_CLIENT_ID"),
+  google_client_secret: required("GOOGLE_CLIENT_SECRET"),
 
-  bkash_base_url: process.env.BKASH_BASE_URL!,
-  bkash_username: process.env.BKASH_USERNAME!,
-  bkash_password: process.env.BKASH_PASSWORD!,
-  bkash_app_key: process.env.BKASH_APP_KEY!,
-  bkash_app_secret: process.env.BKASH_APP_SECRET!,
-  bkash_callback_url: process.env.BKASH_CALLBACK_URL!,
+  bkash_base_url: required("BKASH_BASE_URL"),
+  bkash_username: required("BKASH_USERNAME"),
+  bkash_password: required("BKASH_PASSWORD"),
+  bkash_app_key: required("BKASH_APP_KEY"),
+  bkash_app_secret: required("BKASH_APP_SECRET"),
+  bkash_callback_url: required("BKASH_CALLBACK_URL"),
 
-  redis_user: process.env.REDIS_USER!,
-  redis_password: process.env.REDIS_PASSWORD!,
-  redis_host: process.env.REDIS_HOST!,
-  redis_port: process.env.REDIS_PORT!,
+  redis_user: required("REDIS_USER"),
+  redis_password: required("REDIS_PASSWORD"),
+  redis_host: required("REDIS_HOST"),
+  redis_port: required("REDIS_PORT"),
 
-  smtp_user: process.env.SMTP_USER!,
-  email_sender: process.env.EMAIL_SENDER!,
-  smtp_password: process.env.SMTP_PASSWORD!,
+  smtp_user: required("SMTP_USER"),
+  email_sender: required("EMAIL_SENDER"),
+  smtp_password: required("SMTP_PASSWORD"),
 
-  cloudinary_cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
-  cloudinary_api_key: process.env.CLOUDINARY_API_KEY!,
-  cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET!,
+  cloudinary_cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  cloudinary_api_key: process.env.CLOUDINARY_API_KEY,
+  cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET,
 
   // Seed configs
   seed_admin_email: process.env.SEED_ADMIN_EMAIL,
-  seed_admin_password: process.env.SEED_ADMIN_PASSWORD!,
+  seed_admin_password: required("SEED_ADMIN_PASSWORD"),
   seed_admin_first_name: process.env.SEED_ADMIN_FIRST_NAME,
   seed_admin_last_name: process.env.SEED_ADMIN_LAST_NAME,
   seed_provider_email: process.env.SEED_PROVIDER_EMAIL,

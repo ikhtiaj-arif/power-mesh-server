@@ -27,8 +27,6 @@ const ConsumerRegistrationZodSchema = z.object({
       contactPerson: z.string().optional(),
     })
     .optional(),
-
-      
 });
 const ConsumerVerifyEmailZodSchema = z.object({
   email: z.email("Not email!!"),

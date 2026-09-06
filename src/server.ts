@@ -12,7 +12,7 @@ const main = async () => {
     await prisma.$connect();
     console.log("Connected to the database successfully.");
 
-       await redisClient.connect();
+    await redisClient.connect();
     console.log("Connected to redis successfully.", config.redis_port);
 
     await transporter.verify();
@@ -20,7 +20,6 @@ const main = async () => {
 
     if (config.node_env === "development") {
       await runSeeds();
-   
     }
 
     app.listen(PORT, () => {

@@ -1,19 +1,16 @@
 import type { Request, Response } from "express";
-import { catchAsync } from "../../utils/catchAsync";
-import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
-import { UserServices } from "./user.service";
 import type { RequestUser } from "../../app/middleware/checkAuth";
 import { AppError } from "../../utils/appError";
+import { catchAsync } from "../../utils/catchAsync";
+import { sendResponse } from "../../utils/sendResponse";
+import { UserServices } from "./user.service";
 
 const getMe = catchAsync(async (req: Request, res: Response) => {
   const user = req.user as unknown as RequestUser;
 
   if (!user) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "User information is missing in the request",
-    );
+    throw new AppError(httpStatus.BAD_REQUEST, "User information is missing in the request");
   }
 
   const result = await UserServices.getMe(user);
@@ -30,10 +27,7 @@ const updateMe = catchAsync(async (req: Request, res: Response) => {
   const user = req.user as unknown as RequestUser;
 
   if (!user) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "User information is missing in the request",
-    );
+    throw new AppError(httpStatus.BAD_REQUEST, "User information is missing in the request");
   }
 
   const result = await UserServices.updateMe(req.body, user);

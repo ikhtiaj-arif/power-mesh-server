@@ -1,5 +1,5 @@
 import z from "zod";
-import { ReservationStatus, PaymentStatus } from "../../../prisma/generated/prisma/enums";
+import { PaymentStatus, ReservationStatus } from "../../../prisma/generated/prisma/enums";
 
 const BlockUserZodSchema = z.object({
   isBlocked: z.boolean(),

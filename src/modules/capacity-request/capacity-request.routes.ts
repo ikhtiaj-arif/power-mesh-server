@@ -1,9 +1,9 @@
 import { Router } from "express";
+import { UserRole } from "../../../prisma/generated/prisma/enums";
+import { auth } from "../../app/middleware/checkAuth";
+import { validateRequest } from "../../app/middleware/validation";
 import { CapacityRequestController } from "./capacity-request.controller";
 import { CapacityRequestValidation } from "./capacity-request.validation";
-import { validateRequest } from "../../app/middleware/validation";
-import { auth } from "../../app/middleware/checkAuth";
-import { UserRole } from "../../../prisma/generated/prisma/enums";
 
 const router = Router();
 
@@ -20,11 +20,7 @@ router.get(
   CapacityRequestController.getAllRequests,
 );
 
-router.get(
-  "/my-requests",
-  auth(UserRole.CONSUMER),
-  CapacityRequestController.getMyRequests,
-);
+router.get("/my-requests", auth(UserRole.CONSUMER), CapacityRequestController.getMyRequests);
 
 router.get(
   "/event/:eventId",
@@ -45,11 +41,7 @@ router.patch(
   CapacityRequestController.updateRequest,
 );
 
-router.patch(
-  "/cancel/:id",
-  auth(UserRole.CONSUMER),
-  CapacityRequestController.cancelRequest,
-);
+router.patch("/cancel/:id", auth(UserRole.CONSUMER), CapacityRequestController.cancelRequest);
 
 router.patch(
   "/soft-delete/:id",

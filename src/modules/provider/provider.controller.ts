@@ -1,10 +1,10 @@
 import type { Request, Response } from "express";
-import { catchAsync } from "../../utils/catchAsync";
-import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
-import { ProviderServices } from "./provider.service";
 import type { RequestUser } from "../../app/middleware/checkAuth";
 import { AppError } from "../../utils/appError";
+import { catchAsync } from "../../utils/catchAsync";
+import { sendResponse } from "../../utils/sendResponse";
+import { ProviderServices } from "./provider.service";
 
 const applyAsProvider = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;

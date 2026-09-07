@@ -1,0 +1,19 @@
+name: Keep Render backend alive
+
+on:
+  schedule:
+    # Runs every 10 minutes — well within the 15-minute sleep threshold.
+    # GitHub Actions cron uses UTC. The "*\/10" syntax means "every 10 min".
+    - cron: "*/10 * * * *"
+  workflow_dispatch: # lets you trigger it manually from GitHub UI to test
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping backend health endpoint
+        run: |
+          echo "Pinging at $(date)"
+          curl --fail --silent --show-error \
+            https://power-mesh-server.onrender.com/api/health
+          echo "Ping successful"

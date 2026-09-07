@@ -51,6 +51,8 @@ export default {
   cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET,
 
   // Seed configs
+  run_seeds: process.env.RUN_SEEDS,
+
   seed_admin_email: process.env.SEED_ADMIN_EMAIL,
   seed_admin_password: required("SEED_ADMIN_PASSWORD"),
   seed_admin_first_name: process.env.SEED_ADMIN_FIRST_NAME,

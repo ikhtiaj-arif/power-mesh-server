@@ -7,29 +7,52 @@ import { runSeeds } from "./utils/seed";
 
 const PORT = config.port;
 
-const main = async () => {
+/**
+ * Attempts to connect to an external service within a bounded time.
+ * Failures are logged as warnings and never crash the process, so the
+ * HTTP server can come up immediately even if a dependency is briefly
+ * unavailable (e.g. Render cold starts, SMTP being slow).
+ */
+const connectWithTimeout = async (
+  label: string,
+  fn: () => Promise<unknown>,
+  timeoutMs: number,
+): Promise<void> => {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => {
+      reject(new Error(`${label} connection timed out after ${timeoutMs}ms`));
+    }, timeoutMs);
+  });
+
   try {
-    await prisma.$connect();
-    console.log("Connected to the database successfully.");
-
-    await redisClient.connect();
-    console.log("Connected to redis successfully.", config.redis_port);
-
-    await transporter.verify();
-    console.log("Connected to nodemailer.");
-
-    if (config.node_env === "development") {
-      await runSeeds();
-    }
-
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
+    await Promise.race([fn(), timeout]);
+    console.log(`${label} connected successfully.`);
   } catch (error) {
-    console.error("Error starting the server:", error);
-    await prisma.$disconnect();
-    process.exit(1);
+    const message = error instanceof Error ? error.message : String(error);
+    console.warn(`Warning: ${label} unavailable: ${message}`);
+  } finally {
+    if (timer) clearTimeout(timer);
   }
+};
+
+const main = () => {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+
+  const shouldSeed = config.node_env === "development" || config.run_seeds === "true";
+  if (shouldSeed) {
+    runSeeds().catch((error) => {
+      console.error("Seed process failed:", error);
+    });
+  }
+
+  void Promise.allSettled([
+    connectWithTimeout("Database", () => prisma.$connect(), 15_000),
+    connectWithTimeout("Redis", () => redisClient.connect(), 15_000),
+    connectWithTimeout("Nodemailer", () => transporter.verify(), 15_000),
+  ]);
 };
 
 main();

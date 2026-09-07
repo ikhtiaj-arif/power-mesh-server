@@ -19,7 +19,7 @@ import { ReservationRoutes } from "./modules/reservation/reservation.routes";
 import { UserRoutes } from "./modules/user/user.routes";
 
 const app: Application = express();
-
+app.set("trust proxy", 1);
 app.use(
   cors({
     origin: config.frontend_url,

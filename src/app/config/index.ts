@@ -50,6 +50,11 @@ export default {
   // When true and SMTP is unavailable, verification OTPs are returned in the API
   // response so registration flows still work (used for the live Render demo).
   email_fail_open: process.env.EMAIL_FAIL_OPEN !== "false",
+  // Optional HTTPS email-API fallback (used when SMTP is blocked, e.g. from Render).
+  resend_api_key: process.env.RESEND_API_KEY,
+  // Brevo (sendinblue) also works as an HTTPS fallback and allows sending from a
+  // verified personal email (no custom domain required), unlike Resend.
+  brevo_api_key: process.env.BREVO_API_KEY,
 
   cloudinary_cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   cloudinary_api_key: process.env.CLOUDINARY_API_KEY,

@@ -8,11 +8,11 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:5000/api/v1"
+      "value": "https://power-mesh-server.onrender.com/api/v1"
     },
     {
       "key": "serverRoot",
-      "value": "http://localhost:5000"
+      "value": "https://power-mesh-server.onrender.com"
     },
     {
       "key": "accessToken",

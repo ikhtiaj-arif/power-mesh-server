@@ -8,13 +8,13 @@ import { ProviderServices } from "./provider.service";
 
 const applyAsProvider = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
-  await ProviderServices.applyAsProvider(payload);
+  const result = await ProviderServices.applyAsProvider(payload);
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
     message: "Verification OTP sent to your email",
-    data: null,
+    data: result,
   });
 });
 

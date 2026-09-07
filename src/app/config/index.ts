@@ -45,6 +45,9 @@ export default {
   smtp_user: required("SMTP_USER"),
   email_sender: required("EMAIL_SENDER"),
   smtp_password: required("SMTP_PASSWORD"),
+  // When true and SMTP is unavailable, verification OTPs are returned in the API
+  // response so registration flows still work (used for the live Render demo).
+  email_fail_open: process.env.EMAIL_FAIL_OPEN !== "false",
 
   cloudinary_cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   cloudinary_api_key: process.env.CLOUDINARY_API_KEY,

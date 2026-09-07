@@ -8,7 +8,7 @@ import type { JwtPayload, SignOptions } from "jsonwebtoken";
 import { AuthProvider, UserRole, UserStatus } from "../../../prisma/generated/prisma/enums";
 import config from "../../app/config";
 import { googleClient } from "../../app/lib/googleAuth";
-import { transporter } from "../../app/lib/nodemailer";
+import { sendEmail } from "../../app/lib/nodemailer";
 import { prisma } from "../../app/lib/primsa";
 import { redisClient } from "../../app/lib/redis";
 import type { RequestUser } from "../../app/middleware/checkAuth";
@@ -69,13 +69,25 @@ const registerConsumer = async (payload: IRegisterConsumerPayload) => {
     expirationMinutes: expSec / 60,
   });
 
-  await transporter.sendMail({
+  const sendResult = await sendEmail({
     from: config.email_sender,
     to: email,
     subject: "Email Verification",
     // text: `Your OTP Is: ${otp}`,
     html,
   });
+
+  if (!sendResult.sent) {
+    if (!config.email_fail_open) {
+      throw new AppError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "Could not send the verification email. Please try again.",
+      );
+    }
+    return { emailSent: false, otp };
+  }
+
+  return { emailSent: true };
 };
 
 const verifyConsumerEmail = async (payload: IVerifyConsumerPayload) => {
@@ -145,7 +157,7 @@ const verifyConsumerEmail = async (payload: IVerifyConsumerPayload) => {
     name: `${createdUser.firstName} ${createdUser.lastName}`,
   });
 
-  await transporter.sendMail({
+  await sendEmail({
     from: config.email_sender,
     to: email,
     subject: "Welcome to PowerMesh System",

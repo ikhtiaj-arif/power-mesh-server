@@ -2,13 +2,17 @@
   "info": {
     "name": "PowerMesh Server",
     "_postman_id": "power-mesh-server-collection",
-    "description": "Postman collection for the PowerMesh Server. All implemented routes under /api/v1/auth, /api/v1/provider, /api/v1/offer, /api/v1/event, /api/v1/request, /api/v1/reservation, /api/v1/payments, /api/v1/users, /api/v1/delivery, and /api/v1/admin.",
+    "description": "Postman collection for the PowerMesh Server. All implemented routes under /api/v1/auth, /api/v1/provider, /api/v1/offer, /api/v1/event, /api/v1/request, /api/v1/reservation, /api/v1/payments, /api/v1/users, /api/v1/delivery, and /api/v1/admin.\n\nUse these variables to switch between environments:\n- Local:  baseUrl = http://localhost:5000/api/v1   | serverRoot = http://localhost:5000\n- Deployed: baseUrl = https://power-mesh-server.onrender.com/api/v1 | serverRoot = https://power-mesh-server.onrender.com",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
     {
       "key": "baseUrl",
       "value": "http://localhost:5000/api/v1"
+    },
+    {
+      "key": "serverRoot",
+      "value": "http://localhost:5000"
     },
     {
       "key": "accessToken",
@@ -43,8 +47,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:5000/",
-              "host": ["http://localhost:5000"],
+              "raw": "{{serverRoot}}/",
+              "host": ["{{serverRoot}}"],
               "path": ["/"]
             }
           }
@@ -55,8 +59,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:5000/test",
-              "host": ["http://localhost:5000"],
+              "raw": "{{serverRoot}}/test",
+              "host": ["{{serverRoot}}"],
               "path": ["/test"]
             }
           }

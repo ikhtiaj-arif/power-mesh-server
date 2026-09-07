@@ -45,6 +45,8 @@ export default {
   smtp_user: required("SMTP_USER"),
   email_sender: required("EMAIL_SENDER"),
   smtp_password: required("SMTP_PASSWORD"),
+  smtp_host: process.env.SMTP_HOST || "smtp.gmail.com",
+  smtp_port: Number(process.env.SMTP_PORT || "465"),
   // When true and SMTP is unavailable, verification OTPs are returned in the API
   // response so registration flows still work (used for the live Render demo).
   email_fail_open: process.env.EMAIL_FAIL_OPEN !== "false",

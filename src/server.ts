@@ -1,9 +1,14 @@
+import dns from "node:dns";
 import app from "./app";
 import config from "./app/config";
 import { transporter } from "./app/lib/nodemailer";
 import { prisma } from "./app/lib/primsa";
 import { redisClient } from "./app/lib/redis";
 import { runSeeds } from "./utils/seed";
+
+// Render has no IPv6 egress; prefer IPv4 for all outbound connections
+// (SMTP, Redis, etc.) so DNS ads of the network-unreachable family are never used.
+dns.setDefaultResultOrder("ipv4first");
 
 const PORT = config.port;
 

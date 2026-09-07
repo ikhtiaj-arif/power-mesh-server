@@ -6,7 +6,7 @@ import httpStatus from "http-status";
 import type { SignOptions } from "jsonwebtoken";
 import { ProviderStatus, UserRole, UserStatus } from "../../../prisma/generated/prisma/enums";
 import config from "../../app/config";
-import { transporter } from "../../app/lib/nodemailer";
+import { sendEmail } from "../../app/lib/nodemailer";
 import { prisma } from "../../app/lib/primsa";
 import { redisClient } from "../../app/lib/redis";
 import { AppError } from "../../utils/appError";
@@ -77,12 +77,24 @@ const applyAsProvider = async (payload: IApplyAsProviderPayload) => {
     expirationMinutes: expSec / 60,
   });
 
-  await transporter.sendMail({
+  const sendResult = await sendEmail({
     from: config.email_sender,
     to: email,
     subject: "PowerMesh - Provider Email Verification",
     html,
   });
+
+  if (!sendResult.sent) {
+    if (!config.email_fail_open) {
+      throw new AppError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "Could not send the verification email. Please try again.",
+      );
+    }
+    return { emailSent: false, otp };
+  }
+
+  return { emailSent: true };
 };
 
 const verifyProviderEmail = async (payload: IVerifyProviderEmailPayload) => {
@@ -156,7 +168,7 @@ const verifyProviderEmail = async (payload: IVerifyProviderEmailPayload) => {
     name: `${createdUser.firstName} ${createdUser.lastName}`,
   });
 
-  await transporter.sendMail({
+  await sendEmail({
     from: config.email_sender,
     to: email,
     subject: "Welcome to PowerMesh - Provider Application Received",
@@ -226,7 +238,7 @@ const approveProvider = async (payload: IApproveProviderPayload, adminId: string
     name: `${updatedProvider.user.firstName} ${updatedProvider.user.lastName}`,
   });
 
-  await transporter.sendMail({
+  await sendEmail({
     from: config.email_sender,
     to: updatedProvider.user.email,
     subject: "PowerMesh - Provider Application Approved",

@@ -13,7 +13,9 @@ const applyAsProvider = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
-    message: "Verification OTP sent to your email",
+    message: result.emailSent
+      ? "Verification OTP sent to your email"
+      : "Email delivery unavailable - use the OTP returned below to complete verification",
     data: result,
   });
 });

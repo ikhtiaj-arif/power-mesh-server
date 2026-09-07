@@ -6,6 +6,10 @@ PowerMesh is a backend REST API for a load-shedding / power-management marketpla
 
 ---
 
+
+## ERD
+Link: https://drawsql.app/teams/ikhtiaj-arif/diagrams/power-mesh
+
 ## Table of Contents
 
 - [Roles](#roles)

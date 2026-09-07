@@ -51,11 +51,112 @@ export interface SendEmailResult {
   reason?: string;
 }
 
+interface ResendPayload {
+  from: string;
+  to: string;
+  subject: string;
+  html?: string;
+  text?: string;
+}
+
+const sendViaResend = async (options: SendMailParams): Promise<boolean> => {
+  if (!config.resend_api_key) return false;
+
+  const payload: ResendPayload = {
+    from: options.from as string,
+    to: options.to as string,
+    subject: options.subject as string,
+    ...(options.html ? { html: options.html as string } : {}),
+    ...(options.text ? { text: options.text as string } : {}),
+  };
+
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${config.resend_api_key}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const body = await response.text();
+      console.warn(`Warning: Resend API error ${response.status}: ${body}`);
+      return false;
+    }
+    console.log("Email sent via Resend (HTTPS API).");
+    return true;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.warn(`Warning: Resend API unavailable: ${message}`);
+    return false;
+  }
+};
+
+interface BrevoNameEmail {
+  name?: string;
+  email: string;
+}
+
+const parseAddress = (value: unknown): BrevoNameEmail => {
+  if (typeof value !== "string") return { email: String(value ?? "") };
+  const match = /^\s*(.*?)\s*<\s*([^>]+)\s*>$/.exec(value);
+  if (match) {
+    const name = match[1]?.trim();
+    const email = match[2]?.trim() ?? "";
+    return name ? { name, email } : { email };
+  }
+  return { email: value.trim() };
+};
+
+const toRecipients = (value: unknown): BrevoNameEmail[] => {
+  if (Array.isArray(value)) return value.map(parseAddress);
+  return [parseAddress(value)];
+};
+
+const sendViaBrevo = async (options: SendMailParams): Promise<boolean> => {
+  if (!config.brevo_api_key) return false;
+
+  const sender = parseAddress(options.from);
+  const payload = {
+    sender,
+    to: toRecipients(options.to),
+    subject: options.subject as string,
+    ...(options.html ? { htmlContent: options.html as string } : {}),
+    ...(options.text ? { textContent: options.text as string } : {}),
+  };
+
+  try {
+    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        "api-key": config.brevo_api_key,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const body = await response.text();
+      console.warn(`Warning: Brevo API error ${response.status}: ${body}`);
+      return false;
+    }
+    console.log("Email sent via Brevo (HTTPS API).");
+    return true;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.warn(`Warning: Brevo API unavailable: ${message}`);
+    return false;
+  }
+};
+
 /**
  * Sends an email without ever crashing the request. Tries the primary SMTP
- * port first, then a 587/STARTTLS fallback. When SMTP is unreachable the
- * failure is logged as a warning and the caller decides how to fail open
- * (e.g. return the OTP to the client for demo purposes).
+ * port, a 587/STARTTLS fallback, then the Resend/Brevo HTTPS APIs (when
+ * configured). When delivery is entirely unavailable the failure is logged as
+ * a warning and the caller decides how to fail open (e.g. return the OTP).
  */
 export const sendEmail = async (options: SendMailParams): Promise<SendEmailResult> => {
   const attempts = [transporter, fallbackTransporter];
@@ -68,6 +169,14 @@ export const sendEmail = async (options: SendMailParams): Promise<SendEmailResul
     } catch (error) {
       lastReason = error instanceof Error ? error.message : String(error);
     }
+  }
+
+  if (await sendViaResend(options)) {
+    return { sent: true };
+  }
+
+  if (await sendViaBrevo(options)) {
+    return { sent: true };
   }
 
   console.warn(`Warning: email not sent (SMTP unavailable): ${lastReason}`);

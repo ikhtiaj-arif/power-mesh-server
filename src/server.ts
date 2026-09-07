@@ -41,7 +41,8 @@ const main = () => {
     console.log(`Server is running on port ${PORT}`);
   });
 
-  if (config.node_env === "development") {
+  const shouldSeed = config.node_env === "development" || config.run_seeds === "true";
+  if (shouldSeed) {
     runSeeds().catch((error) => {
       console.error("Seed process failed:", error);
     });

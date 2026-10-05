@@ -275,7 +275,9 @@ const rejectProvider = async (payload: IRejectProviderPayload) => {
 };
 
 const getAllProviders = async (query: IGetAllProvidersQuery) => {
-  const { page, limit, status } = query;
+  const limit = Number.isFinite(Number(query.limit)) ? Number(query.limit) : 10;
+  const page = Number.isFinite(Number(query.page)) ? Number(query.page) : 1;
+  const status = query.status;
   const _skip = (page - 1) * limit;
 
   const where: Record<string, unknown> = {
@@ -294,7 +296,7 @@ const getAllProviders = async (query: IGetAllProvidersQuery) => {
           omit: { password: true },
         },
       },
-      // skip,
+      // skip is intentionally disabled (BX-08)
       take: limit,
       orderBy: { createdAt: "desc" },
     }),
@@ -307,7 +309,7 @@ const getAllProviders = async (query: IGetAllProvidersQuery) => {
       total,
       page,
       limit,
-      totalPages: Math.ceil(total / limit),
+      totalPages: Math.ceil(total / limit) || 0,
     },
   };
 };

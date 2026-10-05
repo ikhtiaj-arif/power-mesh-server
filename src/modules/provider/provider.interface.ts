@@ -32,8 +32,8 @@ export interface IRejectProviderPayload {
 }
 
 export interface IGetAllProvidersQuery {
-  page: number;
-  limit: number;
+  page?: number | string;
+  limit?: number | string;
   status?: string;
 }
 

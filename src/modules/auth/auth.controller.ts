@@ -2,9 +2,18 @@ import type { Request, Response } from "express";
 import httpStatus from "http-status";
 import type { RequestUser } from "../../app/middleware/checkAuth";
 import { AppError } from "../../utils/appError";
+import { authCookieOptions, clearAuthCookieOptions } from "../../utils/authCookies";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { AuthServices } from "./auth.service";
+
+const ACCESS_TOKEN_MAX_AGE = 1000 * 60 * 60 * 24;
+const REFRESH_TOKEN_MAX_AGE = 1000 * 60 * 60 * 24 * 7;
+
+const setAuthCookies = (res: Response, accessToken: string, refreshToken: string) => {
+  res.cookie("accessToken", accessToken, authCookieOptions(ACCESS_TOKEN_MAX_AGE));
+  res.cookie("refreshToken", refreshToken, authCookieOptions(REFRESH_TOKEN_MAX_AGE));
+};
 
 const registerConsumer = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
@@ -26,18 +35,7 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthServices.loginUser(payload);
   const { accessToken, refreshToken } = result;
 
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "none",
-    maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
-  });
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "none",
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-  });
+  setAuthCookies(res, accessToken, refreshToken);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -56,18 +54,7 @@ const verifyConsumerEmail = catchAsync(async (req: Request, res: Response) => {
 
   const { accessToken, refreshToken, user, consumer } = result;
 
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "none",
-    maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
-  });
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "none",
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-  });
+  setAuthCookies(res, accessToken, refreshToken);
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -88,18 +75,7 @@ const googleLogin = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthServices.googleLogin(payload);
   const { accessToken, refreshToken } = result;
 
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "none",
-    maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
-  });
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "none",
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-  });
+  setAuthCookies(res, accessToken, refreshToken);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -122,18 +98,7 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthServices.refreshToken(token);
   const { accessToken, refreshToken: newRefreshToken } = result;
 
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "none",
-    maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
-  });
-  res.cookie("refreshToken", newRefreshToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "none",
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-  });
+  setAuthCookies(res, accessToken, newRefreshToken);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -144,8 +109,8 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 });
 
 const logout = catchAsync(async (_req: Request, res: Response) => {
-  res.clearCookie("accessToken");
-  res.clearCookie("refreshToken");
+  res.clearCookie("accessToken", clearAuthCookieOptions);
+  res.clearCookie("refreshToken", clearAuthCookieOptions);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

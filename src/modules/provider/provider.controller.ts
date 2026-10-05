@@ -2,9 +2,14 @@ import type { Request, Response } from "express";
 import httpStatus from "http-status";
 import type { RequestUser } from "../../app/middleware/checkAuth";
 import { AppError } from "../../utils/appError";
+import { authCookieOptions } from "../../utils/authCookies";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { ProviderServices } from "./provider.service";
+import { ProviderValidation } from "./provider.validation";
+
+const ACCESS_TOKEN_MAX_AGE = 1000 * 60 * 60 * 24;
+const REFRESH_TOKEN_MAX_AGE = 1000 * 60 * 60 * 24 * 7;
 
 const applyAsProvider = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
@@ -25,18 +30,8 @@ const verifyProviderEmail = catchAsync(async (req: Request, res: Response) => {
   const result = await ProviderServices.verifyProviderEmail(payload);
   const { accessToken, refreshToken, user, provider } = result;
 
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "none",
-    maxAge: 1000 * 60 * 60 * 24,
-  });
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "none",
-    maxAge: 1000 * 60 * 60 * 24 * 7,
-  });
+  res.cookie("accessToken", accessToken, authCookieOptions(ACCESS_TOKEN_MAX_AGE));
+  res.cookie("refreshToken", refreshToken, authCookieOptions(REFRESH_TOKEN_MAX_AGE));
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -82,8 +77,16 @@ const rejectProvider = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllProviders = catchAsync(async (req: Request, res: Response) => {
-  const query = req.query;
-  const result = await ProviderServices.getAllProviders(query as never);
+  const parsed = ProviderValidation.GetAllProvidersZodSchema.safeParse(req.query);
+
+  if (!parsed.success) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      parsed.error.issues[0]?.message ?? "Invalid query parameters",
+    );
+  }
+
+  const result = await ProviderServices.getAllProviders(parsed.data);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

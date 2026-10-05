@@ -402,14 +402,30 @@ const updateEvent = async (
   if (event.status !== OutageEventStatus.SCHEDULED) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      `Cannot update event with status "${event.status}". Only SCHEDULED events can be updated.`,
+      `Cannot update event with status "${event.status}". Only upcoming SCHEDULED events can be updated.`,
+    );
+  }
+
+  const now = new Date();
+
+  if (event.scheduledStart <= now) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Cannot update an event after its scheduled start. Only upcoming SCHEDULED events can be edited.",
     );
   }
 
   const updateData: Prisma.OutageEventUpdateInput = {};
 
   if (payload.scheduledStart !== undefined) {
-    updateData.scheduledStart = new Date(payload.scheduledStart);
+    const nextStart = new Date(payload.scheduledStart);
+    if (nextStart <= now) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        "scheduledStart must be in the future for an editable upcoming event",
+      );
+    }
+    updateData.scheduledStart = nextStart;
   }
   if (payload.scheduledEnd !== undefined) {
     updateData.scheduledEnd = new Date(payload.scheduledEnd);

@@ -28,3 +28,4 @@ npm start
 | public API origin used by Next | `API_URL` |
 | `ISR_SERVICE_TOKEN` | `ISR_SERVICE_TOKEN` |
 | `BKASH_CALLBACK_URL` | API only (`…/api/v1/payments/callback`) |
+| `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | API only; webhook `POST …/api/v1/payments/webhook/stripe` |

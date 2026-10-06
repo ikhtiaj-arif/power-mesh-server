@@ -4,8 +4,12 @@ import type {
   WebhookStatus,
 } from "../../../prisma/generated/prisma/enums";
 
+export type PaymentProvider = "BKASH" | "STRIPE";
+
 export interface IInitiatePaymentPayload {
   reservationId: string;
+  /** Defaults to BKASH when omitted (backward compatible). */
+  provider?: PaymentProvider;
 }
 
 export interface IBkashCallbackQuery {

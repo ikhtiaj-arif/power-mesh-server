@@ -30,6 +30,21 @@ const handleBkashCallback = catchAsync(async (req: Request, res: Response) => {
   res.redirect(result.redirectUrl);
 });
 
+const handleStripeWebhook = catchAsync(async (req: Request, res: Response) => {
+  const signatureHeader = req.headers["stripe-signature"];
+  const signature = Array.isArray(signatureHeader)
+    ? signatureHeader[0]
+    : signatureHeader;
+
+  const rawBody = Buffer.isBuffer(req.body)
+    ? req.body
+    : Buffer.from(typeof req.body === "string" ? req.body : JSON.stringify(req.body ?? {}));
+
+  const result = await PaymentServices.handleStripeWebhook(rawBody, signature);
+
+  res.status(httpStatus.OK).json(result);
+});
+
 const getPaymentById = catchAsync(async (req: Request, res: Response) => {
   const user = req.user as unknown as RequestUser;
 
@@ -83,6 +98,7 @@ const getAllPayments = catchAsync(async (req: Request, res: Response) => {
 export const PaymentController = {
   initiatePayment,
   handleBkashCallback,
+  handleStripeWebhook,
   getPaymentById,
   getMyPayments,
   getAllPayments,

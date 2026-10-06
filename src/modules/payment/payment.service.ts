@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import httpStatus from "http-status";
-import type { Prisma } from "../../../prisma/generated/prisma/client";
+import type Stripe from "stripe";
+import { Prisma } from "../../../prisma/generated/prisma/client";
 import {
   AuditAction,
   PaymentMethod,
@@ -13,6 +14,7 @@ import type { PaymentWhereInput } from "../../../prisma/generated/prisma/models"
 import config from "../../app/config";
 import { bkash } from "../../app/lib/bkash";
 import { prisma } from "../../app/lib/primsa";
+import { getStripe } from "../../app/lib/stripe";
 import type { RequestUser } from "../../app/middleware/checkAuth";
 import { AppError } from "../../utils/appError";
 import type {
@@ -45,6 +47,7 @@ const resolveConsumer = async (userId: string) => {
 };
 
 const initiatePayment = async (payload: IInitiatePaymentPayload, userId: string) => {
+  const provider = payload.provider ?? "BKASH";
   const consumer = await resolveConsumer(userId);
 
   const reservation = await prisma.reservation.findUnique({
@@ -82,34 +85,31 @@ const initiatePayment = async (payload: IInitiatePaymentPayload, userId: string)
     throw new AppError(httpStatus.BAD_REQUEST, "This reservation has already been settled");
   }
 
-  if (existingPayment && existingPayment.gatewayStatus === PaymentStatus.PROCESSING) {
-    throw new AppError(
-      httpStatus.CONFLICT,
-      "A payment is already in progress for this reservation",
-    );
-  }
+  // INITIATED / PROCESSING / FAILED payments are reset so the consumer can
+  // retry or switch between bKash and Stripe.
 
   const amount = Number(reservation.totalAmount);
   const merchantInvoiceNumber = generateMerchantInvoiceNumber(reservation.id);
   const payerReference = consumer.user?.email || consumer.contactPhone || consumer.id;
 
-  let payment: Prisma.PaymentGetPayload<object> | null = null;
-  let bkashURL: string;
-  let paymentID: string;
-
+  let prepared: Prisma.PaymentGetPayload<object>;
   try {
-    const prepared = await prisma.$transaction(async (tx) => {
+    prepared = await prisma.$transaction(async (tx) => {
       if (existingPayment) {
         const reset = await tx.payment.update({
           where: { id: existingPayment.id },
           data: {
             gatewayStatus: PaymentStatus.PROCESSING,
+            paymentMethod: provider === "STRIPE" ? PaymentMethod.STRIPE : PaymentMethod.BKASH,
             merchantInvoiceNumber,
             idempotencyKey: crypto.randomUUID(),
             completedAt: null,
             webhookStatus: WebhookStatus.PENDING,
             webhookReceivedAt: null,
             webhookProcessedAt: null,
+            gatewayId: null,
+            bkashTrxId: null,
+            gatewayResponse: Prisma.DbNull,
           },
         });
 
@@ -130,6 +130,7 @@ const initiatePayment = async (payload: IInitiatePaymentPayload, userId: string)
           amount,
           currency: "BDT",
           gatewayStatus: PaymentStatus.PROCESSING,
+          paymentMethod: provider === "STRIPE" ? PaymentMethod.STRIPE : PaymentMethod.BKASH,
           merchantInvoiceNumber,
           idempotencyKey: crypto.randomUUID(),
           webhookStatus: WebhookStatus.PENDING,
@@ -146,41 +147,152 @@ const initiatePayment = async (payload: IInitiatePaymentPayload, userId: string)
 
       return created;
     });
-
-    const bkashPayment = await bkash.createPayment({
-      amount,
-      merchantInvoiceNumber,
-      payerReference,
-      callbackUrl: config.bkash_callback_url,
-    });
-
-    payment = await prisma.payment.update({
-      where: { id: prepared.id },
-      data: {
-        gatewayId: bkashPayment.paymentID,
-        payerReference,
-        gatewayResponse: bkashPayment as unknown as Prisma.InputJsonValue,
-      },
-    });
-
-    bkashURL = bkashPayment.bkashURL;
-    paymentID = bkashPayment.paymentID;
   } catch (error) {
     const err = error as { code?: string; message?: string };
     if (err.code === "P2002") {
       throw new AppError(httpStatus.CONFLICT, "This reservation already has an active payment");
     }
+    throw error;
+  }
+
+  if (provider === "STRIPE") {
+    return initiateStripeCheckout({
+      payment: prepared,
+      reservationId: reservation.id,
+      amount,
+      merchantInvoiceNumber,
+      payerReference,
+      consumerEmail: consumer.user?.email,
+    });
+  }
+
+  return initiateBkashCheckout({
+    payment: prepared,
+    amount,
+    merchantInvoiceNumber,
+    payerReference,
+  });
+};
+
+const initiateBkashCheckout = async (input: {
+  payment: Prisma.PaymentGetPayload<object>;
+  amount: number;
+  merchantInvoiceNumber: string;
+  payerReference: string;
+}) => {
+  try {
+    const bkashPayment = await bkash.createPayment({
+      amount: input.amount,
+      merchantInvoiceNumber: input.merchantInvoiceNumber,
+      payerReference: input.payerReference,
+      callbackUrl: config.bkash_callback_url,
+    });
+
+    const payment = await prisma.payment.update({
+      where: { id: input.payment.id },
+      data: {
+        gatewayId: bkashPayment.paymentID,
+        payerReference: input.payerReference,
+        paymentMethod: PaymentMethod.BKASH,
+        gatewayResponse: bkashPayment as unknown as Prisma.InputJsonValue,
+      },
+    });
+
+    return {
+      payment,
+      provider: "BKASH" as const,
+      checkoutURL: bkashPayment.bkashURL,
+      bkashURL: bkashPayment.bkashURL,
+      paymentID: bkashPayment.paymentID,
+    };
+  } catch (error) {
+    const err = error as { message?: string };
     throw new AppError(
       httpStatus.BAD_GATEWAY,
       `Failed to initiate bKash payment: ${err.message || "unknown gateway error"}`,
     );
   }
+};
 
-  return {
-    payment,
-    bkashURL,
-    paymentID,
-  };
+const initiateStripeCheckout = async (input: {
+  payment: Prisma.PaymentGetPayload<object>;
+  reservationId: string;
+  amount: number;
+  merchantInvoiceNumber: string;
+  payerReference: string;
+  consumerEmail?: string;
+}) => {
+  if (!config.stripe_secret_key) {
+    throw new AppError(
+      httpStatus.SERVICE_UNAVAILABLE,
+      "Stripe is not configured on this server",
+    );
+  }
+
+  try {
+    const stripe = getStripe();
+    // Ledger amount stays BDT. Stripe Checkout settles in USD (test/live accounts
+    // enforce a ~$0.50 minimum when presenting exotic currencies like BDT).
+    const BDT_PER_USD = 110;
+    const usdCents = Math.max(50, Math.round((input.amount / BDT_PER_USD) * 100));
+
+    const session = await stripe.checkout.sessions.create({
+      mode: "payment",
+      ...(input.consumerEmail ? { customer_email: input.consumerEmail } : {}),
+      client_reference_id: input.reservationId,
+      line_items: [
+        {
+          quantity: 1,
+          price_data: {
+            currency: "usd",
+            unit_amount: usdCents,
+            product_data: {
+              name: `PowerMesh reservation ${input.reservationId.slice(0, 8)}`,
+              description: `BDT ${input.amount.toFixed(2)} · invoice ${input.merchantInvoiceNumber}`,
+            },
+          },
+        },
+      ],
+      metadata: {
+        paymentId: input.payment.id,
+        reservationId: input.reservationId,
+        merchantInvoiceNumber: input.merchantInvoiceNumber,
+        amountBdt: String(input.amount),
+      },
+      success_url: `${config.frontend_url}/my-payments?status=success&provider=stripe`,
+      cancel_url: `${config.frontend_url}/my-payments?status=cancel&provider=stripe`,
+    });
+
+    if (!session.url) {
+      throw new AppError(httpStatus.BAD_GATEWAY, "Stripe did not return a checkout URL");
+    }
+
+    const payment = await prisma.payment.update({
+      where: { id: input.payment.id },
+      data: {
+        gatewayId: session.id,
+        payerReference: input.payerReference,
+        paymentMethod: PaymentMethod.STRIPE,
+        gatewayResponse: session as unknown as Prisma.InputJsonValue,
+      },
+    });
+
+    return {
+      payment,
+      provider: "STRIPE" as const,
+      checkoutURL: session.url,
+      sessionId: session.id,
+    };
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+    const err = error as { message?: string };
+    throw new AppError(
+      httpStatus.BAD_GATEWAY,
+      `Failed to initiate Stripe payment: ${err.message || "unknown gateway error"}`,
+    );
+  }
 };
 
 const handleBkashCallback = async (query: IBkashCallbackQuery) => {
@@ -487,9 +599,164 @@ const getAllPayments = async (query: IGetAllPaymentsQuery) => {
   };
 };
 
+const markStripePaymentCompleted = async (session: Stripe.Checkout.Session) => {
+  const gatewayId = session.id;
+
+  return prisma.$transaction(async (tx) => {
+    const payment = await tx.payment.findUnique({
+      where: { gatewayId },
+      include: {
+        reservation: true,
+      },
+    });
+
+    if (!payment) {
+      throw new AppError(httpStatus.NOT_FOUND, "Payment record not found for Stripe session");
+    }
+
+    if (payment.gatewayStatus === PaymentStatus.COMPLETED) {
+      return payment;
+    }
+
+    const consumer = await tx.consumer.findUnique({
+      where: { id: payment.reservation.consumerId },
+      select: { userId: true },
+    });
+
+    const updatedPayment = await tx.payment.update({
+      where: { id: payment.id },
+      data: {
+        gatewayStatus: PaymentStatus.COMPLETED,
+        paymentMethod: PaymentMethod.STRIPE,
+        paidAt: new Date(),
+        completedAt: new Date(),
+        gatewayResponse: session as unknown as Prisma.InputJsonValue,
+        webhookStatus: WebhookStatus.PROCESSED,
+        webhookReceivedAt: new Date(),
+        webhookProcessedAt: new Date(),
+        bkashTrxId: typeof session.payment_intent === "string" ? session.payment_intent : null,
+      },
+    });
+
+    await tx.reservation.update({
+      where: { id: payment.reservationId },
+      data: {
+        status: ReservationStatus.PAYMENT_COMPLETED,
+        paymentStatus: PaymentStatus.COMPLETED,
+      },
+    });
+
+    await tx.auditLog.create({
+      data: {
+        userId: consumer?.userId ?? null,
+        entityType: "payment",
+        entityId: payment.id,
+        action: AuditAction.PAY,
+        newValues: {
+          provider: "STRIPE",
+          gatewayId,
+          amount: session.amount_total != null ? session.amount_total / 100 : payment.amount,
+          currency: session.currency ?? payment.currency,
+        },
+        ipAddress: null,
+        userAgent: null,
+      },
+    });
+
+    return updatedPayment;
+  });
+};
+
+const markStripePaymentFailed = async (session: Stripe.Checkout.Session) => {
+  const gatewayId = session.id;
+
+  return prisma.$transaction(async (tx) => {
+    const payment = await tx.payment.findUnique({
+      where: { gatewayId },
+    });
+
+    if (!payment) {
+      return null;
+    }
+
+    if (
+      payment.gatewayStatus === PaymentStatus.COMPLETED ||
+      payment.gatewayStatus === PaymentStatus.REFUNDED
+    ) {
+      return payment;
+    }
+
+    const updated = await tx.payment.update({
+      where: { id: payment.id },
+      data: {
+        gatewayStatus: PaymentStatus.FAILED,
+        paymentMethod: PaymentMethod.STRIPE,
+        gatewayResponse: session as unknown as Prisma.InputJsonValue,
+        webhookStatus: WebhookStatus.RECEIVED,
+        webhookReceivedAt: new Date(),
+        webhookProcessedAt: new Date(),
+      },
+    });
+
+    await tx.reservation.update({
+      where: { id: payment.reservationId },
+      data: {
+        status: ReservationStatus.ALLOCATED,
+        paymentStatus: PaymentStatus.FAILED,
+      },
+    });
+
+    return updated;
+  });
+};
+
+const handleStripeWebhook = async (rawBody: Buffer, signature: string | undefined) => {
+  if (!config.stripe_webhook_secret) {
+    throw new AppError(httpStatus.SERVICE_UNAVAILABLE, "Stripe webhook secret is not configured");
+  }
+
+  if (!signature) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Missing Stripe-Signature header");
+  }
+
+  const stripe = getStripe();
+  let event: Stripe.Event;
+
+  try {
+    event = stripe.webhooks.constructEvent(rawBody, signature, config.stripe_webhook_secret);
+  } catch (error) {
+    const err = error as { message?: string };
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `Stripe webhook signature verification failed: ${err.message || "invalid signature"}`,
+    );
+  }
+
+  switch (event.type) {
+    case "checkout.session.completed": {
+      const session = event.data.object as Stripe.Checkout.Session;
+      if (session.payment_status === "paid" || session.status === "complete") {
+        await markStripePaymentCompleted(session);
+      }
+      break;
+    }
+    case "checkout.session.expired":
+    case "checkout.session.async_payment_failed": {
+      const session = event.data.object as Stripe.Checkout.Session;
+      await markStripePaymentFailed(session);
+      break;
+    }
+    default:
+      break;
+  }
+
+  return { received: true, type: event.type };
+};
+
 export const PaymentServices = {
   initiatePayment,
   handleBkashCallback,
+  handleStripeWebhook,
   getPaymentById,
   getMyPayments,
   getAllPayments,

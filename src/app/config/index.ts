@@ -27,6 +27,10 @@ export default {
   jwt_access_expires_in: required("JWT_ACCESS_EXPIRES_IN"),
   jwt_refresh_expires_in: required("JWT_REFRESH_EXPIRES_IN"),
 
+  // Optional shared secret for Next.js ISR/build-time read-only fetches.
+  // When set, Bearer <token> authenticates as the first active ADMIN user.
+  isr_service_token: process.env.ISR_SERVICE_TOKEN,
+
   google_client_id: required("GOOGLE_CLIENT_ID"),
   google_client_secret: required("GOOGLE_CLIENT_SECRET"),
 

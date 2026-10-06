@@ -40,6 +40,44 @@ export const auth = (...requiredRoles: UserRole[]) => {
       );
     }
 
+    // Next.js ISR / build-time catalog fetches use a shared service token so
+    // pages can stay static (no per-request user cookies in the RSC tree).
+    // The synthetic user is an ADMIN; staff list endpoints allow ADMIN.
+    if (config.isr_service_token && token === config.isr_service_token) {
+      const admin = await prisma.user.findFirst({
+        where: {
+          role: "ADMIN",
+          status: { not: "BLOCKED" },
+          deletedAt: null,
+        },
+        orderBy: { createdAt: "asc" },
+      });
+
+      if (!admin) {
+        throw new AppError(
+          httpStatus.NOT_FOUND,
+          "No admin user available for ISR service authentication.",
+        );
+      }
+
+      if (requiredRoles.length && !requiredRoles.includes(admin.role)) {
+        throw new AppError(
+          httpStatus.FORBIDDEN,
+          "Forbidden. ISR service token cannot access this resource.",
+        );
+      }
+
+      req.user = {
+        email: admin.email,
+        name: `${admin.firstName} ${admin.lastName}`.trim(),
+        userId: admin.id,
+        role: admin.role,
+      };
+
+      next();
+      return;
+    }
+
     const verifiedToken = jwtUtils.verifyToken(token, config.jwt_access_secret);
 
     if (!verifiedToken.success) {

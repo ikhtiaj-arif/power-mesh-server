@@ -2,6 +2,7 @@ import z from "zod";
 
 const InitiatePaymentZodSchema = z.object({
   reservationId: z.string().uuid("Invalid reservation ID"),
+  provider: z.enum(["BKASH", "STRIPE"]).default("BKASH"),
 });
 
 const BkashCallbackQueryZodSchema = z.object({

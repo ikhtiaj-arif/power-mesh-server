@@ -41,6 +41,10 @@ export default {
   bkash_app_secret: required("BKASH_APP_SECRET"),
   bkash_callback_url: required("BKASH_CALLBACK_URL"),
 
+  // Stripe (optional until keys are set — initiate with STRIPE fails closed if missing)
+  stripe_secret_key: process.env.STRIPE_SECRET_KEY,
+  stripe_webhook_secret: process.env.STRIPE_WEBHOOK_SECRET,
+
   redis_user: required("REDIS_USER"),
   redis_password: required("REDIS_PASSWORD"),
   redis_host: required("REDIS_HOST"),

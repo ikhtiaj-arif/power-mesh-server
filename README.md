@@ -94,19 +94,35 @@ npm start       # node dist/src/server.js (after build)
 
 ## Environment Variables
 
-All configuration is driven by environment variables. See `.env.example` for the full template. Key groups:
+All configuration is driven by environment variables.
+
+- Local template: [`.env.example`](./.env.example) → copy to `.env`
+- Production template: [`.env.production.example`](./.env.production.example) → set on the host (Render, Railway, etc.)
+- Cross-app deploy checklist: [`../power-mesh-client/docs/DEPLOYMENT.md`](../power-mesh-client/docs/DEPLOYMENT.md) (when both repos are siblings)
+
+Key groups:
 
 | Group | Variables |
 |-------|-----------|
 | Server | `NODE_ENV`, `PORT`, `FRONTEND_URL` |
 | Database | `DATABASE_URL` |
-| Auth | `BCRYPT_SALT_ROUNDS`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, `JWT_ACCESS_EXPIRES_IN`, `JWT_REFRESH_EXPIRES_IN`, `ISR_SERVICE_TOKEN` (optional; shared with Next for ISR/build-time catalog reads) |
+| Auth | `BCRYPT_SALT_ROUNDS`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, `JWT_ACCESS_EXPIRES_IN`, `JWT_REFRESH_EXPIRES_IN`, `ISR_SERVICE_TOKEN` (shared with Next for ISR/build-time catalog reads) |
 | Google OAuth2 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` |
 | bKash | `BKASH_BASE_URL`, `BKASH_USERNAME`, `BKASH_PASSWORD`, `BKASH_APP_KEY`, `BKASH_APP_SECRET`, `BKASH_CALLBACK_URL` |
 | Redis | `REDIS_USER`, `REDIS_PASSWORD`, `REDIS_HOST`, `REDIS_PORT` |
-| SMTP | `SMTP_USER`, `EMAIL_SENDER`, `SMTP_PASSWORD` |
+| SMTP | `SMTP_USER`, `EMAIL_SENDER`, `SMTP_PASSWORD`, `EMAIL_FAIL_OPEN`, optional `BREVO_API_KEY` / `RESEND_API_KEY` |
 | Cloudinary (optional) | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` |
-| Demo seed (dev only) | `SEED_ADMIN_*`, `SEED_PROVIDER_*`, `SEED_CONSUMER_*`, `SEED_OPERATOR_*` |
+| Demo seed | `RUN_SEEDS`, `SEED_ADMIN_*`, `SEED_PROVIDER_*`, `SEED_CONSUMER_*`, `SEED_OPERATOR_*` |
+
+### Production checklist
+
+1. `NODE_ENV=production`, strong unique JWT secrets and `ISR_SERVICE_TOKEN`.
+2. `FRONTEND_URL` = deployed Next public URL (exact origin).
+3. `BKASH_CALLBACK_URL` = `https://<api-host>/api/v1/payments/callback`.
+4. `EMAIL_FAIL_OPEN=false` once SMTP or Brevo/Resend delivers mail.
+5. `RUN_SEEDS=false` unless this is a controlled demo host.
+6. Run `npx prisma migrate deploy` then `npm run build` && `npm start`.
+7. Confirm Next `API_URL` points at this API and uses the same `ISR_SERVICE_TOKEN`.
 
 ---
 

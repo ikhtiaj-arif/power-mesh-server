@@ -63,6 +63,8 @@ enum PaymentStatus {
 enum PaymentMethod {
     CASH_OUT
     SEND_MONEY
+    BKASH
+    STRIPE
     UNKNOWN
 }
 

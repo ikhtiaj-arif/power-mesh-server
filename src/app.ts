@@ -13,6 +13,7 @@ import { CapacityRequestRoutes } from "./modules/capacity-request/capacity-reque
 import { DeliveryRoutes } from "./modules/delivery/delivery.routes";
 import { EventRoutes } from "./modules/event/event.routes";
 import { OfferRoutes } from "./modules/offer/offer.routes";
+import { PaymentController } from "./modules/payment/payment.controller";
 import { PaymentRoutes } from "./modules/payment/payment.routes";
 import { ProviderRoutes } from "./modules/provider/provider.routes";
 import { ReservationRoutes } from "./modules/reservation/reservation.routes";
@@ -47,6 +48,14 @@ app.use(
 
 // Enable URL-encoded form data parsing
 app.use(express.urlencoded({ extended: true }));
+
+// Stripe webhooks require the raw request body for signature verification.
+// Mount before express.json() so the payload is not pre-parsed.
+app.post(
+  "/api/v1/payments/webhook/stripe",
+  express.raw({ type: "application/json" }),
+  PaymentController.handleStripeWebhook,
+);
 
 // Middleware to parse JSON bodies
 app.use(express.json());

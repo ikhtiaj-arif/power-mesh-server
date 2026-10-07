@@ -20,6 +20,12 @@ npm run build
 npm start
 ```
 
+### Render notes
+
+- Use **Node 20+** (`NODE_VERSION=20` or `.nvmrc`). Stripe v23 will not install cleanly on older Node.
+- Build command should install deps from the lockfile, e.g. `npm ci && npx prisma migrate deploy && npm run build`.
+- If logs show `Could not resolve "stripe"` / `ERR_MODULE_NOT_FOUND`, **clear the Render build cache** once and redeploy (stale `node_modules` from before the Stripe dependency was added).
+
 ## Must-match with Next.js
 
 | Express | Next |

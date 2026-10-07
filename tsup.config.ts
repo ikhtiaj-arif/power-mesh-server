@@ -8,5 +8,12 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   outDir: "dist",
-  external: ["@prisma/client"],
+  // Prisma stays external (generated client + engines). Bundle stripe so Render
+  // cannot fail with ERR_MODULE_NOT_FOUND when node_modules install/cache drifts.
+  external: [
+    "@prisma/client",
+    "@prisma/adapter-pg",
+    ".prisma/client",
+  ],
+  noExternal: ["stripe"],
 });

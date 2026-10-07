@@ -1,0 +1,17 @@
+# Render Blueprint — keeps Node/install/build aligned with Stripe 23 (needs Node >= 20).
+# Dashboard override: Environment → NODE_VERSION=20, and clear build cache once after merge.
+services:
+  - type: web
+    name: power-mesh-server
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    autoDeploy: true
+    buildCommand: npm ci && npx prisma migrate deploy && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NODE_ENV
+        value: production

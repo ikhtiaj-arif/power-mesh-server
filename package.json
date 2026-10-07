@@ -15,9 +15,12 @@
   "author": "",
   "type": "module",
   "main": "index.js",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "prisma generate && tsup",
+    "build": "node scripts/ensure-stripe.mjs && prisma generate && tsup",
     "start": "node dist/server.js",
     "lint": "biome lint src",
     "lint:fix": "biome lint --write src",

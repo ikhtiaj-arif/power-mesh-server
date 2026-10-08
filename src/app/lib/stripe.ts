@@ -8,9 +8,13 @@ export const getStripe = (): Stripe => {
     throw new Error("STRIPE_SECRET_KEY is not configured");
   }
 
-  stripeClient ??= new Stripe(config.stripe_secret_key);
-
-  return stripeClient;
+  try {
+    stripeClient ??= new Stripe(config.stripe_secret_key);
+    return stripeClient;
+  } catch (error) {
+    const err = error as Error;
+    throw new Error(`Failed to load Stripe: ${err.message}`);
+  }
 };
 
 export const isStripeConfigured = () =>

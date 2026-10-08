@@ -28,8 +28,13 @@ app.use(
   }),
 );
 
-// Security headers
-app.use(helmet());
+// Security headers. CORP must be cross-origin so the Vercel SPA can read
+// credentialed API responses (Helmet defaults to same-origin).
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  }),
+);
 
 // Global rate limiter: 200 requests per 15 minutes per IP
 app.use(

@@ -3,28 +3,46 @@ import type { CookieOptions } from "express";
 import config from "../app/config";
 
 /**
- * Auth cookies are consumed by the Next same-origin BFF / browser on
- * FRONTEND_URL. SameSite=None requires Secure, and browsers drop
- * SameSite=None + Secure=false, which is why Postman works and Chrome does not.
+ * Cross-site SPA (e.g. Vercel) → API (Render) needs SameSite=None; Secure.
+ * SameSite=Lax cookies are stored for the API host but are NOT sent on
+ * cross-site XHR/fetch, so /users/me appears as 401 after a "successful" login.
  *
- * Local HTTP needs Lax + Secure=false. Production HTTPS can use None + Secure
- * when the API is cross-site; when the BFF owns the cookies it rewrites them.
+ * Prefer NODE_ENV=production, but also treat an https FRONTEND_URL as cross-site
+ * so a mis-set NODE_ENV on the host cannot leave cookies as Lax.
+ */
+export const useCrossSiteAuthCookies = (): boolean => {
+  if (process.env.COOKIE_SAME_SITE === "none") {
+    return true;
+  }
+  if (process.env.COOKIE_SAME_SITE === "lax") {
+    return false;
+  }
+  if (config.node_env === "production") {
+    return true;
+  }
+  return /^https:\/\//i.test(config.frontend_url ?? "");
+};
+
+/**
+ * Auth cookies are set on the API host and sent back via credentials: "include".
  */
 export const authCookieOptions = (maxAgeMs: number): CookieOptions => {
-  const isProduction = config.node_env === "production";
+  const crossSite = useCrossSiteAuthCookies();
 
   return {
     httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "none" : "lax",
+    secure: crossSite,
+    sameSite: crossSite ? "none" : "lax",
     path: "/",
     maxAge: maxAgeMs,
   };
 };
 
+const clearCrossSite = useCrossSiteAuthCookies();
+
 export const clearAuthCookieOptions: CookieOptions = {
   httpOnly: true,
-  secure: config.node_env === "production",
-  sameSite: config.node_env === "production" ? "none" : "lax",
+  secure: clearCrossSite,
+  sameSite: clearCrossSite ? "none" : "lax",
   path: "/",
 };

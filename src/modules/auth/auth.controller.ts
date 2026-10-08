@@ -44,6 +44,11 @@ const setAuthCookies = (res: Response, accessToken: string, refreshToken: string
     body: JSON.stringify(debugPayload),
   }).catch(() => {});
   // #endregion
+  // Deploy fingerprint for post-fix probes (no secrets).
+  res.setHeader(
+    "X-PowerMesh-Cookie-Mode",
+    useCrossSiteAuthCookies() ? "none-secure" : "lax",
+  );
   res.cookie("accessToken", accessToken, options);
   res.cookie("refreshToken", refreshToken, authCookieOptions(REFRESH_TOKEN_MAX_AGE));
 };
@@ -142,8 +147,8 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 });
 
 const logout = catchAsync(async (_req: Request, res: Response) => {
-  res.clearCookie("accessToken", clearAuthCookieOptions);
-  res.clearCookie("refreshToken", clearAuthCookieOptions);
+  res.clearCookie("accessToken", clearAuthCookieOptions());
+  res.clearCookie("refreshToken", clearAuthCookieOptions());
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

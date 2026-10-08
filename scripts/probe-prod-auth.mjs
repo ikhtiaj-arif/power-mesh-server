@@ -58,6 +58,7 @@ const loginJson = await loginRes.json().catch((e) => ({ parseError: String(e) })
 log("H1", "probe-prod-auth.mjs:login", "login response", {
   status: loginRes.status,
   origin: ORIGIN,
+  cookieModeHeader: loginHeaders["x-powermesh-cookie-mode"] ?? null,
   acao: loginHeaders["access-control-allow-origin"],
   acac: loginHeaders["access-control-allow-credentials"],
   corp: loginHeaders["cross-origin-resource-policy"],
@@ -74,6 +75,7 @@ log("H1", "probe-prod-auth.mjs:login", "login response", {
   secureFlag: setCookies.some((c) => /;\s*Secure/i.test(c)),
   loginSuccess: Boolean(loginJson?.success),
   hasBodyTokens: Boolean(loginJson?.data?.accessToken && loginJson?.data?.refreshToken),
+  deployLive: loginHeaders["x-powermesh-cookie-mode"] === "none-secure",
 });
 
 const cookieHeader = cookieHeaderFromSetCookies(setCookies);

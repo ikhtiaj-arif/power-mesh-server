@@ -15,11 +15,24 @@ const required = (name: string): string => {
   return value;
 };
 
+/** Trim optional wrapping quotes from host dashboard env values. */
+const envString = (value: string | undefined): string | undefined => {
+  if (value == null) return value;
+  const trimmed = value.trim();
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1);
+  }
+  return trimmed;
+};
+
 export default {
-  node_env: process.env.NODE_ENV,
+  node_env: envString(process.env.NODE_ENV),
   port: process.env.PORT,
   database_url: process.env.DATABASE_URL,
-  frontend_url: process.env.FRONTEND_URL,
+  frontend_url: envString(process.env.FRONTEND_URL),
   bcrypt_salt_rounds: process.env.BCRYPT_SALT_ROUNDS || "10",
 
   jwt_access_secret: required("JWT_ACCESS_SECRET"),

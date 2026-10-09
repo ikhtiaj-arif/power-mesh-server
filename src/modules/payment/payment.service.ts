@@ -259,8 +259,8 @@ const initiateStripeCheckout = async (input: {
         merchantInvoiceNumber: input.merchantInvoiceNumber,
         amountBdt: String(input.amount),
       },
-      success_url: `${config.frontend_url}/my-payments?status=success&provider=stripe`,
-      cancel_url: `${config.frontend_url}/my-payments?status=cancel&provider=stripe`,
+      success_url: `${config.frontend_url}/my-payments?status=success&provider=stripe&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${config.frontend_url}/my-payments?status=cancel&provider=stripe&session_id={CHECKOUT_SESSION_ID}`,
     });
 
     if (!session.url) {
@@ -710,6 +710,61 @@ const markStripePaymentFailed = async (session: Stripe.Checkout.Session) => {
   });
 };
 
+/**
+ * Confirm Stripe Checkout after browser return. Complements the webhook so
+ * payment status updates even when Stripe cannot reach this server.
+ */
+const confirmStripeCheckout = async (sessionId: string, userId: string) => {
+  if (!config.stripe_secret_key) {
+    throw new AppError(
+      httpStatus.SERVICE_UNAVAILABLE,
+      "Stripe is not configured on this server",
+    );
+  }
+
+  if (!sessionId.startsWith("cs_")) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Invalid Stripe checkout session id");
+  }
+
+  const consumer = await resolveConsumer(userId);
+  const stripe = getStripe();
+  let session: Stripe.Checkout.Session;
+
+  try {
+    session = await stripe.checkout.sessions.retrieve(sessionId);
+  } catch (error) {
+    const err = error as { message?: string };
+    throw new AppError(
+      httpStatus.BAD_GATEWAY,
+      `Failed to retrieve Stripe session: ${err.message || "unknown error"}`,
+    );
+  }
+
+  const payment = await prisma.payment.findUnique({
+    where: { gatewayId: sessionId },
+    include: { reservation: true },
+  });
+
+  if (!payment) {
+    throw new AppError(httpStatus.NOT_FOUND, "Payment record not found for Stripe session");
+  }
+
+  if (payment.reservation.consumerId !== consumer.id) {
+    throw new AppError(httpStatus.FORBIDDEN, "You do not own this payment");
+  }
+
+  if (session.payment_status === "paid" || session.status === "complete") {
+    return markStripePaymentCompleted(session);
+  }
+
+  if (session.status === "expired") {
+    await markStripePaymentFailed(session);
+    return prisma.payment.findUniqueOrThrow({ where: { id: payment.id } });
+  }
+
+  return payment;
+};
+
 const handleStripeWebhook = async (rawBody: Buffer, signature: string | undefined) => {
   if (!config.stripe_webhook_secret) {
     throw new AppError(httpStatus.SERVICE_UNAVAILABLE, "Stripe webhook secret is not configured");
@@ -756,6 +811,7 @@ const handleStripeWebhook = async (rawBody: Buffer, signature: string | undefine
 export const PaymentServices = {
   initiatePayment,
   handleBkashCallback,
+  confirmStripeCheckout,
   handleStripeWebhook,
   getPaymentById,
   getMyPayments,

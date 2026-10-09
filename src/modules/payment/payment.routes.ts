@@ -16,6 +16,13 @@ router.post(
 
 router.get("/callback", PaymentController.handleBkashCallback);
 
+router.post(
+  "/stripe/confirm",
+  auth(UserRole.CONSUMER),
+  validateRequest(PaymentValidation.ConfirmStripeZodSchema),
+  PaymentController.confirmStripeCheckout,
+);
+
 router.get("/my-payments", auth(UserRole.CONSUMER), PaymentController.getMyPayments);
 
 router.get("/all", auth(UserRole.ADMIN, UserRole.OPERATOR), PaymentController.getAllPayments);

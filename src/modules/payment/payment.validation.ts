@@ -15,8 +15,13 @@ const PaymentIdParamZodSchema = z.object({
   id: z.string().uuid("Invalid payment ID"),
 });
 
+const ConfirmStripeZodSchema = z.object({
+  sessionId: z.string().min(1, "Stripe session id is required"),
+});
+
 export const PaymentValidation = {
   InitiatePaymentZodSchema,
   BkashCallbackQueryZodSchema,
   PaymentIdParamZodSchema,
+  ConfirmStripeZodSchema,
 };

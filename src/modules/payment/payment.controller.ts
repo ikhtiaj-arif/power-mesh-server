@@ -30,6 +30,24 @@ const handleBkashCallback = catchAsync(async (req: Request, res: Response) => {
   res.redirect(result.redirectUrl);
 });
 
+const confirmStripeCheckout = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user as unknown as RequestUser;
+
+  if (!user) {
+    throw new AppError(httpStatus.BAD_REQUEST, "User information is missing");
+  }
+
+  const sessionId = String(req.body?.sessionId ?? "");
+  const result = await PaymentServices.confirmStripeCheckout(sessionId, user.userId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Stripe payment confirmed",
+    data: result,
+  });
+});
+
 const handleStripeWebhook = catchAsync(async (req: Request, res: Response) => {
   const signatureHeader = req.headers["stripe-signature"];
   const signature = Array.isArray(signatureHeader)
@@ -98,6 +116,7 @@ const getAllPayments = catchAsync(async (req: Request, res: Response) => {
 export const PaymentController = {
   initiatePayment,
   handleBkashCallback,
+  confirmStripeCheckout,
   handleStripeWebhook,
   getPaymentById,
   getMyPayments,

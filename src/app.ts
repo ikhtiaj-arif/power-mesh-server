@@ -36,6 +36,15 @@ app.use(
   }),
 );
 
+// Stripe webhooks require the raw request body for signature verification.
+// Mount before rate limiting and express.json() so Stripe deliveries are not
+// dropped or pre-parsed.
+app.post(
+  "/api/v1/payments/webhook/stripe",
+  express.raw({ type: "application/json" }),
+  PaymentController.handleStripeWebhook,
+);
+
 // Global rate limiter: 200 requests per 15 minutes per IP
 app.use(
   rateLimit({
@@ -53,14 +62,6 @@ app.use(
 
 // Enable URL-encoded form data parsing
 app.use(express.urlencoded({ extended: true }));
-
-// Stripe webhooks require the raw request body for signature verification.
-// Mount before express.json() so the payload is not pre-parsed.
-app.post(
-  "/api/v1/payments/webhook/stripe",
-  express.raw({ type: "application/json" }),
-  PaymentController.handleStripeWebhook,
-);
 
 // Middleware to parse JSON bodies
 app.use(express.json());
